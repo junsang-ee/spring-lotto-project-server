@@ -11,5 +11,9 @@ import java.util.List;
 @Component
 @Scope("prototype")
 public class LottoVO {
-    private final List<Integer> lottoList = new ArrayList<>();
+    private List<Integer> lottoList = new ArrayList<>();
+
+    public void resetLottoNumbers() {
+        lottoList = new ArrayList<>();
+    }
 }
