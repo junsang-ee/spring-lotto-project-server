@@ -1,15 +1,15 @@
 package com.lotto.web.model.vo;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@AllArgsConstructor
+@Component
+@Scope("prototype")
 public class LottoVO {
-    private int firstNumber;
-    private int secondeNumber;
-    private int thirdNumber;
-    private int fourthNumber;
-    private int fifthNumber;
-    private int sixthNumber;
+    private final List<Integer> lottoList = new ArrayList<>();
 }
