@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LottoResponse {
+public class LottoGetResponse {
     private int firstNumber;
     private int secondNumber;
     private int thirdNumber;
