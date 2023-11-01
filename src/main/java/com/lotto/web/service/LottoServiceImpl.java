@@ -1,12 +1,14 @@
 package com.lotto.web.service;
 
-import com.lotto.web.model.dto.response.LottoResponse;
+import com.lotto.web.model.dto.request.LottoExceptListGetRequest;
+import com.lotto.web.model.dto.response.LottoGetResponse;
+import com.lotto.web.model.dto.response.LottoListGetResponse;
 import com.lotto.web.model.vo.LottoVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
-
+import static com.lotto.web.utils.LottoUtil.getIsCorrectPrice;
 @RequiredArgsConstructor
 @Service
 public class LottoServiceImpl implements LottoService{
@@ -14,9 +16,20 @@ public class LottoServiceImpl implements LottoService{
     private final LottoVO lottoVO;
 
     @Override
-    public LottoResponse get() {
+    public LottoGetResponse get() {
         setLottoVo();
         return getLottoResponse();
+    }
+
+    @Override
+    public LottoListGetResponse list(int price) {
+        if (getIsCorrectPrice(price)) return null;
+        return null;
+    }
+
+    @Override
+    public LottoListGetResponse excludedList(LottoExceptListGetRequest request) {
+        return null;
     }
 
     private void setLottoVo() {
@@ -49,9 +62,9 @@ public class LottoServiceImpl implements LottoService{
         lottoVO.resetLottoNumbers();
     }
 
-    private LottoResponse getLottoResponse() {
+    private LottoGetResponse getLottoResponse() {
         sortLottoList();
-        LottoResponse result = new LottoResponse();
+        LottoGetResponse result = new LottoGetResponse();
         result.setFirstNumber(lottoVO.getLottoList().get(0));
         result.setSecondNumber(lottoVO.getLottoList().get(1));
         result.setThirdNumber(lottoVO.getLottoList().get(2));

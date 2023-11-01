@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Component
-@Scope("prototype")
+@Scope("singleton")
 public class LottoVO {
     private List<Integer> lottoList = new ArrayList<>();
 
