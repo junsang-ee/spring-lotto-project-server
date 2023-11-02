@@ -10,5 +10,5 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class LottoListGetResponse {
-    List<LottoGetResponse> lottos;
+    private List<LottoGetResponse> lottoList;
 }

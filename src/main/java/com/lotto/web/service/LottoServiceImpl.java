@@ -7,8 +7,15 @@ import com.lotto.web.model.vo.LottoVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+
 import static com.lotto.web.utils.LottoUtil.getIsCorrectPrice;
+import static com.lotto.web.utils.LottoUtil.getLottoCount;
+import static com.lotto.web.utils.LottoUtil.getRandomNumber;
+
+
 @RequiredArgsConstructor
 @Service
 public class LottoServiceImpl implements LottoService{
@@ -17,14 +24,17 @@ public class LottoServiceImpl implements LottoService{
 
     @Override
     public LottoGetResponse get() {
-        setLottoVo();
-        return getLottoResponse();
+        LottoGetResponse result = new LottoGetResponse();
+        setLottoResponse(result);
+        return result;
     }
 
     @Override
     public LottoListGetResponse list(int price) {
-        if (getIsCorrectPrice(price)) return null;
-        return null;
+        if (!getIsCorrectPrice(price)) return null;
+        LottoListGetResponse result = new LottoListGetResponse();
+        setLottoListResponse(result, price);
+        return result;
     }
 
     @Override
@@ -32,17 +42,14 @@ public class LottoServiceImpl implements LottoService{
         return null;
     }
 
-    private void setLottoVo() {
+    private void setLotto() {
         if (!lottoVO.getLottoList().isEmpty()) {
             resetLottoVo();
         }
         while (lottoVO.getLottoList().size() < 6) {
             addLottoNumber();
         }
-    }
-
-    private int getRandomNumber() {
-        return (int) (Math.random() * 45 + 1);
+        sortLottoList();
     }
 
     private void addLottoNumber() {
@@ -62,19 +69,28 @@ public class LottoServiceImpl implements LottoService{
         lottoVO.resetLottoNumbers();
     }
 
-    private LottoGetResponse getLottoResponse() {
-        sortLottoList();
-        LottoGetResponse result = new LottoGetResponse();
-        result.setFirstNumber(lottoVO.getLottoList().get(0));
-        result.setSecondNumber(lottoVO.getLottoList().get(1));
-        result.setThirdNumber(lottoVO.getLottoList().get(2));
-        result.setFourthNumber(lottoVO.getLottoList().get(3));
-        result.setFifthNumber(lottoVO.getLottoList().get(4));
-        result.setSixthNumber(lottoVO.getLottoList().get(5));
-        return result;
-    }
-
     private void sortLottoList() {
         lottoVO.getLottoList().sort(Comparator.naturalOrder());
+    }
+
+    private void setLottoResponse(LottoGetResponse lottoResponse) {
+        setLotto();
+        lottoResponse.setFirstNumber(lottoVO.getLottoList().get(0));
+        lottoResponse.setSecondNumber(lottoVO.getLottoList().get(1));
+        lottoResponse.setThirdNumber(lottoVO.getLottoList().get(2));
+        lottoResponse.setFourthNumber(lottoVO.getLottoList().get(3));
+        lottoResponse.setFifthNumber(lottoVO.getLottoList().get(4));
+        lottoResponse.setSixthNumber(lottoVO.getLottoList().get(5));
+    }
+
+    private void setLottoListResponse(LottoListGetResponse lottoListGetResponse,
+                                      int price) {
+        List<LottoGetResponse> lottoDetails = new ArrayList<>();
+        for (int i = 0; i < getLottoCount(price); i++) {
+            LottoGetResponse lotto = new LottoGetResponse();
+            setLottoResponse(lotto);
+            lottoDetails.add(lotto);
+        }
+        lottoListGetResponse.setLottoList(lottoDetails);
     }
 }
