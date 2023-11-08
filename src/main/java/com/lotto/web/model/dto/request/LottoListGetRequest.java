@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class LottoExceptListGetRequest {
+public class LottoListGetRequest {
     private int price;
     private List<Integer> exceptList;
 }

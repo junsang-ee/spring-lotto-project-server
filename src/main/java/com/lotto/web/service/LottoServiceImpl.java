@@ -1,6 +1,6 @@
 package com.lotto.web.service;
 
-import com.lotto.web.model.dto.request.LottoExceptListGetRequest;
+import com.lotto.web.model.dto.request.LottoListGetRequest;
 import com.lotto.web.model.dto.response.LottoGetResponse;
 import com.lotto.web.model.dto.response.LottoListGetResponse;
 import com.lotto.web.model.vo.LottoVO;
@@ -23,46 +23,41 @@ public class LottoServiceImpl implements LottoService{
     private final LottoVO lottoVO;
 
     @Override
-    public LottoGetResponse get() {
-        LottoGetResponse result = new LottoGetResponse();
-        setLottoResponse(result);
-        return result;
-    }
-
-    @Override
-    public LottoListGetResponse list(int price) {
-        if (!getIsCorrectPrice(price)) return null;
+    public LottoListGetResponse list(LottoListGetRequest request) {
+        if (!getIsCorrectPrice(request.getPrice())) return null;
         LottoListGetResponse result = new LottoListGetResponse();
-        setLottoListResponse(result, price);
+        setLottoListResponse(result, request);
         return result;
     }
 
-    @Override
-    public LottoListGetResponse excludedList(LottoExceptListGetRequest request) {
-        return null;
-    }
 
-    private void setLotto() {
+    private void setLotto(List<Integer> excludedList) {
         if (!lottoVO.getLottoList().isEmpty()) {
             resetLottoVo();
         }
         while (lottoVO.getLottoList().size() < 6) {
-            addLottoNumber();
+            addLottoNumber(excludedList);
         }
         sortLottoList();
     }
 
-    private void addLottoNumber() {
+    private void addLottoNumber(List<Integer> excludedList) {
         if (lottoVO.getLottoList() != null) {
             int randomNumber = getRandomNumber();
-            if (!getIsDuplicated(randomNumber)) {
+            if (!getIsDuplicated(randomNumber) && !getIsExcluded(excludedList, randomNumber)) {
                 lottoVO.getLottoList().add(randomNumber);
             }
         }
     }
 
+
     private boolean getIsDuplicated(int randomNumber) {
         return lottoVO.getLottoList().contains(randomNumber);
+    }
+
+    private boolean getIsExcluded(List<Integer> excludedList, int randomNumber) {
+        if (excludedList == null || excludedList.isEmpty()) return false;
+        return excludedList.contains(randomNumber);
     }
 
     private void resetLottoVo() {
@@ -73,8 +68,8 @@ public class LottoServiceImpl implements LottoService{
         lottoVO.getLottoList().sort(Comparator.naturalOrder());
     }
 
-    private void setLottoResponse(LottoGetResponse lottoResponse) {
-        setLotto();
+    private void setLottoResponse(LottoGetResponse lottoResponse, LottoListGetRequest request) {
+        setLotto(request.getExceptList());
         lottoResponse.setFirstNumber(lottoVO.getLottoList().get(0));
         lottoResponse.setSecondNumber(lottoVO.getLottoList().get(1));
         lottoResponse.setThirdNumber(lottoVO.getLottoList().get(2));
@@ -84,11 +79,11 @@ public class LottoServiceImpl implements LottoService{
     }
 
     private void setLottoListResponse(LottoListGetResponse lottoListGetResponse,
-                                      int price) {
+                                      LottoListGetRequest request) {
         List<LottoGetResponse> lottoDetails = new ArrayList<>();
-        for (int i = 0; i < getLottoCount(price); i++) {
+        for (int i = 0; i < getLottoCount(request.getPrice()); i++) {
             LottoGetResponse lotto = new LottoGetResponse();
-            setLottoResponse(lotto);
+            setLottoResponse(lotto, request);
             lottoDetails.add(lotto);
         }
         lottoListGetResponse.setLottoList(lottoDetails);
