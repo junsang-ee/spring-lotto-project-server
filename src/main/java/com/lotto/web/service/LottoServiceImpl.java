@@ -3,12 +3,14 @@ package com.lotto.web.service;
 import com.lotto.web.model.dto.request.LottoListGetRequest;
 import com.lotto.web.model.dto.response.LottoGetResponse;
 import com.lotto.web.model.dto.response.LottoListGetResponse;
+import com.lotto.web.model.dto.response.LottoWinningNumberGetResponse;
 import com.lotto.web.model.vo.LottoVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import static com.lotto.web.utils.LottoUtil.getIsCorrectPrice;
@@ -23,13 +25,22 @@ public class LottoServiceImpl implements LottoService{
     private final LottoVO lottoVO;
 
     @Override
-    public LottoListGetResponse list(LottoListGetRequest request) {
+    public LottoListGetResponse getRandomList(LottoListGetRequest request) {
         if (!getIsCorrectPrice(request.getPrice())) return null;
         LottoListGetResponse result = new LottoListGetResponse();
         setLottoListResponse(result, request);
         return result;
     }
 
+    @Override
+    public LottoWinningNumberGetResponse getWinningNumbers(int round) {
+        return null;
+    }
+
+    @Override
+    public LottoWinningNumberGetResponse getWinningNumbers(Date roundDate) {
+        return null;
+    }
 
     private void setLotto(List<Integer> excludedList) {
         if (!lottoVO.getLottoList().isEmpty()) {
