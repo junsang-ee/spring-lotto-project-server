@@ -8,6 +8,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class LottoWinningNumbersResponse {
-    private DefaultLottoResponse winningNumber;
+    private int firstNumber;
+    private int secondNumber;
+    private int thirdNumber;
+    private int fourthNumber;
+    private int fifthNumber;
+    private int sixthNumber;
     private int bonusNumber;
 }

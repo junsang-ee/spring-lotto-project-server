@@ -44,8 +44,9 @@ public class LottoServiceImpl implements LottoService{
     @Override
     public LottoWinningNumbersResponse getWinningNumbersByRound(int round) {
         LottoHistoryEntity entity = lottoHistoryRepository.findByRound(round);
-
-        return null;
+        LottoWinningNumbersResponse response = new LottoWinningNumbersResponse();
+        setWinningNumbersResponse(entity, response);
+        return response;
     }
 
     @Override
@@ -111,15 +112,15 @@ public class LottoServiceImpl implements LottoService{
         lottoListGetResponse.setLottoList(lottoDetails);
     }
 
-    private void setWinningNumbersResponse(LottoWinningNumbersResponse response,
-                                           LottoHistoryEntity entity) {
-        DefaultLottoResponse defaultLottoResponse = new DefaultLottoResponse();
-
-        response.setWinningNumber();
-    }
-
-    private void setDefaultLottoResponse(DefaultLottoResponse defaultLottoResponse) {
-
+    private void setWinningNumbersResponse(LottoHistoryEntity entity,
+                                           LottoWinningNumbersResponse response) {
+        response.setFirstNumber(entity.getFirstNumber());
+        response.setSecondNumber(entity.getSecondNumber());
+        response.setThirdNumber(entity.getThirdNumber());
+        response.setFourthNumber(entity.getFourthNumber());
+        response.setFifthNumber(entity.getFifthNumber());
+        response.setSixthNumber(entity.getSixthNumber());
+        response.setBonusNumber(entity.getBonusNumber());
     }
 
 }
