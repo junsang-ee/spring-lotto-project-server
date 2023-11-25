@@ -1,10 +1,12 @@
 package com.lotto.web.service;
 
 import com.lotto.web.model.dto.request.LottoListGetRequest;
-import com.lotto.web.model.dto.response.LottoGetResponse;
-import com.lotto.web.model.dto.response.LottoListGetResponse;
+import com.lotto.web.model.dto.response.DefaultLottoResponse;
+import com.lotto.web.model.dto.response.DefaultLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumberGetResponse;
+import com.lotto.web.model.entity.LottoHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
+import com.lotto.web.repository.LottoHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,21 +26,30 @@ public class LottoServiceImpl implements LottoService{
 
     private final LottoVO lottoVO;
 
+    private final LottoHistoryRepository lottoHistoryRepository;
+
     @Override
-    public LottoListGetResponse getRandomList(LottoListGetRequest request) {
+    public DefaultLottoListResponse getRandomList(LottoListGetRequest request) {
         if (!getIsCorrectPrice(request.getPrice())) return null;
-        LottoListGetResponse result = new LottoListGetResponse();
+        DefaultLottoListResponse result = new DefaultLottoListResponse();
         setLottoListResponse(result, request);
         return result;
     }
 
     @Override
-    public LottoWinningNumberGetResponse getWinningNumbers(int round) {
+    public void saveWinningNumbers() {
+
+    }
+
+    @Override
+    public LottoWinningNumberGetResponse getWinningNumbersByRound(int round) {
+        LottoHistoryEntity entity = lottoHistoryRepository.findByRound(round);
+
         return null;
     }
 
     @Override
-    public LottoWinningNumberGetResponse getWinningNumbers(Date roundDate) {
+    public LottoWinningNumberGetResponse getWinningNumbersByDrawDate(Date drawDate) {
         return null;
     }
 
@@ -79,7 +90,7 @@ public class LottoServiceImpl implements LottoService{
         lottoVO.getLottoList().sort(Comparator.naturalOrder());
     }
 
-    private void setLottoResponse(LottoGetResponse lottoResponse, LottoListGetRequest request) {
+    private void setLottoResponse(DefaultLottoResponse lottoResponse, LottoListGetRequest request) {
         setLotto(request.getExceptList());
         lottoResponse.setFirstNumber(lottoVO.getLottoList().get(0));
         lottoResponse.setSecondNumber(lottoVO.getLottoList().get(1));
@@ -89,14 +100,15 @@ public class LottoServiceImpl implements LottoService{
         lottoResponse.setSixthNumber(lottoVO.getLottoList().get(5));
     }
 
-    private void setLottoListResponse(LottoListGetResponse lottoListGetResponse,
+    private void setLottoListResponse(DefaultLottoListResponse lottoListGetResponse,
                                       LottoListGetRequest request) {
-        List<LottoGetResponse> lottoDetails = new ArrayList<>();
+        List<DefaultLottoResponse> lottoDetails = new ArrayList<>();
         for (int i = 0; i < getLottoCount(request.getPrice()); i++) {
-            LottoGetResponse lotto = new LottoGetResponse();
+            DefaultLottoResponse lotto = new DefaultLottoResponse();
             setLottoResponse(lotto, request);
             lottoDetails.add(lotto);
         }
         lottoListGetResponse.setLottoList(lottoDetails);
     }
+
 }

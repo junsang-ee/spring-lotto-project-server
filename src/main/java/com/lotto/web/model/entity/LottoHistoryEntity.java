@@ -21,7 +21,7 @@ public class LottoHistoryEntity extends CreationTimestampEntity{
     private int fourthNumber;
     private int fifthNumber;
     private int sixthNumber;
-    private long round;
+    private int round;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date drawDate;

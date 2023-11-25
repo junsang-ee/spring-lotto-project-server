@@ -1,7 +1,7 @@
 package com.lotto.web.controller;
 
 import com.lotto.web.model.dto.request.LottoListGetRequest;
-import com.lotto.web.model.dto.response.LottoListGetResponse;
+import com.lotto.web.model.dto.response.DefaultLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumberGetResponse;
 import com.lotto.web.service.LottoService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class LottoController {
     private final LottoService lottoService;
 
     @GetMapping("/excluded/list")
-    public LottoListGetResponse getRandomList(@RequestBody LottoListGetRequest request) {
+    public DefaultLottoListResponse getRandomList(@RequestBody LottoListGetRequest request) {
         return lottoService.getRandomList(request);
     }
 
