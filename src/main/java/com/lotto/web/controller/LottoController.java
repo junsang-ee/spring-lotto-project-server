@@ -2,7 +2,7 @@ package com.lotto.web.controller;
 
 import com.lotto.web.model.dto.request.LottoListGetRequest;
 import com.lotto.web.model.dto.response.DefaultLottoListResponse;
-import com.lotto.web.model.dto.response.LottoWinningNumberGetResponse;
+import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.service.LottoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +23,13 @@ public class LottoController {
 
     /* 당첨 회차로 번호 찾기 */
     @GetMapping("/{round}")
-    public LottoWinningNumberGetResponse getWinningNumbers(@PathVariable int round) {
+    public LottoWinningNumbersResponse getWinningNumbers(@PathVariable int round) {
         return null;
     }
 
     /* 당첨 날짜로 번호 찾기 */
     @GetMapping("/{date}")
-    public LottoWinningNumberGetResponse getWinningNumbers(@PathVariable Date roundDate) {
+    public LottoWinningNumbersResponse getWinningNumbers(@PathVariable Date roundDate) {
         return null;
     }
 }

@@ -2,7 +2,7 @@ package com.lotto.web.service;
 
 import com.lotto.web.model.dto.request.LottoListGetRequest;
 import com.lotto.web.model.dto.response.DefaultLottoListResponse;
-import com.lotto.web.model.dto.response.LottoWinningNumberGetResponse;
+import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 
 import java.util.Date;
 
@@ -10,9 +10,9 @@ public interface LottoService {
 
     DefaultLottoListResponse getRandomList(LottoListGetRequest request);
 
-    LottoWinningNumberGetResponse getWinningNumbersByRound(int round);
+    LottoWinningNumbersResponse getWinningNumbersByRound(int round);
 
-    LottoWinningNumberGetResponse getWinningNumbersByDrawDate(Date drawDate);
+    LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate);
 
     void saveWinningNumbers();
 }

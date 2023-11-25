@@ -3,7 +3,7 @@ package com.lotto.web.service;
 import com.lotto.web.model.dto.request.LottoListGetRequest;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.dto.response.DefaultLottoListResponse;
-import com.lotto.web.model.dto.response.LottoWinningNumberGetResponse;
+import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.entity.LottoHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
 import com.lotto.web.repository.LottoHistoryRepository;
@@ -42,14 +42,14 @@ public class LottoServiceImpl implements LottoService{
     }
 
     @Override
-    public LottoWinningNumberGetResponse getWinningNumbersByRound(int round) {
+    public LottoWinningNumbersResponse getWinningNumbersByRound(int round) {
         LottoHistoryEntity entity = lottoHistoryRepository.findByRound(round);
 
         return null;
     }
 
     @Override
-    public LottoWinningNumberGetResponse getWinningNumbersByDrawDate(Date drawDate) {
+    public LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate) {
         return null;
     }
 
