@@ -51,7 +51,10 @@ public class LottoServiceImpl implements LottoService{
 
     @Override
     public LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate) {
-        return null;
+        LottoHistoryEntity entity = lottoHistoryRepository.findByDrawDate(drawDate);
+        LottoWinningNumbersResponse response = new LottoWinningNumbersResponse();
+        setWinningNumbersResponse(entity, response);
+        return response;
     }
 
     private void setLotto(List<Integer> excludedList) {
