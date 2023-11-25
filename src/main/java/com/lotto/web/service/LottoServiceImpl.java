@@ -1,6 +1,6 @@
 package com.lotto.web.service;
 
-import com.lotto.web.model.dto.request.LottoListGetRequest;
+import com.lotto.web.model.dto.request.LottoListRequest;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.dto.response.DefaultLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
@@ -29,7 +29,7 @@ public class LottoServiceImpl implements LottoService{
     private final LottoHistoryRepository lottoHistoryRepository;
 
     @Override
-    public DefaultLottoListResponse getRandomList(LottoListGetRequest request) {
+    public DefaultLottoListResponse getRandomList(LottoListRequest request) {
         if (!getIsCorrectPrice(request.getPrice())) return null;
         DefaultLottoListResponse result = new DefaultLottoListResponse();
         setLottoListResponse(result, request);
@@ -90,7 +90,7 @@ public class LottoServiceImpl implements LottoService{
         lottoVO.getLottoList().sort(Comparator.naturalOrder());
     }
 
-    private void setLottoResponse(DefaultLottoResponse lottoResponse, LottoListGetRequest request) {
+    private void setLottoResponse(DefaultLottoResponse lottoResponse, LottoListRequest request) {
         setLotto(request.getExceptList());
         lottoResponse.setFirstNumber(lottoVO.getLottoList().get(0));
         lottoResponse.setSecondNumber(lottoVO.getLottoList().get(1));
@@ -101,7 +101,7 @@ public class LottoServiceImpl implements LottoService{
     }
 
     private void setLottoListResponse(DefaultLottoListResponse lottoListGetResponse,
-                                      LottoListGetRequest request) {
+                                      LottoListRequest request) {
         List<DefaultLottoResponse> lottoDetails = new ArrayList<>();
         for (int i = 0; i < getLottoCount(request.getPrice()); i++) {
             DefaultLottoResponse lotto = new DefaultLottoResponse();
@@ -109,6 +109,17 @@ public class LottoServiceImpl implements LottoService{
             lottoDetails.add(lotto);
         }
         lottoListGetResponse.setLottoList(lottoDetails);
+    }
+
+    private void setWinningNumbersResponse(LottoWinningNumbersResponse response,
+                                           LottoHistoryEntity entity) {
+        DefaultLottoResponse defaultLottoResponse = new DefaultLottoResponse();
+
+        response.setWinningNumber();
+    }
+
+    private void setDefaultLottoResponse(DefaultLottoResponse defaultLottoResponse) {
+
     }
 
 }

@@ -1,6 +1,6 @@
 package com.lotto.web.controller;
 
-import com.lotto.web.model.dto.request.LottoListGetRequest;
+import com.lotto.web.model.dto.request.LottoListRequest;
 import com.lotto.web.model.dto.response.DefaultLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.service.LottoService;
@@ -17,7 +17,7 @@ public class LottoController {
     private final LottoService lottoService;
 
     @GetMapping("/excluded/list")
-    public DefaultLottoListResponse getRandomList(@RequestBody LottoListGetRequest request) {
+    public DefaultLottoListResponse getRandomList(@RequestBody LottoListRequest request) {
         return lottoService.getRandomList(request);
     }
 
