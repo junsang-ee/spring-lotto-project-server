@@ -15,10 +15,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static com.lotto.web.utils.LottoUtil.getIsCorrectPrice;
-import static com.lotto.web.utils.LottoUtil.getLottoCount;
-import static com.lotto.web.utils.LottoUtil.getRandomNumber;
-
+import static com.lotto.web.utils.LottoUtil.*;
 
 @RequiredArgsConstructor
 @Service
@@ -57,9 +54,12 @@ public class LottoServiceImpl implements LottoService{
         return response;
     }
 
-    private void setLotto(List<Integer> excludedList) {
+    private void setLotto(List<Integer> excludedList, List<Integer> needsList) {
         if (!lottoVO.getLottoList().isEmpty()) {
-            resetLottoVo();
+            lottoVO.resetLottoNumbers();
+        }
+        if (needsList != null && !needsList.isEmpty()) {
+            lottoVO.setNeedsNumbers(needsList);
         }
         while (lottoVO.getLottoList().size() < 6) {
             addLottoNumber(excludedList);
@@ -86,16 +86,12 @@ public class LottoServiceImpl implements LottoService{
         return excludedList.contains(randomNumber);
     }
 
-    private void resetLottoVo() {
-        lottoVO.resetLottoNumbers();
-    }
-
     private void sortLottoList() {
         lottoVO.getLottoList().sort(Comparator.naturalOrder());
     }
 
     private void setLottoResponse(DefaultLottoResponse lottoResponse, LottoListRequest request) {
-        setLotto(request.getExceptList());
+        setLotto(request.getExceptList(), request.getNeedsList());
         lottoResponse.setFirstNumber(lottoVO.getLottoList().get(0));
         lottoResponse.setSecondNumber(lottoVO.getLottoList().get(1));
         lottoResponse.setThirdNumber(lottoVO.getLottoList().get(2));

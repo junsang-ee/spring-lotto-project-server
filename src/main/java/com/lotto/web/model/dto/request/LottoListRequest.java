@@ -10,4 +10,5 @@ import java.util.List;
 public class LottoListRequest {
     private int price;
     private List<Integer> exceptList;
+    private List<Integer> needsList;
 }

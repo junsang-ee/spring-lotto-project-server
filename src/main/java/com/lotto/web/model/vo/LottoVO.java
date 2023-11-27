@@ -16,4 +16,8 @@ public class LottoVO {
     public void resetLottoNumbers() {
         lottoList = new ArrayList<>();
     }
+
+    public void setNeedsNumbers(List<Integer> needsNumbers) {
+        lottoList.addAll(needsNumbers);
+    }
 }
