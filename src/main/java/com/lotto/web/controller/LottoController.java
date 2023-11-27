@@ -16,19 +16,19 @@ public class LottoController {
 
     private final LottoService lottoService;
 
-    @GetMapping("/excluded/list")
+    @GetMapping("/random-list")
     public DefaultLottoListResponse getRandomList(@RequestBody LottoListRequest request) {
         return lottoService.getRandomList(request);
     }
 
     /* 당첨 회차로 번호 찾기 */
-    @GetMapping("/{round}")
+    @GetMapping("/winning/{round}")
     public LottoWinningNumbersResponse getWinningNumbers(@PathVariable int round) {
         return null;
     }
 
     /* 당첨 날짜로 번호 찾기 */
-    @GetMapping("/{date}")
+    @GetMapping("/winning/{date}")
     public LottoWinningNumbersResponse getWinningNumbers(@PathVariable Date roundDate) {
         return null;
     }
