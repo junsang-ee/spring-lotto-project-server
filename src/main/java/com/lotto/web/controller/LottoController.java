@@ -24,12 +24,12 @@ public class LottoController {
     /* 당첨 회차로 번호 찾기 */
     @GetMapping("/winning/{round}")
     public LottoWinningNumbersResponse winningNumbers(@PathVariable int round) {
-        return null;
+        return lottoService.getWinningNumbersByRound(round);
     }
 
     /* 당첨 날짜로 번호 찾기 */
     @GetMapping("/winning/{date}")
     public LottoWinningNumbersResponse winningNumbers(@PathVariable Date roundDate) {
-        return null;
+        return lottoService.getWinningNumbersByDrawDate(roundDate);
     }
 }
