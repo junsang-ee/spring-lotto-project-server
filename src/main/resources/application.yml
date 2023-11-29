@@ -4,8 +4,26 @@ server:
 spring:
   application:
     name: spring-lotto-project
-
+  profiles:
+    active: prod
   main:
     allow-circular-references: true
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  jpa:
+    properties:
+      format_sql: true
+      hibernate:
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+    hibernate:
+      ddl-auto: create
+  logging:
+    level:
+      org.hibernate.SQL: debug
+#      hdm2ddl:
+#        auto: update
+#    hibernate:
+#    hibernate:
+#      ddl-auto: update

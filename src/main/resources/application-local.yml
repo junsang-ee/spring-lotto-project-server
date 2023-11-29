@@ -1,0 +1,7 @@
+#junsang-aws-database.chl9xl3gtxky.us-east-2.rds.amazonaws.com
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring_lotto
+    username: root
+    password: 3451
+    driver-class-name: com.mysql.cj.jdbc.Driver
