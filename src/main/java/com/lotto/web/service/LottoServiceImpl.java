@@ -54,6 +54,11 @@ public class LottoServiceImpl implements LottoService{
         return response;
     }
 
+    @Override
+    public List<LottoHistoryEntity> getAllWinningNumbers() {
+        return lottoHistoryRepository.findAll();
+    }
+
     private void setLotto(List<Integer> excludedList, List<Integer> needsList) {
         if (!lottoVO.getLottoList().isEmpty()) {
             lottoVO.resetLottoNumbers();

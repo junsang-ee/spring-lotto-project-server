@@ -3,11 +3,13 @@ package com.lotto.web.controller;
 import com.lotto.web.model.dto.request.LottoListRequest;
 import com.lotto.web.model.dto.response.DefaultLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
+import com.lotto.web.model.entity.LottoHistoryEntity;
 import com.lotto.web.service.LottoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/lotto")
@@ -31,5 +33,11 @@ public class LottoController {
     @GetMapping("/winning/{date}")
     public LottoWinningNumbersResponse winningNumbers(@PathVariable Date roundDate) {
         return lottoService.getWinningNumbersByDrawDate(roundDate);
+    }
+
+    /* 모든 당첨 번호 가져오기 */
+    @GetMapping("/winning/list")
+    public List<LottoHistoryEntity> allWinningNumbers() {
+        return lottoService.getAllWinningNumbers();
     }
 }

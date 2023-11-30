@@ -3,8 +3,10 @@ package com.lotto.web.service;
 import com.lotto.web.model.dto.request.LottoListRequest;
 import com.lotto.web.model.dto.response.DefaultLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
+import com.lotto.web.model.entity.LottoHistoryEntity;
 
 import java.util.Date;
+import java.util.List;
 
 public interface LottoService {
 
@@ -15,4 +17,6 @@ public interface LottoService {
     LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate);
 
     void saveWinningNumbers();
+
+    List<LottoHistoryEntity> getAllWinningNumbers();
 }
