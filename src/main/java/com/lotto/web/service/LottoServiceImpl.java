@@ -26,10 +26,12 @@ public class LottoServiceImpl implements LottoService{
     private final LottoHistoryRepository lottoHistoryRepository;
 
     @Override
-    public DefaultLottoListResponse getRandomList(LottoListRequest request) {
-        if (!getIsCorrectPrice(request.getPrice())) return null;
+    public DefaultLottoListResponse getRandomList(int price,
+                                                  List<Integer> exceptList,
+                                                  List<Integer> needsList) {
+        if (!getIsCorrectPrice(price)) return null;
         DefaultLottoListResponse result = new DefaultLottoListResponse();
-        setLottoListResponse(result, request);
+        setLottoListResponse(price, exceptList, needsList, result);
         return result;
     }
 
@@ -95,8 +97,10 @@ public class LottoServiceImpl implements LottoService{
         lottoVO.getLottoList().sort(Comparator.naturalOrder());
     }
 
-    private void setLottoResponse(DefaultLottoResponse lottoResponse, LottoListRequest request) {
-        setLotto(request.getExceptList(), request.getNeedsList());
+    private void setLottoResponse(DefaultLottoResponse lottoResponse,
+                                  List<Integer> exceptList,
+                                  List<Integer> needsList) {
+        setLotto(exceptList, needsList);
         lottoResponse.setFirstNumber(lottoVO.getLottoList().get(0));
         lottoResponse.setSecondNumber(lottoVO.getLottoList().get(1));
         lottoResponse.setThirdNumber(lottoVO.getLottoList().get(2));
@@ -105,12 +109,14 @@ public class LottoServiceImpl implements LottoService{
         lottoResponse.setSixthNumber(lottoVO.getLottoList().get(5));
     }
 
-    private void setLottoListResponse(DefaultLottoListResponse lottoListGetResponse,
-                                      LottoListRequest request) {
+    private void setLottoListResponse(int price,
+                                      List<Integer> exceptList,
+                                      List<Integer> needsList,
+                                      DefaultLottoListResponse lottoListGetResponse) {
         List<DefaultLottoResponse> lottoDetails = new ArrayList<>();
-        for (int i = 0; i < getLottoCount(request.getPrice()); i++) {
+        for (int i = 0; i < getLottoCount(price); i++) {
             DefaultLottoResponse lotto = new DefaultLottoResponse();
-            setLottoResponse(lotto, request);
+            setLottoResponse(lotto, exceptList, needsList);
             lottoDetails.add(lotto);
         }
         lottoListGetResponse.setLottoList(lottoDetails);

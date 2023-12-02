@@ -20,8 +20,10 @@ public class LottoController {
     private final LottoService lottoService;
 
     @GetMapping("/random-list")
-    public DefaultLottoListResponse randomList(@RequestBody LottoListRequest request) {
-        return lottoService.getRandomList(request);
+    public DefaultLottoListResponse randomList(@RequestParam(defaultValue = "5000") int price,
+                                               @RequestParam(required = false) List<Integer> exceptList,
+                                               @RequestParam(required = false) List<Integer> needsList) {
+        return lottoService.getRandomList(price, exceptList, needsList);
     }
 
     /* 당첨 회차로 번호 찾기 */

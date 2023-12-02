@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface LottoService {
 
-    DefaultLottoListResponse getRandomList(LottoListRequest request);
+    DefaultLottoListResponse getRandomList(int price, List<Integer> exceptList, List<Integer> needsList);
 
     LottoWinningNumbersResponse getWinningNumbersByRound(int round);
 
