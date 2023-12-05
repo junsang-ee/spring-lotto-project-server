@@ -5,7 +5,7 @@ spring:
   application:
     name: spring-lotto-project
   profiles:
-    active: prod
+    active: local
   main:
     allow-circular-references: true
   autoconfigure:
@@ -18,12 +18,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
 
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   logging:
     level:
       org.hibernate.SQL: debug
-#      hdm2ddl:
-#        auto: update
-#    hibernate:
-#    hibernate:
-#      ddl-auto: update

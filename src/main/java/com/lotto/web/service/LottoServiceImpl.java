@@ -1,8 +1,7 @@
 package com.lotto.web.service;
 
-import com.lotto.web.model.dto.request.LottoListRequest;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
-import com.lotto.web.model.dto.response.DefaultLottoListResponse;
+import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.entity.LottoHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
@@ -26,11 +25,11 @@ public class LottoServiceImpl implements LottoService{
     private final LottoHistoryRepository lottoHistoryRepository;
 
     @Override
-    public DefaultLottoListResponse getRandomList(int price,
-                                                  List<Integer> exceptList,
-                                                  List<Integer> needsList) {
+    public RandomLottoListResponse getRandomList(int price,
+                                                 List<Integer> exceptList,
+                                                 List<Integer> needsList) {
         if (!getIsCorrectPrice(price)) return null;
-        DefaultLottoListResponse result = new DefaultLottoListResponse();
+        RandomLottoListResponse result = new RandomLottoListResponse();
         setLottoListResponse(price, exceptList, needsList, result);
         return result;
     }
@@ -61,7 +60,7 @@ public class LottoServiceImpl implements LottoService{
         return lottoHistoryRepository.findAll();
     }
 
-    private void setLotto(List<Integer> excludedList, List<Integer> needsList) {
+    private void setLotto(List<Integer> exceptList, List<Integer> needsList) {
         if (!lottoVO.getLottoList().isEmpty()) {
             lottoVO.resetLottoNumbers();
         }
@@ -69,15 +68,15 @@ public class LottoServiceImpl implements LottoService{
             lottoVO.setNeedsNumbers(needsList);
         }
         while (lottoVO.getLottoList().size() < 6) {
-            addLottoNumber(excludedList);
+            addLottoNumber(exceptList);
         }
         sortLottoList();
     }
 
-    private void addLottoNumber(List<Integer> excludedList) {
+    private void addLottoNumber(List<Integer> exceptList) {
         if (lottoVO.getLottoList() != null) {
             int randomNumber = getRandomNumber();
-            if (!getIsDuplicated(randomNumber) && !getIsExcluded(excludedList, randomNumber)) {
+            if (!getIsDuplicated(randomNumber) && !getIsExcept(exceptList, randomNumber)) {
                 lottoVO.getLottoList().add(randomNumber);
             }
         }
@@ -88,9 +87,9 @@ public class LottoServiceImpl implements LottoService{
         return lottoVO.getLottoList().contains(randomNumber);
     }
 
-    private boolean getIsExcluded(List<Integer> excludedList, int randomNumber) {
-        if (excludedList == null || excludedList.isEmpty()) return false;
-        return excludedList.contains(randomNumber);
+    private boolean getIsExcept(List<Integer> exceptList, int randomNumber) {
+        if (exceptList == null || exceptList.isEmpty()) return false;
+        return exceptList.contains(randomNumber);
     }
 
     private void sortLottoList() {
@@ -112,7 +111,7 @@ public class LottoServiceImpl implements LottoService{
     private void setLottoListResponse(int price,
                                       List<Integer> exceptList,
                                       List<Integer> needsList,
-                                      DefaultLottoListResponse lottoListGetResponse) {
+                                      RandomLottoListResponse lottoListGetResponse) {
         List<DefaultLottoResponse> lottoDetails = new ArrayList<>();
         for (int i = 0; i < getLottoCount(price); i++) {
             DefaultLottoResponse lotto = new DefaultLottoResponse();
