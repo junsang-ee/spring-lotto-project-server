@@ -26,7 +26,20 @@ spring:
     alwaysUseMessageFormat: true
     useCodeAsDefaultMessage: true
     fallbackToSystemLocale: true
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dkwnstkddk@gmail.com
+    password: "by0398467!@"
+    properties.mail.smtp:
+      auth: true
+      starttls:
+        enable: true
+        required: true
+      connectiontimeout: 5000
+      timeout: 5000
+      writetimeout: 5000
+    auth-code-expiration-millis: 180000
   logging:
     level:
       org.hibernate.SQL: debug
