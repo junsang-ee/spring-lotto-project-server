@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorMessage {
-    NEEDS_NUMBER_OVER("100"),
-    EXCEPTION_NUMBER_OVER("101"),
+    OVER_NEEDS_NUMBER("100"),
+    OVER_EXCEPTION_NUMBER("101"),
     PRICE_UNIT_INCONSISTENT("103"),
     USER_NOT_FOUND("500"),
     UNKNOWN("9999");
