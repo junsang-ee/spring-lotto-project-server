@@ -2,6 +2,8 @@ package com.lotto.web.constants.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.Accessors;
+
 
 @Getter
 @AllArgsConstructor
@@ -12,7 +14,7 @@ public enum ErrorMessage {
     USER_NOT_FOUND("500"),
     UNKNOWN("9999");
 
-
+    @Accessors(fluent = true)
     private final String code;
 
     public String resName() {
