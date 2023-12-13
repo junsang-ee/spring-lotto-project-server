@@ -1,23 +1,25 @@
 package com.lotto.web.model.entity;
 
-import com.lotto.web.constants.BoardActivation;
+import com.lotto.web.constants.BoardActivationStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "board")
-public class BoardEntity extends CreationTimestampEntity {
+public class BoardEntity extends AbstractBoardBaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private BoardActivation activation;
+    private BoardActivationStatus status;
+
+    @PrePersist
+    public void onPrevisionPersist() {
+        this.status = BoardActivationStatus.NORMAL;
+    }
 }

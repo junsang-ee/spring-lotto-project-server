@@ -1,5 +1,5 @@
 package com.lotto.web.constants;
 
-public enum BoardActivation {
+public enum BoardActivationStatus {
     NORMAL, ERASED
 }

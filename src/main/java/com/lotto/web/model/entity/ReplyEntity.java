@@ -12,5 +12,5 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name = "reply")
-public class ReplyEntity extends CreationTimestampEntity {
+public class ReplyEntity extends AbstractPostEntity {
 }
