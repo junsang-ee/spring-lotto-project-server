@@ -10,9 +10,6 @@ import javax.persistence.Enumerated;
 @RequestMapping("/api/board")
 @RestController
 public class BoardController extends BaseController{
-    private String name;
 
-    @Enumerated(EnumType.STRING)
-    private BoardActivation activation;
 
 }
