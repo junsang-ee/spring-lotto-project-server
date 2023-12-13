@@ -1,6 +1,6 @@
 package com.lotto.web.model.entity;
 
-import com.lotto.web.config.BoardActivation;
+import com.lotto.web.constants.BoardActivation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
