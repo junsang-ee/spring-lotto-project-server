@@ -1,6 +1,7 @@
 package com.lotto.web.controller;
 
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
+import com.lotto.web.model.dto.response.common.TokenResponse;
 import com.lotto.web.model.entity.UserEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class AuthController extends BaseController {
 
     /* 로그인 */
     @PostMapping("/login")
-    public ApiSuccessResponse<UserEntity> login() {
+    public ApiSuccessResponse<TokenResponse> login() {
         return null;
     }
 

@@ -9,4 +9,9 @@ public class AuthServiceImpl implements AuthService{
     public UserEntity me() {
         return null;
     }
+
+    @Override
+    public UserEntity signup() {
+        return null;
+    }
 }
