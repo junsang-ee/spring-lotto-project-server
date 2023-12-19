@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AuthController extends BaseController {
 
-    @GetMapping("/me")
-    public ApiSuccessResponse<UserEntity> me() {
-        return null;
-    }
-
     /* 로그인 */
     @PostMapping("/login")
     public ApiSuccessResponse<TokenResponse> login() {
