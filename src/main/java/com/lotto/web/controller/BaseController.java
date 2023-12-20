@@ -2,7 +2,7 @@ package com.lotto.web.controller;
 
 import com.lotto.web.constants.messages.SuccessMessage;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
-import com.lotto.web.utils.MessageUtil;
+import com.lotto.web.util.MessageUtil;
 
 import java.util.Optional;
 

@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static com.lotto.web.utils.LottoUtil.*;
+import static com.lotto.web.util.LottoUtil.*;
 
 @RequiredArgsConstructor
 @Service

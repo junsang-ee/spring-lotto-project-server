@@ -3,7 +3,7 @@ package com.lotto.web.exception.handler;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.BaseException;
 import com.lotto.web.model.dto.response.common.ApiErrorResponse;
-import com.lotto.web.utils.MessageUtil;
+import com.lotto.web.util.MessageUtil;
 import org.springframework.lang.Nullable;
 
 
