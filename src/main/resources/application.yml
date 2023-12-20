@@ -43,3 +43,8 @@ spring:
   logging:
     level:
       org.hibernate.SQL: debug
+
+junsang:
+  jwt:
+    secret: junsang_l@tt@
+    valid-time: 1h
