@@ -1,5 +1,6 @@
 package com.lotto.web.model.entity;
 
+import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,9 @@ public class BoardEntity extends AbstractBoardBaseEntity {
 
     @Enumerated(EnumType.STRING)
     private BoardActivationStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private BoardAccessType accessType;
 
     @PrePersist
     public void onPrevisionPersist() {
