@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 @Table(name = "reply")
+@Entity(name = "reply")
 public class ReplyEntity extends AbstractPostEntity {
 }

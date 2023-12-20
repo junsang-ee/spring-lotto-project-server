@@ -11,8 +11,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 @Table(name = "board")
+@Entity(name = "board")
 public class BoardEntity extends AbstractBoardBaseEntity {
     private String name;
 

@@ -12,8 +12,8 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 @Table(name = "lottoHistory")
+@Entity(name = "lottoHistory")
 public class LottoHistoryEntity extends CreationTimestampEntity {
     private int firstNumber;
     private int secondNumber;

@@ -11,8 +11,8 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 @Table(name = "post")
+@Entity(name = "post")
 public class PostEntity extends AbstractPostEntity {
     private String title;
 

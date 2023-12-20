@@ -13,8 +13,8 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 @Table(name = "user")
+@Entity(name = "user")
 public class UserEntity extends CreationTimestampEntity {
     private String email;
     private String password;
