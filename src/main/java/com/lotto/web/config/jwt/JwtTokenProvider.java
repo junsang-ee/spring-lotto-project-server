@@ -1,7 +1,7 @@
 package com.lotto.web.config.jwt;
 
 import com.lotto.web.constants.UserRole;
-import com.lotto.web.security.ExtendedUserDetailService;
+import com.lotto.web.security.ExtendedUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -23,7 +23,7 @@ public class JwtTokenProvider {
 
     private final JwtConfig jwtConfig;
 
-    private final ExtendedUserDetailService userService;
+    private final ExtendedUserDetailsService userService;
 
     public String create(String userAgent, String id, UserRole role) {
         Claims claims = Jwts.claims().setSubject(id);

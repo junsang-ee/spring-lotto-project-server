@@ -2,6 +2,9 @@ package com.lotto.web.service;
 
 import com.lotto.web.model.entity.UserEntity;
 
+import java.util.Optional;
+
 public interface UserService {
-    UserEntity get(String userId);
+
+    Optional<UserEntity> get(String userId);
 }

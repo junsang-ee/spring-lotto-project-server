@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -15,7 +17,7 @@ public class UserServiceImpl implements UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public UserEntity get(String userId) {
-        return null;
+    public Optional<UserEntity> get(String userId) {
+        return userRepository.findById(userId);
     }
 }
