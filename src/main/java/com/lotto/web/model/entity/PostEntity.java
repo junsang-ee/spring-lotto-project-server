@@ -30,6 +30,12 @@ public class PostEntity extends AbstractPostEntity {
     @Column(nullable = false)
     private int viewCount;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parentBoard", nullable = false)
+    private BoardEntity parentBoard;
+
+
     @PrePersist
     public void onPrevisionPersist() {
         this.viewCount = 0;

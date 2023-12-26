@@ -1,5 +1,6 @@
 package com.lotto.web.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +23,10 @@ public class BoardEntity extends AbstractBoardBaseEntity {
 
     @Enumerated(EnumType.STRING)
     private BoardAccessType accessType;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "parentBoard", fetch = FetchType.LAZY)
+    private List<PostEntity> posts;
 
     @PrePersist
     public void onPrevisionPersist() {

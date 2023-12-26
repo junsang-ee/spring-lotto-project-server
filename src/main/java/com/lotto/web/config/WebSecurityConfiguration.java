@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,15 +33,17 @@ public class WebSecurityConfiguration {
     public static final String[] PERMIT_ANT_PATH = {
         "/api/auth/**",
         "/api/post/**",
-        "/api/reply/**"
+        "/api/reply/**",
     };
 
     public static final String[] ADMIN_ANT_PATH = {
-        "/api/admin/**"
+        "/api/test"
     };
 
     public static final String[] TEST_PATH = {
-      "/api/lotto/**"
+        "/api/lotto/**",
+        "/api/admin/**",
+        "/api/board/**"
     };
 
     @Bean
@@ -54,10 +57,11 @@ public class WebSecurityConfiguration {
         return http.authorizeRequests()
                 .antMatchers(PERMIT_ANT_PATH).permitAll()
                 .antMatchers(TEST_PATH).permitAll()
-                .antMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
+                .antMatchers(ADMIN_ANT_PATH).permitAll()
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().cors().disable()
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new JwtAuthenticationFilter(BeanSuppliers.beanSupplier(context, JwtTokenProvider.class)), UsernamePasswordAuthenticationFilter.class)
                 .build();
