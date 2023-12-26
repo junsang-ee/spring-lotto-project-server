@@ -11,22 +11,32 @@ response:
     over:
       needs:
         number:
-          code: "100"
+          code: "1000"
           message: "포함할 로또 번호는 6개를 초과할 수 없습니다."
       exception:
         number:
-          code: "101"
+          code: "1001"
           message: "제외할 로또 번호는 41개를 초과할 수 없습니다."
     price:
       unit:
         inconsistent:
-          code: "103"
+          code: "1003"
           message: "로또 구매 단위가 정확하지 않습니다.(1,000 원 단위)"
     user:
       not:
         found:
-          code: "500"
+          code: "5000"
           message: "해당 사용자를 찾을 수 없습니다."
+    board:
+      not:
+        found:
+          code: "6000"
+          message: "해당 게시판은 찾을 수 없습니다."
+      already:
+        removed:
+          code: "6001"
+          message: "해당 게시판은 이미 삭제되었습니다."
+
     unknown:
       code: "9999"
       message: "알 수 없는 에러가 발생했습니다."

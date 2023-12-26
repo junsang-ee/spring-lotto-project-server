@@ -1,6 +1,10 @@
 package com.lotto.web.service;
 
 import com.lotto.web.constants.BoardAccessType;
+import com.lotto.web.constants.BoardActivationStatus;
+import com.lotto.web.constants.messages.ErrorMessage;
+import com.lotto.web.exception.custom.InvalidStateException;
+import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.response.BoardDetailResponse;
 import com.lotto.web.model.dto.response.BoardListResponse;
@@ -19,8 +23,15 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
-    @Transactional
     @Override
+    public BoardEntity get(String boardId) {
+        return boardRepository.findById(boardId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
+        );
+    }
+
+    @Override
+    @Transactional
     public BoardSaveResponse save(BoardSaveRequest request) {
         BoardEntity entity = new BoardEntity();
         setBoardEntity(entity, request);
@@ -40,11 +51,24 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardListResponse listForUser() {
-//        List<BoardDetailResponse> boardDetails =
-//                boardRepository.getAllByBoardAccessType(BoardAccessType.ALL);
-//        BoardListResponse result = new BoardListResponse();
-//        setBoardList(boardDetails, result);
-        return null;
+        List<BoardDetailResponse> boardDetails =
+                boardRepository.getAllByBoardByAccessType(BoardAccessType.ALL);
+        BoardListResponse result = new BoardListResponse();
+        setBoardList(boardDetails, result);
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteBoard(String boardId) {
+        BoardEntity entity = get(boardId);
+
+        if (entity.getStatus() == BoardActivationStatus.ERASED) {
+            throw new InvalidStateException(ErrorMessage.BOARD_ALREADY_REMOVED);
+        }
+        entity.setStatus(BoardActivationStatus.ERASED);
+        boardRepository.save(entity);
+        return true;
     }
 
     private void setBoardResponse(BoardEntity entity, BoardSaveResponse response) {
@@ -60,6 +84,10 @@ public class BoardServiceImpl implements BoardService {
     private void setBoardList(List<BoardDetailResponse> boardDetails,
                               BoardListResponse response) {
         response.setBoards(boardDetails);
+    }
 
+    private void exception(String code) {
+        ErrorMessage errorMessage = ErrorMessage.from(code);
+        throw new InvalidStateException(errorMessage);
     }
 }

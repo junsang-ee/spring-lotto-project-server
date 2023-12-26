@@ -8,10 +8,21 @@ import lombok.experimental.Accessors;
 @Getter
 @AllArgsConstructor
 public enum ErrorMessage {
-    OVER_NEEDS_NUMBER("100"),
-    OVER_EXCEPTION_NUMBER("101"),
-    PRICE_UNIT_INCONSISTENT("103"),
-    USER_NOT_FOUND("500"),
+
+    /* 1000 ~ LottoError */
+    OVER_NEEDS_NUMBER("1000"),
+    OVER_EXCEPTION_NUMBER("1001"),
+    PRICE_UNIT_INCONSISTENT("1003"),
+
+    /* 5000 ~ UserError */
+    USER_NOT_FOUND("5000"),
+
+    /* 6000 ~ BoardError (board, post, reply) */
+    BOARD_NOT_FOUND("6000"),
+    BOARD_ALREADY_REMOVED("6001"),
+
+
+    /* 9999 UknownError */
     UNKNOWN("9999");
 
     @Accessors(fluent = true)
