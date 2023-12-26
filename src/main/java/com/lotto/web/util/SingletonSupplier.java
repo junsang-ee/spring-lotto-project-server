@@ -1,7 +1,5 @@
 package com.lotto.web.util;
 
-
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
