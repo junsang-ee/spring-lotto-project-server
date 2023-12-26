@@ -43,16 +43,20 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardListResponse listAll() {
-//        List<BoardDetailResponse> boardDetails = boardRepository.getAll();
-//        BoardListResponse result = new BoardListResponse();
-//        setBoardList(boardDetails, result);
-        return null;
+        List<BoardDetailResponse> boardDetails =
+                boardRepository.getAllByStatus(BoardActivationStatus.NORMAL);
+        BoardListResponse result = new BoardListResponse();
+        setBoardList(boardDetails, result);
+        return result;
     }
 
     @Override
     public BoardListResponse listForUser() {
         List<BoardDetailResponse> boardDetails =
-                boardRepository.getAllByBoardByAccessType(BoardAccessType.ALL);
+                boardRepository.getAllByBoardByAccessTypeAndStatus(
+                        BoardAccessType.ALL,
+                        BoardActivationStatus.NORMAL
+                );
         BoardListResponse result = new BoardListResponse();
         setBoardList(boardDetails, result);
         return result;

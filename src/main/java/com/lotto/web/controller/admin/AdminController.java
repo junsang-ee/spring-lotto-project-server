@@ -3,6 +3,7 @@ package com.lotto.web.controller.admin;
 
 import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
+import com.lotto.web.model.dto.response.BoardListResponse;
 import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.service.BoardService;
@@ -20,6 +21,11 @@ public class AdminController extends BaseController {
     @PostMapping("/board")
     public ApiSuccessResponse<BoardSaveResponse> saveBoard(@RequestBody BoardSaveRequest request) {
         return wrap(boardService.save(request));
+    }
+
+    @GetMapping("/board")
+    public ApiSuccessResponse<BoardListResponse> boardList() {
+        return wrap(boardService.listAll());
     }
 
     @DeleteMapping("/board/{boardId}")
