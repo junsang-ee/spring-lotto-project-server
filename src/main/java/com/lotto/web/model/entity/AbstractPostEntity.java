@@ -4,16 +4,15 @@ import com.lotto.web.constants.PostActivationStatus;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PrePersist;
+import javax.persistence.*;
+
 
 @Getter
 @Setter
 @MappedSuperclass
 public abstract class AbstractPostEntity extends AbstractBoardBaseEntity {
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PostActivationStatus status;
 

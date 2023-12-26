@@ -4,9 +4,9 @@ import com.lotto.web.constants.PostDisclosureType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -14,12 +14,24 @@ import javax.persistence.Table;
 @Table(name = "post")
 @Entity(name = "post")
 public class PostEntity extends AbstractPostEntity {
+
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PostDisclosureType disclosureType;
 
     private String password;
 
+    @Column(nullable = false)
+    private int viewCount;
+
+    @PrePersist
+    public void onPrevisionPersist() {
+        this.viewCount = 0;
+    }
 }
