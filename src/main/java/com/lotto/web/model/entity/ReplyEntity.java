@@ -13,4 +13,6 @@ import javax.persistence.Table;
 @Table(name = "reply")
 @Entity(name = "reply")
 public class ReplyEntity extends AbstractPostEntity {
+    private String content;
+
 }

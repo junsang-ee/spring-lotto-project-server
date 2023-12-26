@@ -4,7 +4,6 @@ import com.lotto.web.constants.PostDisclosureType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -18,7 +17,8 @@ public class PostEntity extends AbstractPostEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "Text")
     private String content;
 
     @Column(nullable = false)
