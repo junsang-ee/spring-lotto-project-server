@@ -17,9 +17,13 @@ public enum ErrorMessage {
     /* 5000 ~ UserError */
     USER_NOT_FOUND("5000"),
 
-    /* 6000 ~ BoardError (board, post, reply) */
+    /* 6000 ~ BoardError (board) */
     BOARD_NOT_FOUND("6000"),
     BOARD_ALREADY_REMOVED("6001"),
+
+    /* 7000 ~ PostError (post) */
+    POST_NOT_FOUND("7000"),
+
 
 
     /* 9999 UknownError */

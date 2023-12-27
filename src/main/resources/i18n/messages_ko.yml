@@ -31,11 +31,17 @@ response:
       not:
         found:
           code: "6000"
-          message: "해당 게시판은 찾을 수 없습니다."
+          message: "해당 게시판을 찾을 수 없습니다."
       already:
         removed:
           code: "6001"
           message: "해당 게시판은 이미 삭제되었습니다."
+
+    post:
+      not:
+        found:
+          code: "7000"
+          message: "해당 게시글을 찾을 수 없습니다."
 
     unknown:
       code: "9999"
