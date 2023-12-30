@@ -39,9 +39,11 @@ dependencies {
 
     /* DataBase */
     implementation 'com.h2database:h2:'
-    implementation 'mysql:mysql-connector-java'
+//    implementation 'mysql:mysql-connector-java'
+    implementation 'org.postgresql:postgresql'
 
-    runtimeOnly 'mysql:mysql-connector-java'
+//    runtimeOnly 'mysql:mysql-connector-java'
+    runtimeOnly 'org.postgresql:postgresql'
 
     /* lombok */
     compileOnly 'org.projectlombok:lombok'
@@ -69,7 +71,7 @@ test {
     useJUnitPlatform()
 }
 
-def querydslDir = "src/main/generated"
+def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
     jpa = true

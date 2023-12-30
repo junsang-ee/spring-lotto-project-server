@@ -20,7 +20,9 @@ public class PostController extends BaseController {
     }
 
     @GetMapping("/{postId}")
-    public ApiSuccessResponse<PostEntity> get(@PathVariable String postId) {
+    public ApiSuccessResponse<PostEntity> get(@PathVariable String postId,
+                                              @RequestParam(required = false) String password) {
+
         return null;
     }
 }

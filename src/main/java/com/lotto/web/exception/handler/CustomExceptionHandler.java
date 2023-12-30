@@ -1,6 +1,7 @@
 package com.lotto.web.exception.handler;
 
 import com.lotto.web.exception.custom.AuthException;
+import com.lotto.web.exception.custom.DuplicatedException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,11 @@ public class CustomExceptionHandler extends BaseExceptionHandler{
 
     @ExceptionHandler(InvalidStateException.class)
     public Object handleInvalidState(InvalidStateException ex) {
+        return toResponse(ex);
+    }
+
+    @ExceptionHandler(DuplicatedException.class)
+    public Object handleDuplicated(DuplicatedException ex) {
         return toResponse(ex);
     }
 }

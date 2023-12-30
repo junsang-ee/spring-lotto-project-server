@@ -16,8 +16,8 @@ public abstract class AbstractPostEntity extends AbstractBoardBaseEntity {
     @Enumerated(EnumType.STRING)
     private PostActivationStatus status;
 
-    @PrePersist
-    public void onPrevisionPersist() {
-        this.status = PostActivationStatus.NORMAL;
-    }
+//    @PrePersist
+//    public void onPrevisionPersist() {
+//        this.status = PostActivationStatus.NORMAL;
+//    }
 }

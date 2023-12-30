@@ -2,7 +2,7 @@ package com.lotto.web.repository;
 
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
-import com.lotto.web.model.dto.response.BoardDetailResponse;
+import com.lotto.web.model.dto.response.BoardListEntryResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,16 +15,16 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<BoardEntity, String> {
 
     @Query(value = "SELECT " +
-                        "new com.lotto.web.model.dto.response.BoardDetailResponse(b.id, b.name) " +
+                        "new com.lotto.web.model.dto.response.BoardListEntryResponse(b.id, b.name) " +
                      "FROM board b " +
                     "WHERE b.status = :status")
-    List<BoardDetailResponse> getAllByStatus(@Param("status") BoardActivationStatus status);
+    List<BoardListEntryResponse> getAllByStatus(@Param("status") BoardActivationStatus status);
     @Query(value = "SELECT " +
-                        "new com.lotto.web.model.dto.response.BoardDetailResponse(b.id, b.name) " +
+                        "new com.lotto.web.model.dto.response.BoardListEntryResponse(b.id, b.name) " +
                     "FROM board b " +
                    "WHERE b.accessType = :accessType " +
                      "AND b.status = :status")
-    List<BoardDetailResponse> getAllByBoardByAccessTypeAndStatus(@Param("accessType") BoardAccessType accessType,
-                                                                 @Param("status")BoardActivationStatus status);
+    List<BoardListEntryResponse> getAllByBoardByAccessTypeAndStatus(@Param("accessType") BoardAccessType accessType,
+                                                                    @Param("status")BoardActivationStatus status);
 
 }

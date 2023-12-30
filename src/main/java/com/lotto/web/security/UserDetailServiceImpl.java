@@ -1,8 +1,10 @@
 package com.lotto.web.security;
 
+import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.service.UserService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -19,7 +21,7 @@ public class UserDetailServiceImpl implements ExtendedUserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(email + " 로 등록된 사용자 정보를 찾을 수 없습니다."));
     }
     @Override
-    public UserDetails loadUserById(String userId) throws UsernameNotFoundException {
+    public UserDetails loadUserById(String userId) throws NotFoundException {
         return serviceSupplier.get().get(userId).map(this::convert)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자 정보를 찾을 수 없습니다."));
     }

@@ -12,6 +12,7 @@ import javax.persistence.MappedSuperclass;
 @Setter
 @MappedSuperclass
 public abstract class AbstractBoardBaseEntity extends ModificationTimestampEntity {
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private UserEntity createdBy;

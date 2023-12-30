@@ -16,11 +16,15 @@ import java.util.List;
 @Table(name = "board")
 @Entity(name = "board")
 public class BoardEntity extends AbstractBoardBaseEntity {
+
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BoardActivationStatus status;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BoardAccessType accessType;
 

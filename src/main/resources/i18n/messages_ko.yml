@@ -6,7 +6,6 @@ response:
     empty:
       code: "1"
       message: "데이터가 없습니다."
-
   error:
     over:
       needs:
@@ -22,6 +21,13 @@ response:
         inconsistent:
           code: "1003"
           message: "로또 구매 단위가 정확하지 않습니다.(1,000 원 단위)"
+
+    auth:
+      duplicated:
+        email:
+          code: "4000"
+          message: "사용중인 이메일입니다."
+
     user:
       not:
         found:

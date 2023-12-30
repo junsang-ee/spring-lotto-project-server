@@ -6,12 +6,14 @@ import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
-import com.lotto.web.model.dto.response.BoardDetailResponse;
+import com.lotto.web.model.dto.response.BoardListEntryResponse;
 import com.lotto.web.model.dto.response.BoardListResponse;
 import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -43,7 +45,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardListResponse listAll() {
-        List<BoardDetailResponse> boardDetails =
+        List<BoardListEntryResponse> boardDetails =
                 boardRepository.getAllByStatus(BoardActivationStatus.NORMAL);
         BoardListResponse result = new BoardListResponse();
         setBoardList(boardDetails, result);
@@ -52,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardListResponse listForUser() {
-        List<BoardDetailResponse> boardDetails =
+        List<BoardListEntryResponse> boardDetails =
                 boardRepository.getAllByBoardByAccessTypeAndStatus(
                         BoardAccessType.ALL,
                         BoardActivationStatus.NORMAL
@@ -85,7 +87,7 @@ public class BoardServiceImpl implements BoardService {
         entity.setAccessType(request.getAccessType());
     }
 
-    private void setBoardList(List<BoardDetailResponse> boardDetails,
+    private void setBoardList(List<BoardListEntryResponse> boardDetails,
                               BoardListResponse response) {
         response.setBoards(boardDetails);
     }

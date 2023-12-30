@@ -14,6 +14,9 @@ public enum ErrorMessage {
     OVER_EXCEPTION_NUMBER("1001"),
     PRICE_UNIT_INCONSISTENT("1003"),
 
+    /* 4000 ~ AuthError*/
+    AUTH_DUPLICATED_EMAIL("4000"),
+
     /* 5000 ~ UserError */
     USER_NOT_FOUND("5000"),
 
@@ -23,6 +26,8 @@ public enum ErrorMessage {
 
     /* 7000 ~ PostError (post) */
     POST_NOT_FOUND("7000"),
+
+
 
 
 
