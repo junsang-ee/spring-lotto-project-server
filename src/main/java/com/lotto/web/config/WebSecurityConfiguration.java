@@ -5,14 +5,15 @@ import com.lotto.web.config.jwt.JwtTokenProvider;
 import com.lotto.web.security.ExtendedUserDetailsService;
 import com.lotto.web.security.UserDetailServiceImpl;
 import com.lotto.web.service.UserService;
-import com.lotto.web.service.UserServiceImpl;
 import com.lotto.web.util.BeanSuppliers;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpMethod;
+
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

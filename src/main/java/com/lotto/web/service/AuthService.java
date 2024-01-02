@@ -6,7 +6,9 @@ import com.lotto.web.model.dto.request.SignupRequest;
 import com.lotto.web.model.entity.UserEntity;
 
 public interface AuthService {
-    UserEntity me();
 
     UserEntity signup(UserRole role, SignupRequest request);
+
+    String login(String userAgent, LoginRequest login);
+
 }

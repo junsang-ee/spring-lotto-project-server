@@ -27,7 +27,13 @@ response:
         email:
           code: "4000"
           message: "사용중인 이메일입니다."
-
+      disabled:
+        code: "4001"
+        message: "이용중지된 계정입니다."
+      invalid:
+        password:
+          code: "4002"
+          message: "비빌번호가 일치하지 않습니다."
     user:
       not:
         found:

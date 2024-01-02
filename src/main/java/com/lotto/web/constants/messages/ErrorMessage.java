@@ -16,6 +16,8 @@ public enum ErrorMessage {
 
     /* 4000 ~ AuthError*/
     AUTH_DUPLICATED_EMAIL("4000"),
+    AUTH_DISABLED("4001"),
+    AUTH_INVALID_PASSWORD("4002"),
 
     /* 5000 ~ UserError */
     USER_NOT_FOUND("5000"),

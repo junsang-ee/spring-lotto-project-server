@@ -32,7 +32,7 @@ public class BoardController extends BaseController {
 
     @GetMapping("/{boardId}/post")
     public ApiSuccessResponse<List<PostListEntryResponse>> postList(@PathVariable String boardId,
-                                                                            Pageable pageable) {
+                                                                    Pageable pageable) {
         return wrap(postService.list(boardId, pageable));
     }
 
