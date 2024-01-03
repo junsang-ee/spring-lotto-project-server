@@ -19,8 +19,11 @@ public interface UserService {
 
     Optional<UserEntity> getByEmail(String email);
 
+    UserEntity getUserByEmail(String email);
+
     UserEntity save(UserRole role, SignupRequest request);
 
-    UserEntity checkAccount(String userId, LoginRequest login);
+    void checkAccount(UserEntity user, String password);
 
+    boolean updatePassword(String userId, String oldPassword, String newPassword);
 }

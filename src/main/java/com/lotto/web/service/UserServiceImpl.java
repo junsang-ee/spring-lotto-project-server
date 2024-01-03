@@ -7,10 +7,11 @@ import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.DuplicatedException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
-import com.lotto.web.model.dto.request.LoginRequest;
+
 import com.lotto.web.model.dto.request.SignupRequest;
 import com.lotto.web.model.dto.response.UserDetailResponse;
 import com.lotto.web.model.entity.UserEntity;
+
 import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserEntity getUserByEmail(String email) {
+        return getByEmail(email).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
+    }
+
+    @Override
     public Optional<UserEntity> getByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -66,19 +74,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity checkAccount(String userId, LoginRequest login) {
-        String email = login.getEmail();
-        String password = login.getPassword();
-        UserEntity user = userRepository.findByIdOrEmail(userId, email).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
-        );
-
+    public void checkAccount(UserEntity user, String password) {
         if (passwordEncoder.matches(password, user.getPassword())) {
             if (user.getStatus() == UserStatus.DISABLED)
                 throw new AuthException(ErrorMessage.AUTH_DISABLED);
-            return user;
+        } else
+            throw new InvalidStateException(ErrorMessage.AUTH_INVALID_PASSWORD);
+    }
+
+    @Override
+    @Transactional
+    public boolean updatePassword(String userId, String oldPassword, String newPassword) {
+        UserEntity user = getUser(userId);
+        if (oldPassword != null) {
+            checkAccount(user, oldPassword);
         }
-        throw new InvalidStateException(ErrorMessage.AUTH_INVALID_PASSWORD);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
     }
 
     private void setUser(UserEntity entity, UserRole role, SignupRequest request) {

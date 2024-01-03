@@ -75,10 +75,10 @@ public class BoardServiceImpl implements BoardService {
     public boolean deleteBoard(String boardId) {
         BoardEntity entity = get(boardId);
 
-        if (entity.getStatus() == BoardActivationStatus.ERASED) {
-            throw new InvalidStateException(ErrorMessage.BOARD_ALREADY_REMOVED);
+        if (entity.getStatus() == BoardActivationStatus.REMOVED) {
+            throw new InvalidStateException(ErrorMessage.BOARD_REMOVED);
         }
-        entity.setStatus(BoardActivationStatus.ERASED);
+        entity.setStatus(BoardActivationStatus.REMOVED);
         boardRepository.save(entity);
         return true;
     }

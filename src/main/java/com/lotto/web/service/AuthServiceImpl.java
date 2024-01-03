@@ -5,7 +5,9 @@ import com.lotto.web.constants.UserRole;
 import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
 import com.lotto.web.model.entity.UserEntity;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -23,7 +25,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String login(String userAgent, LoginRequest login) {
-        UserEntity user = userService.checkAccount(null, login);
+        UserEntity user = userService.getUserByEmail(login.getEmail());
+        userService.checkAccount(user, login.getPassword());
         return jwtTokenProvider.create(userAgent, user.getId(), user.getRole());
     }
 }

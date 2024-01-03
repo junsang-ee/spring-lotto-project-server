@@ -32,10 +32,9 @@ response:
       disabled:
         code: "4001"
         message: "이용중지된 계정입니다."
-      invalid:
-        password:
-          code: "4002"
-          message: "비빌번호가 일치하지 않습니다."
+      invalid.password:
+        code: "4002"
+        message: "비빌번호가 일치하지 않습니다."
       only:
         admin:
           code: "4003"
@@ -45,26 +44,31 @@ response:
           message: "회원만 접근할 수 있습니다."
 
     user:
-      not:
-        found:
-          code: "5000"
-          message: "해당 사용자를 찾을 수 없습니다."
+      not.found:
+        code: "5000"
+        message: "해당 사용자를 찾을 수 없습니다."
 
     board:
-      not:
-        found:
-          code: "6000"
-          message: "해당 게시판을 찾을 수 없습니다."
-      already:
-        removed:
-          code: "6001"
-          message: "해당 게시판은 이미 삭제되었습니다."
+      not.found:
+        code: "6000"
+        message: "해당 게시판을 찾을 수 없습니다."
+      removed:
+        code: "6001"
+        message: "해당 게시판은 삭제되었습니다."
 
     post:
-      not:
-        found:
-          code: "7000"
-          message: "해당 게시글을 찾을 수 없습니다."
+      not.found:
+        code: "7000"
+        message: "해당 게시글을 찾을 수 없습니다."
+      invalid.password:
+        code: "7001"
+        message: "입력하신 비밀번호와 해당 게시판의 비밀번호가 일치하지 않습니다."
+      disabled:
+        code: "7002"
+        message: "해당 게시글은 이용할 수 없습니다."
+      removed:
+        code: "7003"
+        message: "해당 게시글은 삭제되었습니다."
 
     unknown:
       code: "9999"

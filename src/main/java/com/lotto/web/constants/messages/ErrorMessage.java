@@ -28,11 +28,13 @@ public enum ErrorMessage {
 
     /* 6000 ~ BoardError (board) */
     BOARD_NOT_FOUND("6000"),
-    BOARD_ALREADY_REMOVED("6001"),
+    BOARD_REMOVED("6001"),
 
     /* 7000 ~ PostError (post) */
     POST_NOT_FOUND("7000"),
-
+    POST_INVALID_PASSWORD("7001"),
+    POST_DISABLED("7002"),
+    POST_REMOVED("7003"),
 
     /* 9999 UknownError */
     UNKNOWN("9999");
