@@ -6,25 +6,27 @@ response:
     empty:
       code: "1"
       message: "데이터가 없습니다."
+
   error:
-    over:
-      needs:
-        number:
+    request:
+      query.param:
+        code: "100"
+        message: "요청 파라미터 오류 : {0}"
+
+    lotto:
+      over:
+        needs:
           code: "1000"
           message: "포함할 로또 번호는 6개를 초과할 수 없습니다."
-      exception:
-        number:
+        exception:
           code: "1001"
           message: "제외할 로또 번호는 41개를 초과할 수 없습니다."
-    price:
-      unit:
-        inconsistent:
-          code: "1003"
-          message: "로또 구매 단위가 정확하지 않습니다.(1,000 원 단위)"
+      price.unit:
+        code: "1002"
+        message: "로또 구매 가격 단위가 정확하지 않습니다. (1,000 원 단위)"
 
     auth:
-      duplicated:
-        email:
+      duplicated.email:
           code: "4000"
           message: "사용중인 이메일입니다."
       disabled:
@@ -34,11 +36,13 @@ response:
         password:
           code: "4002"
           message: "비빌번호가 일치하지 않습니다."
+
     user:
       not:
         found:
           code: "5000"
           message: "해당 사용자를 찾을 수 없습니다."
+
     board:
       not:
         found:

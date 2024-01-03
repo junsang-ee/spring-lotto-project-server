@@ -9,10 +9,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public enum ErrorMessage {
 
+    REQUEST_QUERY_PARAM("100"),
+
     /* 1000 ~ LottoError */
-    OVER_NEEDS_NUMBER("1000"),
-    OVER_EXCEPTION_NUMBER("1001"),
-    PRICE_UNIT_INCONSISTENT("1003"),
+    LOTTO_OVER_NEEDS("1000"),
+    LOTTO_OVER_EXCEPTION("1001"),
+    LOTTO_PRICE_UNIT("1002"),
 
     /* 4000 ~ AuthError*/
     AUTH_DUPLICATED_EMAIL("4000"),
@@ -28,9 +30,6 @@ public enum ErrorMessage {
 
     /* 7000 ~ PostError (post) */
     POST_NOT_FOUND("7000"),
-
-
-
 
 
     /* 9999 UknownError */

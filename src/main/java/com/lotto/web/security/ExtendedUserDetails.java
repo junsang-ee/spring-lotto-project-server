@@ -6,22 +6,20 @@ import lombok.Getter;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
-import java.util.UUID;
-
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class ExtendedUserDetails extends User {
 
-    private final String userId;
+    private final String id;
 
-    public ExtendedUserDetails(String userId, String email, UserRole role){
+    public ExtendedUserDetails(String id, String email, UserRole role){
         super(email, "", AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
-        this.userId = userId;
+        this.id = id;
     }
 
-    public ExtendedUserDetails(String userId, String email, UserRole role, boolean enabled){
+    public ExtendedUserDetails(String id, String email, UserRole role, boolean enabled){
         super(email, "", enabled, true, true, true,
                 AuthorityUtils.createAuthorityList("ROLE_" + role.name()));
-        this.userId = userId;
+        this.id = id;
     }
 }
