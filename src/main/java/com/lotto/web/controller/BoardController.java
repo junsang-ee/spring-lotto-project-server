@@ -11,6 +11,7 @@ import com.lotto.web.service.BoardService;
 import com.lotto.web.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +38,10 @@ public class BoardController extends BaseController {
     }
 
     @PostMapping("/{boardId}/post")
-    public ApiSuccessResponse<Boolean> savePost(@PathVariable String boardId,
+    public ApiSuccessResponse<Boolean> savePost(@AuthenticationPrincipal(expression = "id") String userId,
+                                                @PathVariable String boardId,
                                                 @RequestBody PostSaveRequest request) {
-        return wrap(postService.save(boardId, request));
+        return wrap(postService.save(userId, boardId, request));
     }
 
 }

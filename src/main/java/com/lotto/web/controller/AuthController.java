@@ -1,13 +1,17 @@
 package com.lotto.web.controller;
 
 import com.lotto.web.constants.UserRole;
+import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.TokenResponse;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.service.AuthService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -17,12 +21,14 @@ public class AuthController extends BaseController {
 
     private final AuthService authService;
 
+
     /* 로그인 */
     @PostMapping("/login")
-    public ApiSuccessResponse<TokenResponse> login() {
-        return null;
+    public ApiSuccessResponse<TokenResponse> login(HttpServletRequest request,
+                                                   @RequestBody LoginRequest loginRequest) {
+        String userAgent = request.getHeader("User-Agent");
+        return wrap(new TokenResponse(authService.login(userAgent, loginRequest)));
     }
-
 
     /* 일반 사용자 회원가입 */
     @PostMapping("/signup")
@@ -32,8 +38,8 @@ public class AuthController extends BaseController {
 
     /* 관리자 회원가입 */
     @PostMapping("/signup/admin")
-    public ApiSuccessResponse<UserEntity> signupAdmin() {
-        return null;
+    public ApiSuccessResponse<UserEntity> signupAdmin(@RequestBody SignupRequest request) {
+        return wrap(authService.signup(UserRole.ADMIN, request));
     }
 
     @PatchMapping("/{userId}")

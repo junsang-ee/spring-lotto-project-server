@@ -1,6 +1,7 @@
 package com.lotto.web.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lotto.web.constants.PostActivationStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,4 +23,8 @@ public class ReplyEntity extends AbstractPostEntity {
     @JoinColumn(name = "parentPost", nullable = false)
     private PostEntity parentPost;
 
+    @PrePersist
+    public void onPrevisionPersist() {
+        super.setStatus(PostActivationStatus.NORMAL);
+    }
 }

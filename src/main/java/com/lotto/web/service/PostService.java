@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface PostService {
-    boolean save(String boardId, PostSaveRequest request);
+    boolean save(String userId, String boardId, PostSaveRequest request);
 
     PostEntity get(String PostId);
 

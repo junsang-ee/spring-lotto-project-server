@@ -11,7 +11,7 @@ public class PostSaveRequest {
 
     private String content;
 
-    private PostDisclosureType postDisclosureType;
+    private PostDisclosureType disclosureType;
 
     private String password;
 

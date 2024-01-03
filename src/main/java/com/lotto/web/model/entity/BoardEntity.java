@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "board")
 @Entity(name = "board")
-public class BoardEntity extends AbstractBoardBaseEntity {
+public class BoardEntity extends CreationUserEntity {
 
     @Column(nullable = false)
     private String name;

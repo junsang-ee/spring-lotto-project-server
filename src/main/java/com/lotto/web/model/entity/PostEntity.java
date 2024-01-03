@@ -36,10 +36,6 @@ public class PostEntity extends AbstractPostEntity {
     @JoinColumn(name = "parentBoard", nullable = false)
     private BoardEntity parentBoard;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "writer")
-    private UserEntity writer;
-
     @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY)
     private List<ReplyEntity> replies;
 

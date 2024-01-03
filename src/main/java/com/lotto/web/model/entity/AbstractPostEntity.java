@@ -10,14 +10,10 @@ import javax.persistence.*;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class AbstractPostEntity extends AbstractBoardBaseEntity {
+public abstract class AbstractPostEntity extends CreationUserEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PostActivationStatus status;
 
-//    @PrePersist
-//    public void onPrevisionPersist() {
-//        this.status = PostActivationStatus.NORMAL;
-//    }
 }

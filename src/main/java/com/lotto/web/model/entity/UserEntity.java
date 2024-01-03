@@ -20,6 +20,7 @@ public class UserEntity extends CreationTimestampEntity {
     @Column(nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
@@ -32,12 +33,16 @@ public class UserEntity extends CreationTimestampEntity {
     private UserStatus status;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "writer", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<PostEntity> posts;
 
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<BoardEntity> boards;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+    private List<ReplyEntity> replies;
 
     @PrePersist
     private void onPrevisionPersist() {
