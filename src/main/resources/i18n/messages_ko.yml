@@ -36,6 +36,13 @@ response:
         password:
           code: "4002"
           message: "비빌번호가 일치하지 않습니다."
+      only:
+        admin:
+          code: "4003"
+          message: "관리자만 접근할 수 있습니다."
+        user:
+          code: "4004"
+          message: "회원만 접근할 수 있습니다."
 
     user:
       not:
