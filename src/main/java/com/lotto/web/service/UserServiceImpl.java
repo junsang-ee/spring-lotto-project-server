@@ -74,7 +74,6 @@ public class UserServiceImpl implements UserService {
         );
 
         if (passwordEncoder.matches(password, user.getPassword())) {
-            log.info("password matched!");
             if (user.getStatus() == UserStatus.DISABLED)
                 throw new AuthException(ErrorMessage.AUTH_DISABLED);
             return user;

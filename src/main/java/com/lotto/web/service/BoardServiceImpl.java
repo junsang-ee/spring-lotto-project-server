@@ -2,18 +2,20 @@ package com.lotto.web.service;
 
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
+import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.messages.ErrorMessage;
+import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.response.BoardListEntryResponse;
 import com.lotto.web.model.dto.response.BoardListResponse;
-import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.entity.BoardEntity;
+import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.repository.BoardRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,6 +27,8 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
+    private final UserService userService;
+
     @Override
     public BoardEntity get(String boardId) {
         return boardRepository.findById(boardId).orElseThrow(
@@ -34,13 +38,15 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public BoardSaveResponse save(BoardSaveRequest request) {
-        BoardEntity entity = new BoardEntity();
-        setBoardEntity(entity, request);
-        BoardEntity savedEntity = boardRepository.save(entity);
-        BoardSaveResponse result = new BoardSaveResponse();
-        setBoardResponse(savedEntity, result);
-        return result;
+    public boolean save(String userId, BoardSaveRequest request) {
+        UserEntity user = userService.getUser(userId);
+        if (user.getRole() != UserRole.ADMIN) {
+            throw new AuthException(ErrorMessage.AUTH_ONLY_ADMIN);
+        }
+        BoardEntity board = new BoardEntity();
+        setBoardEntity(user, board, request);
+        boardRepository.save(board);
+        return true;
     }
 
     @Override
@@ -77,12 +83,10 @@ public class BoardServiceImpl implements BoardService {
         return true;
     }
 
-    private void setBoardResponse(BoardEntity entity, BoardSaveResponse response) {
-        response.setBoardName(entity.getName());
-    }
-
-    private void setBoardEntity(BoardEntity entity,
+    private void setBoardEntity(UserEntity user,
+                                BoardEntity entity,
                                 BoardSaveRequest request) {
+        entity.setCreatedBy(user);
         entity.setName(request.getName());
         entity.setAccessType(request.getAccessType());
     }

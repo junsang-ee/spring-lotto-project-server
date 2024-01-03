@@ -5,6 +5,7 @@ import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -13,11 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class PostController extends BaseController {
 
     private final PostService postService;
-
-    @PostMapping
-    public ApiSuccessResponse<Boolean> save(@RequestBody PostSaveRequest request) {
-        return null;
-    }
 
     @GetMapping("/{postId}")
     public ApiSuccessResponse<PostEntity> get(@PathVariable String postId,

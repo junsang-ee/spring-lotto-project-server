@@ -49,7 +49,7 @@ public class JwtTokenProvider {
 
     public boolean isValid(String token) {
         try {
-            log.info("valid... {}", token);
+            log.info("validToken :: {}", token);
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(jwtConfig.getEncodedSecret())
                     .parseClaimsJws(token);
