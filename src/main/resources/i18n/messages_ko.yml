@@ -68,7 +68,14 @@ response:
         message: "해당 게시글은 이용할 수 없습니다."
       removed:
         code: "7003"
-        message: "해당 게시글은 삭제되었습니다."
+        message: "해당 게시글은 이미 삭제된 게시물입니다."
+      only:
+        edit.writer:
+          code: "7004"
+          message: "게시글은 관리자 또는 작성한 본인만 수정할 수 있습니다."
+        delete.writer:
+          code: "7005"
+          message: "게시글은 관리자 또는 작성한 본인만 삭제할 수 있습니다."
 
     unknown:
       code: "9999"

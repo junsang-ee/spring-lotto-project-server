@@ -35,6 +35,8 @@ public enum ErrorMessage {
     POST_INVALID_PASSWORD("7001"),
     POST_DISABLED("7002"),
     POST_REMOVED("7003"),
+    POST_ONLY_EDIT_WRITER("7004"),
+    POST_ONLY_DELETE_WRITER("7005"),
 
     /* 9999 UknownError */
     UNKNOWN("9999");

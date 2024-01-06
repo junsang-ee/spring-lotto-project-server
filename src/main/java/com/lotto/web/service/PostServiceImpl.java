@@ -1,11 +1,14 @@
 package com.lotto.web.service;
 
+import com.lotto.web.constants.MethodType;
 import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.constants.PostDisclosureType;
 import com.lotto.web.constants.messages.ErrorMessage;
+import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.PostSaveRequest;
+import com.lotto.web.model.dto.request.PostUpdateRequest;
 import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
 import com.lotto.web.model.entity.PostEntity;
@@ -46,11 +49,32 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDetailResponse detail(String postId, String password) {
+    @Transactional
+    public boolean delete(String userId, String postId) {
         PostEntity post = get(postId);
-        validPost(post, password);
+        validPost(post, null, MethodType.DELETE, userId);
+        post.setStatus(PostActivationStatus.REMOVED);
+        postRepository.save(post);
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean update(String userId, String postId, PostUpdateRequest request) {
+        PostEntity post = get(postId);
+        validPost(post, null, MethodType.UPDATE, userId);
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        postRepository.save(post);
+        return true;
+    }
+
+    @Override
+    public PostDetailResponse detail(String userId, String postId, String password) {
+        PostEntity post = get(postId);
+        validPost(post, password, MethodType.GET, null);
         PostDetailResponse result = new PostDetailResponse();
-        setPostDetail(post, result);
+        setPostDetail(userId, post, result);
         return result;
     }
 
@@ -82,20 +106,36 @@ public class PostServiceImpl implements PostService {
         } else entity.setPassword(null);
     }
 
-    private void setPostDetail(PostEntity entity, PostDetailResponse response) {
+    private void setPostDetail(String userId, PostEntity entity, PostDetailResponse response) {
+        if (entity.getCreatedBy() == userService.getUser(userId)) {
+            response.setMine(true);
+        } else response.setMine(false);
         response.setTitle(entity.getTitle());
         response.setContent(entity.getContent());
     }
 
-    private void validPost(PostEntity post, String password) {
+    private void validPost(PostEntity post, String password, MethodType type, String userId) {
         switch (post.getStatus()) {
             case REMOVED:
                 throw new InvalidStateException(ErrorMessage.POST_REMOVED);
             case DISABLED:
                 throw new InvalidStateException(ErrorMessage.POST_DISABLED);
             case NORMAL:
-                if (!passwordEncoder.matches(password, post.getPassword()))
-                    throw new InvalidStateException(ErrorMessage.POST_INVALID_PASSWORD);
+                if (type == MethodType.GET) {
+                    if (!passwordEncoder.matches(password, post.getPassword()))
+                        throw new InvalidStateException(ErrorMessage.POST_INVALID_PASSWORD);
+                } else {
+                    if (userService.getUser(userId) != post.getCreatedBy()) {
+                        if (type == MethodType.DELETE)
+                            throw new InvalidStateException(ErrorMessage.POST_ONLY_DELETE_WRITER);
+                        else throw new InvalidStateException(ErrorMessage.POST_ONLY_DELETE_WRITER);
+                    }
+
+                }
+                break;
+            default:
+                throw new InvalidStateException(ErrorMessage.UNKNOWN);
+
         }
     }
 

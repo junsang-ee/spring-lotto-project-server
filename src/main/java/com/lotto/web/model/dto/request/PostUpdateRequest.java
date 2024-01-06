@@ -1,17 +1,12 @@
-package com.lotto.web.model.dto.response;
+package com.lotto.web.model.dto.request;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
-public class PostDetailResponse {
-
+public class PostUpdateRequest {
     private String title;
-
     private String content;
-
-    private boolean mine;
 }
