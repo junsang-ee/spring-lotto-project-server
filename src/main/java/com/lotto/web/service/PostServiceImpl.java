@@ -4,7 +4,6 @@ import com.lotto.web.constants.MethodType;
 import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.constants.PostDisclosureType;
 import com.lotto.web.constants.messages.ErrorMessage;
-import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.PostSaveRequest;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -127,8 +125,9 @@ public class PostServiceImpl implements PostService {
                 } else {
                     if (userService.getUser(userId) != post.getCreatedBy()) {
                         if (type == MethodType.DELETE)
-                            throw new InvalidStateException(ErrorMessage.POST_ONLY_DELETE_WRITER);
-                        else throw new InvalidStateException(ErrorMessage.POST_ONLY_DELETE_WRITER);
+                            throw new InvalidStateException(ErrorMessage.POST_ONLY_REMOVE_WRITER);
+                        else if (type == MethodType.UPDATE)
+                            throw new InvalidStateException(ErrorMessage.POST_ONLY_EDIT_WRITER);
                     }
 
                 }

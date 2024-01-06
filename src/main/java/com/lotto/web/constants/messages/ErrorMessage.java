@@ -36,7 +36,14 @@ public enum ErrorMessage {
     POST_DISABLED("7002"),
     POST_REMOVED("7003"),
     POST_ONLY_EDIT_WRITER("7004"),
-    POST_ONLY_DELETE_WRITER("7005"),
+    POST_ONLY_REMOVE_WRITER("7005"),
+
+    /* 8000 ~ PostError (reply) */
+    REPLY_NOT_FOUND("8000"),
+    REPLY_DISABLED("8001"),
+    REPLY_REMOVED("8002"),
+    REPLY_ONLY_EDIT_WRITER("8003"),
+    REPLY_ONLY_REMOVE_WRITER("8004"),
 
     /* 9999 UknownError */
     UNKNOWN("9999");
