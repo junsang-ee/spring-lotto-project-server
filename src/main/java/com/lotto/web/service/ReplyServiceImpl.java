@@ -5,6 +5,7 @@ import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
+import com.lotto.web.model.dto.request.ReplySaveRequest;
 import com.lotto.web.model.dto.request.ReplyUpdateRequest;
 import com.lotto.web.model.entity.ReplyEntity;
 import com.lotto.web.repository.ReplyRepository;
@@ -21,6 +22,17 @@ public class ReplyServiceImpl implements ReplyService {
     private final ReplyRepository replyRepository;
 
     private final UserService userService;
+
+    private  final PostService postService;
+
+    @Override
+    @Transactional
+    public boolean save(String userId, String postId, ReplySaveRequest request) {
+        ReplyEntity reply = new ReplyEntity();
+        setSaveReply(userId, postId, reply, request);
+        replyRepository.save(reply);
+        return true;
+    }
 
     @Override
     public ReplyEntity get(String replyId) {
@@ -47,6 +59,12 @@ public class ReplyServiceImpl implements ReplyService {
         reply.setStatus(PostActivationStatus.REMOVED);
         replyRepository.save(reply);
         return true;
+    }
+
+    private void setSaveReply(String userId, String postId, ReplyEntity entity, ReplySaveRequest request) {
+        entity.setContent(request.getContent());
+        entity.setCreatedBy(userService.getUser(userId));
+        entity.setParentPost(postService.get(postId));
     }
 
     private void valid(ReplyEntity reply, MethodType type, String userId) {
