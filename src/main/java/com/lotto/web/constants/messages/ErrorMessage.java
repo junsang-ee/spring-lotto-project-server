@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 public enum ErrorMessage {
 
     REQUEST_QUERY_PARAM("100"),
+    REQUEST_BODY_FIELD("101"),
 
     /* 1000 ~ LottoError */
     LOTTO_OVER_NEEDS("1000"),

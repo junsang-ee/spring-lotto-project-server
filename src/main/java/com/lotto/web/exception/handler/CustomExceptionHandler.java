@@ -8,6 +8,7 @@ import com.lotto.web.exception.custom.NotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -46,5 +47,11 @@ public class CustomExceptionHandler extends BaseExceptionHandler{
         ConstraintViolation<?> violation = ((ConstraintViolation<?>) ex.getConstraintViolations().toArray()[0]);
         String message = "< " + violation.getPropertyPath() + "> " + violation.getMessage();
         return toResponse(ErrorMessage.REQUEST_QUERY_PARAM, new String[] {message});
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Object handleValidationViolation(MethodArgumentNotValidException ex) {
+        String arg = String.valueOf(ex.getBindingResult().getErrorCount());
+        return toResponse(ErrorMessage.REQUEST_BODY_FIELD, new String[]{arg});
     }
 }
