@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.concurrent.Callable;
 
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class AuthController extends BaseController {
     /* 로그인 */
     @PostMapping("/login")
     public ApiSuccessResponse<TokenResponse> login(HttpServletRequest request,
-                                                   @RequestBody LoginRequest loginRequest) {
+                                                   @Valid @RequestBody LoginRequest loginRequest) {
         String userAgent = request.getHeader("User-Agent");
         return wrap(new TokenResponse(authService.login(userAgent, loginRequest)));
     }

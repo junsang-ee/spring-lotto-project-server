@@ -1,13 +1,11 @@
 package com.lotto.web.exception.handler;
 
 import com.lotto.web.constants.messages.ErrorMessage;
-import com.lotto.web.exception.custom.AuthException;
-import com.lotto.web.exception.custom.DuplicatedException;
-import com.lotto.web.exception.custom.InvalidStateException;
-import com.lotto.web.exception.custom.NotFoundException;
+import com.lotto.web.exception.custom.*;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.Objects;
 
 
 @Slf4j
@@ -41,6 +40,11 @@ public class CustomExceptionHandler extends BaseExceptionHandler{
         return toResponse(ex);
     }
 
+    @ExceptionHandler(InvalidBasicFormatException.class)
+    public Object handleAbsent(InvalidBasicFormatException ex) {
+        return toResponse(ex.error(), new String[] {ex.getFieldName()});
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public Object handleValidationViolation(ConstraintViolationException ex) {
         log.info("Parameter Error :: {}", ex.getConstraintViolations().size());
@@ -51,7 +55,9 @@ public class CustomExceptionHandler extends BaseExceptionHandler{
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Object handleValidationViolation(MethodArgumentNotValidException ex) {
-        String arg = String.valueOf(ex.getBindingResult().getErrorCount());
+        BindingResult result = ex.getBindingResult();
+        String arg = String.valueOf(result.getErrorCount());
+        String fieldName = Objects.requireNonNull(result.getFieldError()).getField();
         return toResponse(ErrorMessage.REQUEST_BODY_FIELD, new String[]{arg});
     }
 }
