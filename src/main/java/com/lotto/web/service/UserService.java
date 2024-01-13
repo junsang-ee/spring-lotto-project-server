@@ -23,6 +23,8 @@ public interface UserService {
 
     UserEntity save(UserRole role, SignupRequest request);
 
+    boolean getIsDuplicatedEmail(String email);
+
     void checkAccount(UserEntity user, String password);
 
     boolean updatePassword(String userId, String oldPassword, String newPassword);

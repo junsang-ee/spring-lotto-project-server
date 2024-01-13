@@ -17,9 +17,14 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<PostEntity, String>,
         QueryDslPredicateExtendedExecutor<PostEntity> {
 
-    @Query(value = "select p.title, p.disclosure_type, u.email, p.created_at, p.view_count from post p left join user u on p.created_by = u.id where p.status=:status and p.parent_board=:boardId",
+    @Query(value = "SELECT p.title, p.disclosure_type, u.email, p.created_at, p.view_count " +
+                     "FROM post p " +
+                "LEFT JOIN user u on p.created_by = u.id " +
+                    "WHERE p.status=:status " +
+                      "AND p.parent_board=:boardId",
             nativeQuery = true)
-    List<PostListQueryResult> findAllByParentBoardAndStatus(@Param("status") PostActivationStatus status,
-                                                            @Param("boardId") String boardId);
+    Page<PostListQueryResult> findAllByParentBoardAndStatus(@Param("status") PostActivationStatus status,
+                                                                  @Param("boardId") String boardId,
+                                                                  Pageable pageable);
 
 }

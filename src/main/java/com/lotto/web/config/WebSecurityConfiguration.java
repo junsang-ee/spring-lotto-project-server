@@ -38,13 +38,13 @@ public class WebSecurityConfiguration {
     };
 
     public static final String[] ADMIN_ANT_PATH = {
-        "/api/test"
+        "/api/admin/**"
     };
 
     public static final String[] TEST_PATH = {
         "/api/lotto/**",
-        "/api/admin/**",
-        "/api/board/**"
+        "/api/board/**",
+        "/api/user/me"
     };
 
     @Bean
@@ -58,7 +58,7 @@ public class WebSecurityConfiguration {
         return http.authorizeRequests()
                 .antMatchers(PERMIT_ANT_PATH).permitAll()
                 .antMatchers(TEST_PATH).permitAll()
-                .antMatchers(ADMIN_ANT_PATH).permitAll()
+                .antMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().cors().disable()

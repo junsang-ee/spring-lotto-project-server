@@ -94,6 +94,11 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public boolean getIsDuplicatedEmail(String email) {
+        return !userRepository.findByEmail(email).isEmpty();
+    }
+
     private void setUser(UserEntity entity, UserRole role, SignupRequest request) {
         entity.setRole(role);
         entity.setEmail(request.getEmail());

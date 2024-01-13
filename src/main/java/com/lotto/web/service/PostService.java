@@ -6,10 +6,10 @@ import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
 import com.lotto.web.model.entity.PostEntity;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PostService {
     boolean save(String userId, String boardId, PostSaveRequest request);
@@ -22,5 +22,5 @@ public interface PostService {
 
     PostDetailResponse detail(String userId, String postId, String password);
 
-    List<PostListEntryResponse> list(String boardId, Pageable pageable);
+    Page<PostListEntryResponse> list(String boardId, Pageable pageable);
 }

@@ -3,6 +3,7 @@ package com.lotto.web.controller;
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
+import com.lotto.web.model.dto.request.VerifyRequest;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.TokenResponse;
 import com.lotto.web.model.entity.UserEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.concurrent.Callable;
 
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -42,6 +42,11 @@ public class AuthController extends BaseController {
     @PostMapping("/signup/admin")
     public ApiSuccessResponse<UserEntity> signupAdmin(@RequestBody SignupRequest request) {
         return wrap(authService.signup(UserRole.ADMIN, request));
+    }
+
+    @PostMapping("/email/code")
+    public ApiSuccessResponse<Boolean> sendCode(@RequestBody @Valid VerifyRequest request) {
+        return wrap(authService.sendVerifyCode(request));
     }
 
     @PatchMapping("/{userId}")

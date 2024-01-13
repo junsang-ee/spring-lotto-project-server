@@ -16,6 +16,8 @@ import com.lotto.web.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -84,13 +86,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostListEntryResponse> list(String boardId, Pageable pageable) {
-        List<PostListQueryResult> result =
+    public Page<PostListEntryResponse> list(String boardId, Pageable pageable) {
+        Page<PostListQueryResult> list =
                 postRepository.findAllByParentBoardAndStatus(
                         PostActivationStatus.NORMAL,
-                        boardId
+                        boardId,
+                        pageable
                 );
-        return result.stream().map(PostListEntryResponse::new).collect(Collectors.toList());
+
+        return new PageImpl<>(
+                list.stream().map(PostListEntryResponse::new).collect(Collectors.toList()),
+                list.getPageable(),
+                list.getTotalElements());
     }
 
     private void setPostEntity(String userId, String boardId, PostEntity entity, PostSaveRequest request) {
