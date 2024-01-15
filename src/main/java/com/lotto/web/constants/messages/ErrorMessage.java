@@ -27,6 +27,7 @@ public enum ErrorMessage {
     AUTH_INVALID_PASSWORD("4002"),
     AUTH_ONLY_ADMIN("4003"),
     AUTH_ONLY_USER("4004"),
+    AUTH_SEND_EMAIL("4005"),
 
     /* 5000 ~ UserError */
     USER_NOT_FOUND("5000"),

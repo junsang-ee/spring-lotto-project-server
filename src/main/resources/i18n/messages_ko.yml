@@ -42,8 +42,8 @@ response:
 
     auth:
       duplicated.email:
-          code: "4000"
-          message: "사용중인 이메일입니다."
+        code: "4000"
+        message: "사용중인 이메일입니다."
       disabled:
         code: "4001"
         message: "이용중지된 계정입니다."
@@ -57,7 +57,9 @@ response:
         user:
           code: "4004"
           message: "회원만 접근할 수 있습니다."
-
+      send.email:
+        code: "4005"
+        message: "이메일 인증 번호 전송이 실패하였습니다."
     user:
       not.found:
         code: "5000"
