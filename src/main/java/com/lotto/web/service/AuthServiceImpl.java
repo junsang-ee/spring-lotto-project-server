@@ -48,11 +48,11 @@ public class AuthServiceImpl implements AuthService {
         String email = request.getEmail();
         if (userService.getIsDuplicatedEmail(email))
             throw new DuplicatedException(ErrorMessage.AUTH_DUPLICATED_EMAIL);
-        String authCode = getAuthCode();
         mailService.sendMail(
                 email,
-                MailTemplate.VERIFY_EMAIL.getSubject(),
-                authCode);
+                MailTemplate.VERIFY_EMAIL,
+                getAuthCode()
+        );
         return true;
     }
 

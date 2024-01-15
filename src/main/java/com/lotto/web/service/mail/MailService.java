@@ -1,6 +1,8 @@
 package com.lotto.web.service.mail;
 
+import com.lotto.web.model.dto.mail.MailTemplate;
+
 public interface MailService {
 
-    void sendMail(String email, String title, String detail);
+    void sendMail(String email, MailTemplate template, String authCode);
 }
