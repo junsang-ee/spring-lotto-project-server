@@ -3,7 +3,8 @@ package com.lotto.web.controller;
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
-import com.lotto.web.model.dto.request.VerifyRequest;
+import com.lotto.web.model.dto.request.VerifyAuthRequest;
+import com.lotto.web.model.dto.request.VerifyEmailRequest;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.TokenResponse;
 import com.lotto.web.model.entity.UserEntity;
@@ -45,8 +46,13 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/email/code")
-    public ApiSuccessResponse<Boolean> sendCode(@RequestBody @Valid VerifyRequest request) {
+    public ApiSuccessResponse<Boolean> sendCode(@RequestBody @Valid VerifyEmailRequest request) {
         return wrap(authService.sendVerifyCode(request));
+    }
+
+    @PostMapping("/email/verify")
+    public ApiSuccessResponse<Boolean> verifyEmail(@RequestBody @Valid VerifyAuthRequest request) {
+        return wrap(authService.verifyEmail(request));
     }
 
     @PatchMapping("/{userId}")
