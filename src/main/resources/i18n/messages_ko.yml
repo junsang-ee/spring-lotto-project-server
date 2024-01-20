@@ -28,6 +28,12 @@ response:
       invalid.email:
         code: "105"
         message: "이메일 형식이 맞지 않습니다."
+      field.only.number:
+        code: "106"
+        message: "{0} 은(는) 숫자만 입력 가능합니다."
+      auth.code.length.invalid:
+        code: "107"
+        message: "인증 코드는 5자리 숫자여야 합니다."
     lotto:
       over:
         needs:
@@ -43,7 +49,7 @@ response:
     auth:
       duplicated.email:
         code: "4000"
-        message: "사용중인 이메일입니다."
+        message: "사용중인 이메일 입니다."
       disabled:
         code: "4001"
         message: "이용중지된 계정입니다."
@@ -60,6 +66,14 @@ response:
       send.email:
         code: "4005"
         message: "이메일 인증 번호 전송이 실패하였습니다."
+      code:
+        invalid:
+          code: "4010"
+          message: "잘못된 인증 코드 입니다."
+        expired:
+          code: "4011"
+          message: "인증 시간이 만료되었습니다. 인증 코드를 재발급받으세요."
+
     user:
       not.found:
         code: "5000"

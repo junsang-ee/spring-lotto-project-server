@@ -3,6 +3,7 @@ package com.lotto.web.config.validator;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidBasicFormatException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
@@ -40,11 +41,25 @@ public class BasicValidatorImpl implements ConstraintValidator<BasicValidator, S
             if (!isValidEmail(value))
                 throw new InvalidBasicFormatException(ErrorMessage.REQUEST_INVALID_EMAIL, null);
         }
+
+        if (fieldName.equals("AuthCode")) {
+            isValidAuthCode(value, fieldName);
+        }
         return true;
     }
 
     private boolean isValidEmail(String email) {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
+    }
+
+    private void isValidAuthCode(String value, String fieldName) {
+        try {
+            int result = Integer.parseInt(value);
+            if (!(10000 <= result && result <= 99999))
+                throw new InvalidBasicFormatException(ErrorMessage.REQUEST_AUTH_CODE_LENGTH_INVALID, null);
+        } catch (NumberFormatException e) {
+            throw new InvalidBasicFormatException(ErrorMessage.REQUEST_FIELD_ONLY_NUMBER, fieldName);
+        }
     }
 }

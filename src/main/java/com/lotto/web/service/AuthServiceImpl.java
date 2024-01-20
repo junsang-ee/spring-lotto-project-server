@@ -3,7 +3,9 @@ package com.lotto.web.service;
 import com.lotto.web.config.jwt.JwtTokenProvider;
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.messages.ErrorMessage;
+import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.DuplicatedException;
+import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.model.dto.mail.MailTemplate;
 import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
@@ -63,19 +65,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean verifyEmail(VerifyAuthRequest request) {
-        int cachedAuthCode = caffeineService.get(request.getEmail());
-        if (cachedAuthCode != Integer.parseInt(request.getAuthCode())) {
-            log.info("not!!");
-        } else {
-            log.info("ok!!");
+        try {
+            String cachedAuthCode = caffeineService.get(request.getEmail());
+            if (!cachedAuthCode.equals(request.getAuthCode())) {
+                throw new AuthException(ErrorMessage.AUTH_CODE_INVALID);
+            }
+            caffeineService.remove(request.getEmail());
+            return true;
+        } catch (NullPointerException e) {
+            throw new AuthException(ErrorMessage.AUTH_CODE_EXPIRED);
         }
-        return true;
     }
 
     private String getAuthCode() {
         Random random = new Random();
-        int randomNubmer = random.nextInt(88888) + 11111;
-        return String.valueOf(randomNubmer);
+        int randomNumber = random.nextInt(88888) + 11111;
+        return String.valueOf(randomNumber);
     }
 
     private void saveAuthCache(String email, String authCode) {

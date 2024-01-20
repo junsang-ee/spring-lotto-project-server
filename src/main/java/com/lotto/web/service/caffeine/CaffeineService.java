@@ -13,13 +13,6 @@ public class CaffeineService {
 
     private final static String CACHE_NAME = "AUTH_CACHE";
 
-//    @SuppressWarnings("unchecked")
-//    public <K, V> LoadingCache<K, V> createCache() {
-//        CaffeineCache caffeineCache = (CaffeineCache) cacheManager.getCache(CACHE_NAME);
-//        assert caffeineCache != null;
-//        return (LoadingCache<K, V>) caffeineCache.getNativeCache();
-//    }
-
     public <K, V> CaffeineCache createCache() {
         return (CaffeineCache) cacheManager.getCache(CACHE_NAME);
     }
@@ -32,7 +25,7 @@ public class CaffeineService {
         createCache().put(key, value);
     }
 
-    public <K> void remove(String cacheName, K key) {
+    public <K> void remove(K key) {
         createCache().evict(key);
     }
 }
