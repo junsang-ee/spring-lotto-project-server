@@ -35,13 +35,13 @@ public class AuthController extends BaseController {
 
     /* 일반 사용자 회원가입 */
     @PostMapping("/signup")
-    public ApiSuccessResponse<UserEntity> signup(@RequestBody SignupRequest request) {
+    public ApiSuccessResponse<Boolean> signup(@RequestBody SignupRequest request) {
         return wrap(authService.signup(UserRole.USER, request));
     }
 
     /* 관리자 회원가입 */
     @PostMapping("/signup/admin")
-    public ApiSuccessResponse<UserEntity> signupAdmin(@RequestBody SignupRequest request) {
+    public ApiSuccessResponse<Boolean> signupAdmin(@RequestBody SignupRequest request) {
         return wrap(authService.signup(UserRole.ADMIN, request));
     }
 
@@ -53,6 +53,11 @@ public class AuthController extends BaseController {
     @PostMapping("/email/verify")
     public ApiSuccessResponse<Boolean> verifyEmail(@RequestBody @Valid VerifyAuthRequest request) {
         return wrap(authService.verifyEmail(request));
+    }
+
+    @PatchMapping("/password/reset")
+    public ApiSuccessResponse<Boolean> resetPassword(@RequestBody @Valid VerifyEmailRequest request) {
+        return wrap(authService.resetPassword(request));
     }
 
     @PatchMapping("/{userId}")

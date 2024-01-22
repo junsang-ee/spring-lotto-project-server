@@ -9,12 +9,14 @@ import com.lotto.web.model.entity.UserEntity;
 
 public interface AuthService {
 
-    UserEntity signup(UserRole role, SignupRequest request);
+    boolean signup(UserRole role, SignupRequest request);
 
     String login(String userAgent, LoginRequest login);
 
     boolean sendVerifyCode(VerifyEmailRequest request);
 
     boolean verifyEmail(VerifyAuthRequest request);
+
+    boolean resetPassword(VerifyEmailRequest request);
 
 }

@@ -30,7 +30,7 @@ public class MailServiceImpl implements MailService {
     private final JavaMailSender mailSender;
 
     @Override
-    public void sendMail(String email, MailTemplate template, String authCode) {
+    public void sendMail(String email, MailTemplate template, String code) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(
@@ -39,18 +39,21 @@ public class MailServiceImpl implements MailService {
                     StandardCharsets.UTF_8.name()
             );
             String content = loadHtmlContent();
-            if (content == null) {
-                content = "<div>";
-                content +=  "<div style='text-align=center;'><h1>" + template.getSubject() + "</h1></div>";
-                content +=  "<div style='text-align=center;'><h1> 이메일 인증 코드 : " + authCode + "</h1></div>";
-                content +="</div>";
-            } else {
+            if (content != null) {
                 content = content.replace("${subject}", template.getSubject());
-                content = content.replace("${authCode}", authCode);
+                content = content.replace("${titleSubject}",
+                        template == MailTemplate.VERIFY_EMAIL ? "인증 코드" : "임시 비밀번호");
+                content = content.replace("${tempCode}", code);
+                content = content.replace("${notice}", template.getNotice());
+            } else {
+                if (template == MailTemplate.VERIFY_EMAIL)
+                    content = "<div> 인증 코드 : " + code + "</div>";
+                else content = "<div> 임시 비밀번호 : " + code + "</div>";
             }
+
             helper.setFrom(MailConstants.SENDER);
             helper.setTo(email);
-            helper.setSubject(MailTemplate.VERIFY_EMAIL.getSubject());
+            helper.setSubject(template.getSubject());
             helper.setText(content, true);
             mailSender.send(message);
         } catch (MessagingException e) {

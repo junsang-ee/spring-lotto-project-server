@@ -4,5 +4,5 @@ import com.lotto.web.model.dto.mail.MailTemplate;
 
 public interface MailService {
 
-    void sendMail(String email, MailTemplate template, String authCode);
+    void sendMail(String email, MailTemplate template, String code);
 }

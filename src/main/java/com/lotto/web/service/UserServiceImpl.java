@@ -37,7 +37,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUser(String userId) {
+        UserEntity user = get(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
+        if (user.getStatus() == UserStatus.DISABLED)
+            throw new AuthException(ErrorMessage.AUTH_DISABLED);
+        return user;
+    }
+
+    @Override
+    public UserEntity getUserForAdmin(String userId) {
         return get(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
+    }
+
+    @Override
+    public UserEntity getUserByEmailForAdmin(String email) {
+        return getByEmail(email).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
     }
@@ -52,9 +69,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity getUserByEmail(String email) {
-        return getByEmail(email).orElseThrow(
+        UserEntity user = getByEmail(email).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
+        if (user.getStatus() == UserStatus.DISABLED)
+            throw new AuthException(ErrorMessage.AUTH_DISABLED);
+        return user;
     }
 
     @Override
@@ -64,13 +84,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserEntity save(UserRole role, SignupRequest request) {
+    public boolean save(UserRole role, SignupRequest request) {
         if (getByEmail(request.getEmail()).isPresent()) {
             throw new DuplicatedException(ErrorMessage.AUTH_DUPLICATED_EMAIL);
         }
         UserEntity user = new UserEntity();
         setUser(user, role, request);
-        return userRepository.save(user);
+        userRepository.save(user);
+        return true;
     }
 
     @Override
@@ -96,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean getIsDuplicatedEmail(String email) {
-        return !userRepository.findByEmail(email).isEmpty();
+        return userRepository.findByEmail(email).isPresent();
     }
 
     private void setUser(UserEntity entity, UserRole role, SignupRequest request) {

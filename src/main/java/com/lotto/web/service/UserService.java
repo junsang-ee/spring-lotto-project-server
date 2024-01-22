@@ -15,13 +15,17 @@ public interface UserService {
 
     UserEntity getUser(String userId);
 
+    UserEntity getUserForAdmin(String userId);
+
+    UserEntity getUserByEmailForAdmin(String email);
+
     UserDetailResponse getDetail(String userId);
 
     Optional<UserEntity> getByEmail(String email);
 
     UserEntity getUserByEmail(String email);
 
-    UserEntity save(UserRole role, SignupRequest request);
+    boolean save(UserRole role, SignupRequest request);
 
     boolean getIsDuplicatedEmail(String email);
 

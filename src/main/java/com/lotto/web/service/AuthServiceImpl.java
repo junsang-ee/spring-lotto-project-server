@@ -5,7 +5,7 @@ import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.DuplicatedException;
-import com.lotto.web.exception.custom.InvalidStateException;
+
 import com.lotto.web.model.dto.mail.MailTemplate;
 import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Random;
 
 @Slf4j
@@ -37,7 +38,8 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public UserEntity signup(UserRole role, SignupRequest request) {
+    @Transactional
+    public boolean signup(UserRole role, SignupRequest request) {
         return userService.save(role, request);
     }
 
@@ -67,14 +69,27 @@ public class AuthServiceImpl implements AuthService {
     public boolean verifyEmail(VerifyAuthRequest request) {
         try {
             String cachedAuthCode = caffeineService.get(request.getEmail());
-            if (!cachedAuthCode.equals(request.getAuthCode())) {
+            if (!cachedAuthCode.equals(request.getAuthCode()))
                 throw new AuthException(ErrorMessage.AUTH_CODE_INVALID);
-            }
             caffeineService.remove(request.getEmail());
             return true;
         } catch (NullPointerException e) {
             throw new AuthException(ErrorMessage.AUTH_CODE_EXPIRED);
         }
+    }
+
+    @Override
+    @Transactional
+    public boolean resetPassword(VerifyEmailRequest request) {
+        String email = request.getEmail();
+        String temp = String.valueOf(getTempPassword());
+        UserEntity user = userService.getUserByEmail(email);
+        mailService.sendMail(
+                email,
+                MailTemplate.RESET_PASSWORD,
+                temp
+        );
+        return userService.updatePassword(user.getId(), null, temp);
     }
 
     private String getAuthCode() {
@@ -86,5 +101,10 @@ public class AuthServiceImpl implements AuthService {
     private void saveAuthCache(String email, String authCode) {
         caffeineService.createCache();
         caffeineService.put(email, authCode);
+    }
+
+    private int getTempPassword() {
+        Random random = new Random();
+        return random.nextInt(888888) + 111111;
     }
 }
