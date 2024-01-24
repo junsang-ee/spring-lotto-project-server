@@ -3,18 +3,14 @@ package com.lotto.web.controller;
 import com.lotto.web.model.dto.request.PostSaveRequest;
 import com.lotto.web.model.dto.response.BoardListResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
-import com.lotto.web.model.dto.response.PostListResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
-import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.service.BoardService;
 import com.lotto.web.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin("*")
 @RequiredArgsConstructor
@@ -33,7 +29,7 @@ public class BoardController extends BaseController {
 
     @GetMapping("/{boardId}/post")
     public ApiSuccessResponse<PageResponse<PostListEntryResponse>> postList(@PathVariable String boardId,
-                                                                    Pageable pageable) {
+                                                                            Pageable pageable) {
         return page(postService.list(boardId, pageable));
     }
 

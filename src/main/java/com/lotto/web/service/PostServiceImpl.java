@@ -10,12 +10,13 @@ import com.lotto.web.model.dto.request.PostSaveRequest;
 import com.lotto.web.model.dto.request.PostUpdateRequest;
 import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
+import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
-import com.lotto.web.model.querydsl.PostListQueryResult;
 import com.lotto.web.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,9 +25,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostServiceImpl implements PostService {
@@ -87,15 +88,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostListEntryResponse> list(String boardId, Pageable pageable) {
-        Page<PostListQueryResult> list =
+        BoardEntity parentBoard = boardService.get(boardId);
+        Page<PostListEntryResponse> list =
                 postRepository.findAllByParentBoardAndStatus(
                         PostActivationStatus.NORMAL,
-                        boardId,
+                        parentBoard,
                         pageable
                 );
-
         return new PageImpl<>(
-                list.stream().map(PostListEntryResponse::new).collect(Collectors.toList()),
+                list.stream().collect(Collectors.toList()),
                 list.getPageable(),
                 list.getTotalElements());
     }
@@ -133,10 +134,8 @@ public class PostServiceImpl implements PostService {
                     if (userService.getUser(userId) != post.getCreatedBy()) {
                         if (type == MethodType.DELETE)
                             throw new InvalidStateException(ErrorMessage.POST_ONLY_REMOVE_WRITER);
-                        else if (type == MethodType.UPDATE)
-                            throw new InvalidStateException(ErrorMessage.POST_ONLY_EDIT_WRITER);
+                        throw new InvalidStateException(ErrorMessage.POST_ONLY_EDIT_WRITER);
                     }
-
                 }
                 break;
             default:
