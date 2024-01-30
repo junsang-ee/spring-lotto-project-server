@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class PostListEntryResponse {
+    private String id;
     private String title;
     private String disclosureType;
     private String email;

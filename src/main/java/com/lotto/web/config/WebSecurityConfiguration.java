@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,9 +33,13 @@ public class WebSecurityConfiguration {
     private final ApplicationContext context;
 
     public static final String[] PERMIT_ANT_PATH = {
-        "/api/auth/**",
-        "/api/post/**",
-        "/api/reply/**",
+        "/api/auth/**"
+    };
+
+    public static final String[] PERMIT_ANT_ONLY_GET_PATH = {
+        "/api/lotto/random",
+        "/api/board",
+        "/api/board/{boardId}/post"
     };
 
     public static final String[] ADMIN_ANT_PATH = {
@@ -44,7 +49,9 @@ public class WebSecurityConfiguration {
     public static final String[] TEST_PATH = {
         "/api/lotto/**",
         "/api/board/**",
-        "/api/user/me"
+        "/api/user/**",
+        "/api/post/**",
+        "/api/reply/**"
     };
 
     @Bean
@@ -57,12 +64,11 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
                 .antMatchers(PERMIT_ANT_PATH).permitAll()
-                .antMatchers(TEST_PATH).permitAll()
+                .antMatchers(HttpMethod.GET, PERMIT_ANT_ONLY_GET_PATH).permitAll()
                 .antMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().cors()
-                .and().cors().disable()
-                .csrf().disable()
+                .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().addFilterBefore(new JwtAuthenticationFilter(BeanSuppliers.beanSupplier(context, JwtTokenProvider.class)), UsernamePasswordAuthenticationFilter.class)
                 .build();

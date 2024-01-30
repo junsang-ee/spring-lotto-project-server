@@ -19,6 +19,7 @@ public interface PostRepository extends JpaRepository<PostEntity, String>,
 
     @Query(value = "SELECT " +
                       "new com.lotto.web.model.dto.response.PostListEntryResponse(" +
+                                "p.id, " +
                                 "p.title, " +
                                 "CASE " +
                                     "WHEN p.disclosureType = 'PUBLIC' then '공개' " +

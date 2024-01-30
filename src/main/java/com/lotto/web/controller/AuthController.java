@@ -7,7 +7,6 @@ import com.lotto.web.model.dto.request.VerifyAuthRequest;
 import com.lotto.web.model.dto.request.VerifyEmailRequest;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.TokenResponse;
-import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.service.AuthService;
 import lombok.RequiredArgsConstructor;
 

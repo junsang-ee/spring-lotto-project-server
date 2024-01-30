@@ -19,7 +19,7 @@ public class LottoController extends BaseController {
 
     private final LottoService lottoService;
 
-    @GetMapping("/random-list")
+    @GetMapping("/random")
     public ApiSuccessResponse<RandomLottoListResponse> randomList(@RequestParam(defaultValue = "5000") int price,
                                                                   @RequestParam(required = false) List<Integer> exceptList,
                                                                   @RequestParam(required = false) List<Integer> needsList) {
