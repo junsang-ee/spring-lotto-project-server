@@ -107,7 +107,8 @@ public class PostServiceImpl implements PostService {
         entity.setTitle(request.getTitle());
         entity.setContent(request.getContent());
         entity.setDisclosureType(request.getDisclosureType());
-        if (request.getDisclosureType() == PostDisclosureType.PRIVATE) {
+        if (request.getPassword() != null &&
+            request.getDisclosureType() == PostDisclosureType.PRIVATE) {
             entity.setPassword(passwordEncoder.encode(request.getPassword()));
         } else entity.setPassword(null);
     }

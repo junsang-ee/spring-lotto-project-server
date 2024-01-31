@@ -129,5 +129,6 @@ public class UserServiceImpl implements UserService {
     private void setUserDetail(UserEntity user, UserDetailResponse result) {
         result.setEmail(user.getEmail());
         result.setCreatedAt(user.getCreatedAt());
+        result.setRole(user.getRole());
     }
 }
