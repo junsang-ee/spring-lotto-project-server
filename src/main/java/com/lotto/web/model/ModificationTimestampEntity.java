@@ -1,7 +1,6 @@
 package com.lotto.web.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lotto.web.model.CreationTimestampEntity;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
