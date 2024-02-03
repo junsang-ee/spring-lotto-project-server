@@ -3,7 +3,7 @@ package com.lotto.web.service;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
-import com.lotto.web.model.entity.LottoHistoryEntity;
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
 import com.lotto.web.repository.LottoHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class LottoServiceImpl implements LottoService{
 
     @Override
     public LottoWinningNumbersResponse getWinningNumbersByRound(int round) {
-        LottoHistoryEntity entity = lottoHistoryRepository.findByRound(round);
+        LottoWinningHistoryEntity entity = lottoHistoryRepository.findByRound(round);
         LottoWinningNumbersResponse response = new LottoWinningNumbersResponse();
         setWinningNumbersResponse(entity, response);
         return response;
@@ -49,14 +49,14 @@ public class LottoServiceImpl implements LottoService{
 
     @Override
     public LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate) {
-        LottoHistoryEntity entity = lottoHistoryRepository.findByDrawDate(drawDate);
+        LottoWinningHistoryEntity entity = lottoHistoryRepository.findByDrawDate(drawDate);
         LottoWinningNumbersResponse response = new LottoWinningNumbersResponse();
         setWinningNumbersResponse(entity, response);
         return response;
     }
 
     @Override
-    public List<LottoHistoryEntity> getAllWinningNumbers() {
+    public List<LottoWinningHistoryEntity> getAllWinningNumbers() {
         return lottoHistoryRepository.findAll();
     }
 
@@ -121,7 +121,7 @@ public class LottoServiceImpl implements LottoService{
         lottoListGetResponse.setLottoList(lottoDetails);
     }
 
-    private void setWinningNumbersResponse(LottoHistoryEntity entity,
+    private void setWinningNumbersResponse(LottoWinningHistoryEntity entity,
                                            LottoWinningNumbersResponse response) {
         response.setFirstNumber(entity.getFirstNumber());
         response.setSecondNumber(entity.getSecondNumber());

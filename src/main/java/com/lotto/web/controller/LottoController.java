@@ -3,7 +3,7 @@ package com.lotto.web.controller;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
-import com.lotto.web.model.entity.LottoHistoryEntity;
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.service.LottoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +40,7 @@ public class LottoController extends BaseController {
 
     /* 모든 당첨 번호 가져오기 */
     @GetMapping("/winning/list")
-    public ApiSuccessResponse<List<LottoHistoryEntity>> allWinningNumbers() {
+    public ApiSuccessResponse<List<LottoWinningHistoryEntity>> allWinningNumbers() {
         return wrap(lottoService.getAllWinningNumbers());
     }
 }
