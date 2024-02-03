@@ -62,7 +62,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardListResponse listForUser() {
         List<BoardListEntryResponse> boardDetails =
                 boardRepository.getAllByBoardByAccessTypeAndStatus(
-                        BoardAccessType.ALL,
+                        BoardAccessType.USER,
                         BoardActivationStatus.NORMAL
                 );
         BoardListResponse result = new BoardListResponse();

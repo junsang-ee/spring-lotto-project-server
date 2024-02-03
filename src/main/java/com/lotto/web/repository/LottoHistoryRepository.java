@@ -1,14 +1,14 @@
 package com.lotto.web.repository;
 
-import com.lotto.web.model.entity.LottoHistoryEntity;
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 
 @Repository
-public interface LottoHistoryRepository extends JpaRepository<LottoHistoryEntity, String> {
-    LottoHistoryEntity findByRound(int round);
+public interface LottoHistoryRepository extends JpaRepository<LottoWinningHistoryEntity, String> {
+    LottoWinningHistoryEntity findByRound(int round);
 
-    LottoHistoryEntity findByDrawDate(Date drawDate);
+    LottoWinningHistoryEntity findByDrawDate(Date drawDate);
 }
