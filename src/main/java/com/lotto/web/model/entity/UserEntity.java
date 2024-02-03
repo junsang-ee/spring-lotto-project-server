@@ -3,6 +3,7 @@ package com.lotto.web.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.UserStatus;
+import com.lotto.web.model.CreationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

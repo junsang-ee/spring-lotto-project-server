@@ -1,6 +1,6 @@
 package com.lotto.web.model.entity.lotto;
 
-import com.lotto.web.model.entity.CreationTimestampEntity;
+import com.lotto.web.model.CreationTimestampEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
