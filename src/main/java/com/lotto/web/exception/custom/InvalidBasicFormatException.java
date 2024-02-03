@@ -7,6 +7,11 @@ import lombok.Getter;
 public class InvalidBasicFormatException extends BaseException {
 
     private String fieldName;
+
+    public InvalidBasicFormatException(ErrorMessage error) {
+        super(error);
+    }
+
     public InvalidBasicFormatException(ErrorMessage error, String fieldName) {
         super(error);
         if (fieldName != null)

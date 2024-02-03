@@ -52,19 +52,22 @@ response:
         message: "사용중인 이메일 입니다."
       disabled:
         code: "4001"
-        message: "이용중지된 계정입니다."
-      invalid.password:
+        message: "이용 제한된 계정입니다."
+      retired:
         code: "4002"
-        message: "비빌번호가 일치하지 않습니다."
+        message: "탈퇴한 계정입니다."
+      invalid.password:
+        code: "4003"
+        message: "비밀번호가 일치하지 않습니다."
       only:
         admin:
-          code: "4003"
+          code: "4004"
           message: "관리자만 접근할 수 있습니다."
         user:
-          code: "4004"
+          code: "4005"
           message: "회원만 접근할 수 있습니다."
       send.email:
-        code: "4005"
+        code: "4006"
         message: "이메일 전송이 실패하였습니다."
       code:
         invalid:

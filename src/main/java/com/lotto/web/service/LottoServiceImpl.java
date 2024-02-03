@@ -1,5 +1,7 @@
 package com.lotto.web.service;
 
+import com.lotto.web.constants.messages.ErrorMessage;
+import com.lotto.web.exception.custom.InvalidBasicFormatException;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
@@ -28,7 +30,8 @@ public class LottoServiceImpl implements LottoService{
     public RandomLottoListResponse getRandomList(int price,
                                                  List<Integer> exceptList,
                                                  List<Integer> needsList) {
-        if (!getIsCorrectPrice(price)) return null;
+        if (!getIsCorrectPriceUnit(price))
+            throw new InvalidBasicFormatException(ErrorMessage.LOTTO_PRICE_UNIT);
         RandomLottoListResponse result = new RandomLottoListResponse();
         setLottoListResponse(price, exceptList, needsList, result);
         return result;

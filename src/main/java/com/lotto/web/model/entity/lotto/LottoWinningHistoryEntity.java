@@ -1,6 +1,7 @@
 package com.lotto.web.model.entity.lotto;
 
 import com.lotto.web.model.CreationTimestampEntity;
+import com.lotto.web.model.TimestampSequentialEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "lottoWinningHistory")
 @Entity(name = "lottoWinningHistory")
-public class LottoWinningHistoryEntity extends CreationTimestampEntity {
+public class LottoWinningHistoryEntity extends TimestampSequentialEntity {
     private int firstNumber;
     private int secondNumber;
     private int thirdNumber;
