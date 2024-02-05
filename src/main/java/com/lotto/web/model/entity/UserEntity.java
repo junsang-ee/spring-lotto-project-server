@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import java.util.List;
 
 @Getter
@@ -32,6 +33,9 @@ public class UserEntity extends CreationTimestampEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @Max(100)
+    private int dailyAvailableCount = 100;
 
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)

@@ -1,6 +1,5 @@
 package com.lotto.web.model.entity.lotto;
 
-import com.lotto.web.model.CreationTimestampEntity;
 import com.lotto.web.model.TimestampSequentialEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

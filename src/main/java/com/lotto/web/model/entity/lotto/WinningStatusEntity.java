@@ -38,7 +38,7 @@ public class WinningStatusEntity extends TimestampSequentialEntity {
     private WinningStatus overallStatus;
 
     @PrePersist
-    private void onPrevisionPersist() {
+    public void onPrevisionPersist() {
         this.firstStatus = WinningStatus.PENDING;
         this.secondStatus = WinningStatus.PENDING;
         this.thirdStatus = WinningStatus.PENDING;
