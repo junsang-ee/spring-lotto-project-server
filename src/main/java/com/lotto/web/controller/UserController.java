@@ -31,4 +31,9 @@ public class UserController extends BaseController {
                 request.getNewPassword())
         );
     }
+
+    @GetMapping("/available-count")
+    public ApiSuccessResponse<Integer> getDailyAvailableCount(@AuthenticationPrincipal(expression = "id") String userId) {
+        return wrap(userService.getUser(userId).getDailyAvailableCount());
+    }
 }

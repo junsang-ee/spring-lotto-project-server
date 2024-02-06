@@ -64,7 +64,6 @@ public class WebSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
                 .antMatchers(PERMIT_ANT_PATH).permitAll()
-                .antMatchers(HttpMethod.GET, PERMIT_ANT_ONLY_GET_PATH).permitAll()
                 .antMatchers(ADMIN_ANT_PATH).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().cors()

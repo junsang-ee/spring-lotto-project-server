@@ -16,6 +16,6 @@ public interface AuthService {
 
     boolean verifyEmail(VerifyAuthRequest request);
 
-    boolean resetPassword(VerifyEmailRequest request);
+    String resetPassword(VerifyEmailRequest request);
 
 }

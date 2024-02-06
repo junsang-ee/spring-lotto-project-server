@@ -80,16 +80,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public boolean resetPassword(VerifyEmailRequest request) {
+    public String resetPassword(VerifyEmailRequest request) {
         String email = request.getEmail();
         String temp = String.valueOf(getTempPassword());
         UserEntity user = userService.getUserByEmail(email);
-        mailService.sendMail(
-                email,
-                MailTemplate.RESET_PASSWORD,
-                temp
-        );
-        return userService.updatePassword(user.getId(), null, temp);
+        userService.updatePassword(user.getId(), null, temp);
+        return temp;
     }
 
     private String getAuthCode() {

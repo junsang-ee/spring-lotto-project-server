@@ -56,7 +56,8 @@ public class AuthController extends BaseController {
 
     @PatchMapping("/password/reset")
     public ApiSuccessResponse<Boolean> resetPassword(@RequestBody @Valid VerifyEmailRequest request) {
-        return wrap(authService.resetPassword(request));
+        authService.resetPassword(request);
+        return wrap(null);
     }
 
     @PatchMapping("/{userId}")

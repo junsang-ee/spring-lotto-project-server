@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.UserStatus;
 import com.lotto.web.model.CreationTimestampEntity;
+import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -48,6 +49,9 @@ public class UserEntity extends CreationTimestampEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<ReplyEntity> replies;
+
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
+    private List<ExtractionHistoryEntity> extractionLottos;
 
     @PrePersist
     private void onPrevisionPersist() {

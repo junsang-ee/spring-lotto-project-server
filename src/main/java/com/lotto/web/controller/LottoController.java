@@ -6,6 +6,7 @@ import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.service.LottoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -20,10 +21,11 @@ public class LottoController extends BaseController {
     private final LottoService lottoService;
 
     @GetMapping("/random")
-    public ApiSuccessResponse<RandomLottoListResponse> randomList(@RequestParam(defaultValue = "5000") int price,
+    public ApiSuccessResponse<RandomLottoListResponse> randomList(@AuthenticationPrincipal(expression = "id") String userId,
+                                                                  @RequestParam(defaultValue = "5000") int price,
                                                                   @RequestParam(required = false) List<Integer> exceptList,
                                                                   @RequestParam(required = false) List<Integer> needsList) {
-        return wrap(lottoService.getRandomList(price, exceptList, needsList));
+        return wrap(lottoService.getRandomList(userId, price, exceptList, needsList));
     }
 
     /* 당첨 회차로 번호 찾기 */

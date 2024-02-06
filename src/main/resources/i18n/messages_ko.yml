@@ -35,15 +35,18 @@ response:
         code: "107"
         message: "인증 코드는 5자리 숫자여야 합니다."
     lotto:
-      over:
+      exceed:
         needs:
           code: "1000"
-          message: "포함할 로또 번호는 6개를 초과할 수 없습니다."
+          message: "포함할 로또 번호를 초과하였습니다.(6개 제한)"
         exception:
           code: "1001"
-          message: "제외할 로또 번호는 41개를 초과할 수 없습니다."
+          message: "제외할 로또 번호를 초과하였습니다. (39개 제한)"
+        issue:
+          code: "1002"
+          message: "랜덤 로또 발급 이용 가능 횟수를 초과하였습니다."
       price.unit:
-        code: "1002"
+        code: "1003"
         message: "로또 구매 가격 단위가 정확하지 않습니다. (1,000 원 단위)"
 
     auth:

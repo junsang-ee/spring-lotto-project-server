@@ -9,6 +9,7 @@ import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
 import com.lotto.web.repository.LottoHistoryRepository;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,18 +21,17 @@ import static com.lotto.web.util.LottoUtil.*;
 
 @RequiredArgsConstructor
 @Service
-public class LottoServiceImpl implements LottoService{
+public class LottoServiceImpl implements LottoService {
 
     private final LottoVO lottoVO;
 
     private final LottoHistoryRepository lottoHistoryRepository;
 
     @Override
-    public RandomLottoListResponse getRandomList(int price,
+    public RandomLottoListResponse getRandomList(String userId,
+                                                 int price,
                                                  List<Integer> exceptList,
                                                  List<Integer> needsList) {
-        if (!getIsCorrectPriceUnit(price))
-            throw new InvalidBasicFormatException(ErrorMessage.LOTTO_PRICE_UNIT);
         RandomLottoListResponse result = new RandomLottoListResponse();
         setLottoListResponse(price, exceptList, needsList, result);
         return result;
