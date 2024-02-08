@@ -1,5 +1,6 @@
 package com.lotto.web.service.caffeine;
 
+import com.lotto.web.constants.cache.CacheType;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.cache.CacheManager;
@@ -11,21 +12,19 @@ import org.springframework.stereotype.Service;
 public class CaffeineService {
     private final CacheManager cacheManager;
 
-    private final static String CACHE_NAME = "AUTH_CACHE";
-
-    public <K, V> CaffeineCache createCache() {
-        return (CaffeineCache) cacheManager.getCache(CACHE_NAME);
+    public <K, V> CaffeineCache getCache(CacheType cacheType) {
+        return (CaffeineCache) cacheManager.getCache(cacheType.getName());
     }
 
-    public <K, V> V get(K key) {
-        return (V) createCache().get(key).get();
+    public <K, V> V get(CacheType cacheType, K key) {
+        return (V) getCache(cacheType).get(key).get();
     }
 
-    public <K, V> void put(K key, V value) {
-        createCache().put(key, value);
+    public <K, V> void put(CacheType cacheType, K key, V value) {
+        getCache(cacheType).put(key, value);
     }
 
-    public <K> void remove(K key) {
-        createCache().evict(key);
+    public <K> void remove(CacheType cacheType, K key) {
+        getCache(cacheType).evict(key);
     }
 }

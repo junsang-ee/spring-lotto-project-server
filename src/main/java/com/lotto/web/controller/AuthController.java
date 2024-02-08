@@ -45,8 +45,9 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/email/code")
-    public ApiSuccessResponse<Boolean> sendCode(@RequestBody @Valid VerifyEmailRequest request) {
-        return wrap(authService.sendVerifyCode(request));
+    public ApiSuccessResponse<Object> sendCode(@RequestBody @Valid VerifyEmailRequest request) {
+        authService.sendAuthCode(request);
+        return wrap(null);
     }
 
     @PostMapping("/email/verify")
@@ -55,7 +56,7 @@ public class AuthController extends BaseController {
     }
 
     @PatchMapping("/password/reset")
-    public ApiSuccessResponse<Boolean> resetPassword(@RequestBody @Valid VerifyEmailRequest request) {
+    public ApiSuccessResponse<Object> resetPassword(@RequestBody @Valid VerifyEmailRequest request) {
         authService.resetPassword(request);
         return wrap(null);
     }

@@ -12,7 +12,7 @@ public interface AuthService {
 
     String login(String userAgent, LoginRequest login);
 
-    boolean sendVerifyCode(VerifyEmailRequest request);
+    String sendAuthCode(VerifyEmailRequest request);
 
     boolean verifyEmail(VerifyAuthRequest request);
 

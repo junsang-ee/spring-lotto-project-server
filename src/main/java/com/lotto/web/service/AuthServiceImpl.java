@@ -2,6 +2,7 @@ package com.lotto.web.service;
 
 import com.lotto.web.config.jwt.JwtTokenProvider;
 import com.lotto.web.constants.UserRole;
+import com.lotto.web.constants.cache.CacheType;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.DuplicatedException;
@@ -51,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean sendVerifyCode(VerifyEmailRequest request) {
+    public String sendAuthCode(VerifyEmailRequest request) {
         String email = request.getEmail();
         if (userService.getIsDuplicatedEmail(email))
             throw new DuplicatedException(ErrorMessage.AUTH_DUPLICATED_EMAIL);
@@ -61,21 +62,23 @@ public class AuthServiceImpl implements AuthService {
                 MailTemplate.VERIFY_EMAIL,
                 authCode
         );
-        saveAuthCache(email, authCode);
-        return true;
+        return authCode;
     }
 
     @Override
     public boolean verifyEmail(VerifyAuthRequest request) {
+        String cachedAuthCode;
         try {
-            String cachedAuthCode = caffeineService.get(request.getEmail());
-            if (!cachedAuthCode.equals(request.getAuthCode()))
-                throw new AuthException(ErrorMessage.AUTH_CODE_INVALID);
-            caffeineService.remove(request.getEmail());
-            return true;
+            cachedAuthCode = caffeineService.get(
+                    CacheType.SIGNUP_CODE,
+                    request.getEmail()
+            );
         } catch (NullPointerException e) {
             throw new AuthException(ErrorMessage.AUTH_CODE_EXPIRED);
         }
+        if (!cachedAuthCode.equals(request.getAuthCode()))
+            throw new AuthException(ErrorMessage.AUTH_CODE_INVALID);
+        return true;
     }
 
     @Override
@@ -92,11 +95,6 @@ public class AuthServiceImpl implements AuthService {
         Random random = new Random();
         int randomNumber = random.nextInt(88888) + 11111;
         return String.valueOf(randomNumber);
-    }
-
-    private void saveAuthCache(String email, String authCode) {
-        caffeineService.createCache();
-        caffeineService.put(email, authCode);
     }
 
     private int getTempPassword() {

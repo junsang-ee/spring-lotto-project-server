@@ -168,6 +168,5 @@ public class UserServiceImpl implements UserService {
         result.setEmail(user.getEmail());
         result.setCreatedAt(user.getCreatedAt());
         result.setRole(user.getRole());
-        result.setDailyAvailableCount(user.getDailyAvailableCount());
     }
 }
