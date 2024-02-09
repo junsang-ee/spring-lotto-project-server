@@ -71,9 +71,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDetailResponse detail(String userId, String postId, String password) {
+    public PostDetailResponse detail(String userId, String postId) {
         PostEntity post = get(postId);
-        validPost(post, password, MethodType.GET, null);
+        validPost(post, null, MethodType.GET, null);
         PostDetailResponse result = new PostDetailResponse();
         setPostDetail(userId, post, result);
         return result;
@@ -99,6 +99,13 @@ public class PostServiceImpl implements PostService {
                 list.stream().collect(Collectors.toList()),
                 list.getPageable(),
                 list.getTotalElements());
+    }
+
+    @Override
+    public boolean verifyPassword(String postId, String password) {
+        PostEntity post = get(postId);
+        validPost(post, password, MethodType.GET, null);
+        return true;
     }
 
     private void setPostEntity(String userId, String boardId, PostEntity entity, PostSaveRequest request) {
@@ -129,8 +136,10 @@ public class PostServiceImpl implements PostService {
                 throw new InvalidStateException(ErrorMessage.POST_DISABLED);
             case NORMAL:
                 if (type == MethodType.GET) {
-                    if (!passwordEncoder.matches(password, post.getPassword()))
-                        throw new InvalidStateException(ErrorMessage.POST_INVALID_PASSWORD);
+                    if (password != null && post.getDisclosureType() == PostDisclosureType.PRIVATE) {
+                        if (!passwordEncoder.matches(password, post.getPassword()))
+                            throw new InvalidStateException(ErrorMessage.POST_INVALID_PASSWORD);
+                    }
                 } else {
                     if (userService.getUser(userId) != post.getCreatedBy()) {
                         if (type == MethodType.DELETE)

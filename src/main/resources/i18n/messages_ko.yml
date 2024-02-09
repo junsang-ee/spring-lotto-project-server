@@ -31,9 +31,13 @@ response:
       field.only.number:
         code: "106"
         message: "{0} 은(는) 숫자만 입력 가능합니다."
-      auth.code.length.invalid:
-        code: "107"
-        message: "인증 코드는 5자리 숫자여야 합니다."
+      length.invalid:
+        auth.code:
+          code: "107"
+          message: "인증 코드는 5자리 숫자여야 합니다."
+        post.password:
+          code: "108"
+          message: "게시글 비밀번호는 4자리 숫자여야 합니다."
     lotto:
       exceed:
         needs:

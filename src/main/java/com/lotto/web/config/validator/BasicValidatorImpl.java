@@ -37,29 +37,40 @@ public class BasicValidatorImpl implements ConstraintValidator<BasicValidator, S
             throw new InvalidBasicFormatException(ErrorMessage.REQUEST_ARGUMENTS_NOT_BLANK, fieldName);
         }
 
-        if (fieldName.equals("Email")) {
-            if (!isValidEmail(value))
-                throw new InvalidBasicFormatException(ErrorMessage.REQUEST_INVALID_EMAIL, null);
-        }
-
-        if (fieldName.equals("AuthCode")) {
-            isValidAuthCode(value, fieldName);
+        switch (fieldName) {
+            case "Email": validEmail(value); break;
+            case "AuthCode": validAuthCode(value, fieldName); break;
+            case "PostPassword": validPostPassword(value, fieldName); break;
+            default: break;
         }
         return true;
     }
 
-    private boolean isValidEmail(String email) {
+    private void validEmail(String email) {
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        if (!matcher.matches())
+            throw new InvalidBasicFormatException(ErrorMessage.REQUEST_INVALID_EMAIL, null);
     }
 
-    private void isValidAuthCode(String value, String fieldName) {
+    private void validAuthCode(String value, String fieldName) {
+        int authCode = getToNumber(value, fieldName);
+        if (!(10000 <= authCode && authCode <= 99999))
+            throw new InvalidBasicFormatException(ErrorMessage.REQUEST_LENGTH_INVALID_AUTH_CODE, null);
+    }
+
+    private void validPostPassword(String value, String fieldName) {
+        int password = getToNumber(value, fieldName);
+        if (!(1000 <= password && password <= 9999))
+            throw new InvalidBasicFormatException(ErrorMessage.REQUEST_LENGTH_INVALID_POST_PASSWORD, null);
+    }
+
+    private Integer getToNumber(String value, String fieldName) {
+        int result = 0;
         try {
-            int result = Integer.parseInt(value);
-            if (!(10000 <= result && result <= 99999))
-                throw new InvalidBasicFormatException(ErrorMessage.REQUEST_AUTH_CODE_LENGTH_INVALID, null);
+            result = Integer.parseInt(value);
         } catch (NumberFormatException e) {
             throw new InvalidBasicFormatException(ErrorMessage.REQUEST_FIELD_ONLY_NUMBER, fieldName);
         }
+        return result;
     }
 }

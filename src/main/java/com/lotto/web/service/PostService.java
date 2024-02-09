@@ -20,7 +20,9 @@ public interface PostService {
 
     PostEntity get(String postId);
 
-    PostDetailResponse detail(String userId, String postId, String password);
+    PostDetailResponse detail(String userId, String postId);
 
     Page<PostListEntryResponse> list(String boardId, Pageable pageable);
+
+    boolean verifyPassword(String postId, String password);
 }
