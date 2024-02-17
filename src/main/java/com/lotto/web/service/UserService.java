@@ -42,4 +42,6 @@ public interface UserService {
     List<UserEntity> getAllEnabledUser();
 
     void saveAll(List<UserEntity> users);
+
+    void initializeAdministratorAccount();
 }

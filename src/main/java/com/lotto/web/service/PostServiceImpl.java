@@ -12,6 +12,8 @@ import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
+import com.lotto.web.model.entity.UserEntity;
+import com.lotto.web.model.entity.count.ReplyCountEntity;
 import com.lotto.web.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -80,6 +82,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostDetailResponse detailForAdmin(String postId) {
+        PostEntity post = get(postId);
+        return null;
+    }
+
+    @Override
     public PostEntity get(String postId) {
         return postRepository.findById(postId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
@@ -108,6 +116,13 @@ public class PostServiceImpl implements PostService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public void updateReplyCount(PostEntity post, ReplyCountEntity replyCount) {
+        post.setReplyCount(replyCount);
+        postRepository.save(post);
+    }
+
     private void setPostEntity(String userId, String boardId, PostEntity entity, PostSaveRequest request) {
         entity.setParentBoard(boardService.get(boardId));
         entity.setCreatedBy(userService.getUser(userId));
@@ -120,12 +135,14 @@ public class PostServiceImpl implements PostService {
         } else entity.setPassword(null);
     }
 
-    private void setPostDetail(String userId, PostEntity entity, PostDetailResponse response) {
-        if (entity.getCreatedBy() == userService.getUser(userId)) {
-            response.setMine(true);
-        } else response.setMine(false);
-        response.setTitle(entity.getTitle());
-        response.setContent(entity.getContent());
+    private void setPostDetail(String userId, PostEntity post, PostDetailResponse response) {
+        UserEntity createdBy = post.getCreatedBy();
+        response.setWriter(createdBy.getEmail());
+        response.setTitle(post.getTitle());
+        response.setContent(post.getContent());
+        response.setMine(createdBy == userService.getUser(userId));
+        response.setDisclosureType(post.getDisclosureType());
+        response.setReplyCount(post.getReplyCount().getEnabledCount());
     }
 
     private void validPost(PostEntity post, String password, MethodType type, String userId) {

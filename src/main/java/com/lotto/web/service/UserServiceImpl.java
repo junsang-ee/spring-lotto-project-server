@@ -17,9 +17,12 @@ import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import com.lotto.web.repository.ExtractionHistoryRepository;
 import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -36,6 +39,12 @@ public class UserServiceImpl implements UserService {
     private final ExtractionHistoryRepository extractionHistoryRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Value("${junsang.admin.email}")
+    private String adminEmail;
+
+    @Value("${junsang.admin.password}")
+    private String adminPassword;
 
     @Override
     public Optional<UserEntity> get(String userId) {
@@ -156,6 +165,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void saveAll(List<UserEntity> users) {
         userRepository.saveAll(users);
+    }
+
+    @Override
+    @Transactional
+    public void initializeAdministratorAccount() {
+        if (getByEmail(adminEmail).isPresent()) return;
+        UserEntity admin = new UserEntity();
+        admin.setRole(UserRole.ADMIN);
+        admin.setEmail(adminEmail);
+        admin.setPassword(passwordEncoder.encode(adminPassword));
+        userRepository.save(admin);
     }
 
     private void setUser(UserEntity entity, UserRole role, SignupRequest request) {

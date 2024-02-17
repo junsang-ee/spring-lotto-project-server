@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -55,8 +56,7 @@ public class WebSecurityConfiguration {
     };
 
     @Bean
-    @PostConstruct
-    public PasswordEncoder getPasswordEncoder() {
+    public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
     }
 

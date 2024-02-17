@@ -1,16 +1,23 @@
 package com.lotto.web.controller;
 
+import com.lotto.web.model.dto.request.PostPasswordRequest;
 import com.lotto.web.model.dto.request.PostUpdateRequest;
 import com.lotto.web.model.dto.request.ReplySaveRequest;
 import com.lotto.web.model.dto.response.PostDetailResponse;
+import com.lotto.web.model.dto.response.ReplyDetailResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
+import com.lotto.web.model.entity.ReplyEntity;
 import com.lotto.web.service.PostService;
 
 import com.lotto.web.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
@@ -23,9 +30,8 @@ public class PostController extends BaseController {
 
     @GetMapping("/{postId}")
     public ApiSuccessResponse<PostDetailResponse> get(@AuthenticationPrincipal(expression = "id") String userId,
-                                                      @PathVariable String postId,
-                                                      @RequestParam(required = false) String password) {
-        return wrap(postService.detail(userId, postId, password));
+                                                      @PathVariable String postId) {
+        return wrap(postService.detail(userId, postId));
     }
 
     @PatchMapping("/{postId}")
@@ -42,9 +48,23 @@ public class PostController extends BaseController {
     }
 
     @PostMapping("/{postId}/reply")
-    public ApiSuccessResponse<Boolean> saveReply(@AuthenticationPrincipal(expression = "id") String userId,
-                                                 @PathVariable String postId,
-                                                 @RequestBody ReplySaveRequest request) {
+    public ApiSuccessResponse<ReplyEntity> saveReply(@AuthenticationPrincipal(expression = "id") String userId,
+                                                     @PathVariable String postId,
+                                                     @Valid @RequestBody ReplySaveRequest request) {
         return wrap(replyService.save(userId, postId, request));
+    }
+
+    @GetMapping("/{postId}/replies")
+    public ApiSuccessResponse<List<ReplyDetailResponse>> replies(@AuthenticationPrincipal(expression = "id") String userId,
+                                                                 @PathVariable String postId,
+                                                                 Pageable pageable) {
+        return wrap(replyService.listForUser(userId, postId, pageable));
+    }
+
+    @PostMapping("/{postId}/verify")
+    public ApiSuccessResponse<Boolean> verifyPassword(@PathVariable String postId,
+                                                      @Valid @RequestBody PostPasswordRequest request) {
+        return wrap(postService.verifyPassword(postId, request.getPassword()));
+
     }
 }

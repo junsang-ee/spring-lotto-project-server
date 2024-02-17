@@ -1,13 +1,11 @@
 package com.lotto.web.model.dto.request;
 
+import com.lotto.web.constants.SettingToggleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
-public class SignupRequest {
-    private String email;
-    private String password;
+public class SettingUpdateRequest {
+    private SettingToggleType type;
 }

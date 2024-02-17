@@ -6,6 +6,7 @@ import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
 import com.lotto.web.model.entity.PostEntity;
 
+import com.lotto.web.model.entity.count.ReplyCountEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -22,7 +23,11 @@ public interface PostService {
 
     PostDetailResponse detail(String userId, String postId);
 
+    PostDetailResponse detailForAdmin(String postId);
+
     Page<PostListEntryResponse> list(String boardId, Pageable pageable);
 
     boolean verifyPassword(String postId, String password);
+
+    void updateReplyCount(PostEntity post, ReplyCountEntity replyCount);
 }

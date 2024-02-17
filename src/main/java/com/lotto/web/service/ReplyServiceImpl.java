@@ -7,13 +7,16 @@ import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.ReplySaveRequest;
 import com.lotto.web.model.dto.request.ReplyUpdateRequest;
+import com.lotto.web.model.dto.response.ReplyDetailResponse;
 import com.lotto.web.model.entity.ReplyEntity;
 import com.lotto.web.repository.ReplyRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -23,15 +26,14 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final UserService userService;
 
-    private  final PostService postService;
+    private final PostService postService;
 
     @Override
     @Transactional
-    public boolean save(String userId, String postId, ReplySaveRequest request) {
+    public ReplyEntity save(String userId, String postId, ReplySaveRequest request) {
         ReplyEntity reply = new ReplyEntity();
         setSaveReply(userId, postId, reply, request);
-        replyRepository.save(reply);
-        return true;
+        return replyRepository.save(reply);
     }
 
     @Override
@@ -43,12 +45,11 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     @Transactional
-    public boolean update(String userId, String replyId, ReplyUpdateRequest request) {
+    public ReplyEntity update(String userId, String replyId, ReplyUpdateRequest request) {
         ReplyEntity reply = get(replyId);
         valid(reply, MethodType.UPDATE, userId);
         reply.setContent(request.getContent());
-        replyRepository.save(reply);
-        return true;
+        return replyRepository.save(reply);
     }
 
     @Override
@@ -61,7 +62,22 @@ public class ReplyServiceImpl implements ReplyService {
         return true;
     }
 
-    private void setSaveReply(String userId, String postId, ReplyEntity entity, ReplySaveRequest request) {
+    @Override
+    public List<ReplyDetailResponse> listForUser(String userId,
+                                                 String postId,
+                                                 Pageable pageable) {
+        return replyRepository.findAllByParentPostAndStatus(
+                userService.getUser(userId),
+                PostActivationStatus.NORMAL,
+                postService.get(postId),
+                pageable
+        );
+    }
+
+    private void setSaveReply(String userId,
+                              String postId,
+                              ReplyEntity entity,
+                              ReplySaveRequest request) {
         entity.setContent(request.getContent());
         entity.setCreatedBy(userService.getUser(userId));
         entity.setParentPost(postService.get(postId));

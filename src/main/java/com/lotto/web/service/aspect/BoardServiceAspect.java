@@ -15,10 +15,10 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 @Slf4j
+@RequiredArgsConstructor
 @Aspect
 @Component
-@RequiredArgsConstructor
-public class BoardAspect {
+public class BoardServiceAspect {
 
     private final CaffeineService caffeineService;
 
@@ -49,7 +49,10 @@ public class BoardAspect {
             argNames = "point")
     public BoardListResponse getBoardsInCached(ProceedingJoinPoint point) throws Throwable{
         try {
-            BoardListResponse cachedData = caffeineService.get(CacheType.USER_BOARDS, USER_BOARD_KEY);
+            BoardListResponse cachedData = caffeineService.get(
+                    CacheType.USER_BOARDS,
+                    USER_BOARD_KEY
+            );
             if (cachedData != null)
                 return cachedData;
         } catch (NullPointerException ignore) {
