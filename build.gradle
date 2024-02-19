@@ -17,7 +17,6 @@ configurations {
         extendsFrom annotationProcessor
     }
     querydsl.extendsFrom compileClasspath
-
 }
 
 dependencies {
@@ -85,6 +84,13 @@ test {
     useJUnitPlatform()
 }
 
+jar {
+    enabled = false
+}
+
+bootJar {
+    archiveFileName = "spring-lotto.jar"
+}
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {

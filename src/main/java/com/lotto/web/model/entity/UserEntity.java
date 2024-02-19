@@ -50,8 +50,9 @@ public class UserEntity extends CreationTimestampEntity {
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<ReplyEntity> replies;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    private List<ExtractionHistoryEntity> extractionLottos;
+    private List<ExtractionHistoryEntity> extractionLottoList;
 
     @PrePersist
     private void onPrevisionPersist() {
