@@ -84,13 +84,10 @@ test {
     useJUnitPlatform()
 }
 
-jar {
-    enabled = false
-}
-
 bootJar {
     archiveFileName = "spring-lotto.jar"
 }
+
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
