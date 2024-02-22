@@ -16,11 +16,10 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -74,8 +73,17 @@ public class MailServiceImpl implements MailService {
     private String loadHtmlContent() {
         try {
             Resource resource = new ClassPathResource("templates/email-template.html");
-            Path path = Paths.get(resource.getURI());
-            return Files.readString(path);
+            InputStreamReader inputStreamReader = new InputStreamReader(
+                    resource.getInputStream(),
+                    StandardCharsets.UTF_8
+            );
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String html = "";
+            StringBuilder result = new StringBuilder();
+            while ((html = bufferedReader.readLine()) != null) {
+                result.append(html);
+            }
+            return result.toString();
         } catch (IOException e) {
             return null;
         }
