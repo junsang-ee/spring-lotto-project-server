@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "www.junsang-lotto.me")
+@CrossOrigin(origins = "https://www.junsang-lotto.me")
 @RequiredArgsConstructor
 @RequestMapping("/api/post")
 @RestController
