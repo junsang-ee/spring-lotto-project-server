@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = "www.junsang-lotto.me")
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 @RestController
