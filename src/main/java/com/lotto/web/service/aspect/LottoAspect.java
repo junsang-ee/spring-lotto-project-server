@@ -50,7 +50,7 @@ public class LottoAspect {
 
         RandomLottoListResponse result = (RandomLottoListResponse) point.proceed();
         stopWatch.stop();
-        System.out.println("getRandomLottoList :: " + stopWatch.prettyPrint());
+        log.info("getRandomLottoList :: " + stopWatch.prettyPrint());
         userService.updateAvailableCount(userId, count);
         userService.saveExtractionLottos(userId, result);
         return result;

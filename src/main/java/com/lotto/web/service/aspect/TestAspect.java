@@ -28,7 +28,7 @@ public class TestAspect {
         Object result = joinPoint.proceed();
 
         stopWatch.stop();
-        System.out.println("signupTest : " + stopWatch.prettyPrint());
+        log.info("signupTest : " + stopWatch.prettyPrint());
         return (String) result;
     }
 
@@ -41,7 +41,7 @@ public class TestAspect {
         Object result = joinPoint.proceed();
 
         stopWatch.stop();
-        System.out.println("loginTest :: " + stopWatch.prettyPrint());
+        log.info("loginTest :: " + stopWatch.prettyPrint());
         return (String) result;
     }
 
