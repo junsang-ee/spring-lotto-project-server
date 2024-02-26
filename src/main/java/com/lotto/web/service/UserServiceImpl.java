@@ -40,12 +40,6 @@ public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Value("${junsang.admin.email}")
-    private String adminEmail;
-
-    @Value("${junsang.admin.password}")
-    private String adminPassword;
-
     @Override
     public Optional<UserEntity> get(String userId) {
         return userRepository.findById(userId);
@@ -58,6 +52,8 @@ public class UserServiceImpl implements UserService {
         );
         if (user.getStatus() == UserStatus.DISABLED)
             throw new AuthException(ErrorMessage.AUTH_DISABLED);
+        if (user.getStatus() == UserStatus.RETIRED)
+            throw new AuthException(ErrorMessage.AUTH_RETIRED);
         return user;
     }
 
@@ -100,14 +96,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean save(UserRole role, SignupRequest request) {
+    public UserEntity save(UserRole role, SignupRequest request) {
         if (getByEmail(request.getEmail()).isPresent()) {
             throw new DuplicatedException(ErrorMessage.AUTH_DUPLICATED_EMAIL);
         }
         UserEntity user = new UserEntity();
         setUser(user, role, request);
-        userRepository.save(user);
-        return true;
+        return userRepository.save(user);
     }
 
     @Override
@@ -121,14 +116,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean updatePassword(String userId, String oldPassword, String newPassword) {
+    public void updatePassword(String userId, String oldPassword, String newPassword) {
         UserEntity user = getUser(userId);
         if (oldPassword != null) {
             checkAccount(user, oldPassword);
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        return true;
     }
 
     @Override
@@ -169,13 +163,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void initializeAdministratorAccount() {
-        if (getByEmail(adminEmail).isPresent()) return;
-        UserEntity admin = new UserEntity();
-        admin.setRole(UserRole.ADMIN);
-        admin.setEmail(adminEmail);
-        admin.setPassword(passwordEncoder.encode(adminPassword));
-        userRepository.save(admin);
+    public void retired(String userId) {
+        UserEntity user = getUser(userId);
+        user.setStatus(UserStatus.RETIRED);
+        userRepository.save(user);
     }
 
     private void setUser(UserEntity entity, UserRole role, SignupRequest request) {

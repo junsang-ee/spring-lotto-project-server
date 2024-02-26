@@ -5,10 +5,11 @@ import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
 import com.lotto.web.model.dto.request.VerifyAuthRequest;
 import com.lotto.web.model.dto.request.VerifyEmailRequest;
+import com.lotto.web.model.entity.UserEntity;
 
 public interface AuthService {
 
-    boolean signup(UserRole role, SignupRequest request);
+    UserEntity signup(UserRole role, SignupRequest request);
 
     String login(String userAgent, LoginRequest login);
 

@@ -7,6 +7,7 @@ import com.lotto.web.model.dto.request.VerifyAuthRequest;
 import com.lotto.web.model.dto.request.VerifyEmailRequest;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.TokenResponse;
+import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.service.AuthService;
 import lombok.RequiredArgsConstructor;
 
@@ -33,14 +34,8 @@ public class AuthController extends BaseController {
 
     /* 일반 사용자 회원가입 */
     @PostMapping("/signup")
-    public ApiSuccessResponse<Boolean> signup(@RequestBody SignupRequest request) {
+    public ApiSuccessResponse<UserEntity> signup(@RequestBody SignupRequest request) {
         return wrap(authService.signup(UserRole.USER, request));
-    }
-
-    /* 관리자 회원가입 */
-    @PostMapping("/signup/admin")
-    public ApiSuccessResponse<Boolean> signupAdmin(@RequestBody SignupRequest request) {
-        return wrap(authService.signup(UserRole.ADMIN, request));
     }
 
     @PostMapping("/email/code")

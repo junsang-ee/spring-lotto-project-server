@@ -22,14 +22,22 @@ public class UserController extends BaseController {
     }
 
     @PatchMapping("/password")
-    public ApiSuccessResponse<Boolean> updatePassword(@AuthenticationPrincipal(expression = "id") String userId,
+    public ApiSuccessResponse<Object> updatePassword(@AuthenticationPrincipal(expression = "id") String userId,
                                                      @Valid @RequestBody UpdatePasswordRequest request) {
-        return wrap(userService.updatePassword(
+        userService.updatePassword(
                 userId,
                 request.getOldPassword(),
-                request.getNewPassword())
+                request.getNewPassword()
         );
+        return wrap(null);
     }
+
+    @PatchMapping("/retired")
+    public ApiSuccessResponse<Object> retired(@AuthenticationPrincipal(expression = "id") String userId) {
+        userService.retired(userId);
+        return wrap(null);
+    }
+
 
     @GetMapping("/available-count")
     public ApiSuccessResponse<Integer> getDailyAvailableCount(@AuthenticationPrincipal(expression = "id") String userId) {

@@ -7,7 +7,7 @@ import com.lotto.web.model.entity.BoardEntity;
 public interface BoardService {
     BoardEntity get(String boardId);
 
-    boolean save(String userId, BoardSaveRequest request);
+    BoardEntity save(String userId, BoardSaveRequest request);
 
     BoardListResponse listAll();
 

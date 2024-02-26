@@ -40,15 +40,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public boolean save(String userId, BoardSaveRequest request) {
+    public BoardEntity save(String userId, BoardSaveRequest request) {
         UserEntity user = userService.getUser(userId);
         if (user.getRole() != UserRole.ADMIN) {
             throw new AuthException(ErrorMessage.AUTH_ONLY_ADMIN);
         }
         BoardEntity board = new BoardEntity();
         setBoardEntity(user, board, request);
-        boardRepository.save(board);
-        return true;
+        return boardRepository.save(board);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.lotto.web.service;
 
 import com.lotto.web.constants.UserRole;
-import com.lotto.web.model.dto.request.LoginRequest;
 import com.lotto.web.model.dto.request.SignupRequest;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.UserDetailResponse;
@@ -27,13 +26,13 @@ public interface UserService {
 
     UserEntity getUserByEmail(String email);
 
-    boolean save(UserRole role, SignupRequest request);
+    UserEntity save(UserRole role, SignupRequest request);
 
     boolean getIsDuplicatedEmail(String email);
 
     void checkAccount(UserEntity user, String password);
 
-    boolean updatePassword(String userId, String oldPassword, String newPassword);
+    void updatePassword(String userId, String oldPassword, String newPassword);
 
     void updateAvailableCount(String userId, int count);
 
@@ -43,5 +42,5 @@ public interface UserService {
 
     void saveAll(List<UserEntity> users);
 
-    void initializeAdministratorAccount();
+    void retired(String userId);
 }

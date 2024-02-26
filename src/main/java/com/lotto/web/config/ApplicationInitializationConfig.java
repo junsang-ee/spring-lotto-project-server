@@ -1,7 +1,6 @@
 package com.lotto.web.config;
 
-import com.lotto.web.service.UserService;
-import com.lotto.web.service.admin.SettingService;
+import com.lotto.web.service.admin.AdminService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -14,14 +13,12 @@ import javax.transaction.Transactional;
 @Component
 public class ApplicationInitializationConfig implements ApplicationRunner {
 
-    private final SettingService settingService;
-
-    private final UserService userService;
+    private final AdminService adminService;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        settingService.load();
-        userService.initializeAdministratorAccount();
+        adminService.createAdminSetting();
+        adminService.createAdminAccount();
     }
 }
