@@ -2,7 +2,9 @@ package com.lotto.web.service.admin;
 
 import com.lotto.web.constants.SettingToggleType;
 import com.lotto.web.constants.UserRole;
+import com.lotto.web.constants.UserStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
+import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
 import com.lotto.web.model.dto.response.admin.BoardDetailResponse;
@@ -92,5 +94,21 @@ public class AdminServiceImpl implements AdminService {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
+    }
+
+    @Override
+    @Transactional
+    public void updateUserStatus(String userId, UserStatus status) {
+        UserEntity user = getUserDetail(userId);
+        if (status == user.getStatus()) {
+            switch (user.getStatus()) {
+                case DISABLED:
+                    throw new AuthException(ErrorMessage.AUTH_DISABLED);
+                case RETIRED:
+                    throw new AuthException(ErrorMessage.AUTH_RETIRED);
+            }
+        }
+        user.setStatus(status);
+        userRepository.save(user);
     }
 }

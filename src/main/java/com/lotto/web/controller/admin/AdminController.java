@@ -5,6 +5,7 @@ import com.lotto.web.constants.UserStatus;
 import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
+import com.lotto.web.model.dto.request.UserStatusRequest;
 import com.lotto.web.model.dto.response.admin.BoardDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserDetailResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
@@ -64,8 +65,9 @@ public class AdminController extends BaseController {
 
     @PatchMapping("/user/{userId}/status")
     public ApiSuccessResponse<Object> updateUserStatus(@PathVariable("userId") String userId,
-                                                       UserStatus status) {
-        return null;
+                                                       @RequestBody UserStatusRequest request) {
+        adminService.updateUserStatus(userId, request.getStatus());
+        return wrap(null);
     }
 
 

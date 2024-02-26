@@ -96,9 +96,4 @@ public class BoardServiceImpl implements BoardService {
                               BoardListResponse response) {
         response.setBoards(boardDetails);
     }
-
-    private void exception(String code) {
-        ErrorMessage errorMessage = ErrorMessage.from(code);
-        throw new InvalidStateException(errorMessage);
-    }
 }

@@ -1,5 +1,6 @@
 package com.lotto.web.service.admin;
 
+import com.lotto.web.constants.UserStatus;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
 import com.lotto.web.model.dto.response.admin.BoardDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserDetailResponse;
@@ -20,4 +21,6 @@ public interface AdminService {
     Page<UserDetailResponse> getUserList(Pageable pageable);
 
     UserEntity getUserDetail(String userId);
+
+    void updateUserStatus(String userId, UserStatus status);
 }

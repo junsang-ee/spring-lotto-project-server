@@ -86,6 +86,8 @@ public class UserServiceImpl implements UserService {
         );
         if (user.getStatus() == UserStatus.DISABLED)
             throw new AuthException(ErrorMessage.AUTH_DISABLED);
+        if (user.getStatus() == UserStatus.RETIRED)
+            throw new AuthException(ErrorMessage.AUTH_RETIRED);
         return user;
     }
 
@@ -110,6 +112,8 @@ public class UserServiceImpl implements UserService {
         if (passwordEncoder.matches(password, user.getPassword())) {
             if (user.getStatus() == UserStatus.DISABLED)
                 throw new AuthException(ErrorMessage.AUTH_DISABLED);
+            if (user.getStatus() == UserStatus.RETIRED)
+                throw new AuthException(ErrorMessage.AUTH_RETIRED);
         } else
             throw new InvalidStateException(ErrorMessage.AUTH_INVALID_PASSWORD);
     }
