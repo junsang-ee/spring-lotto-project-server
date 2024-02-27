@@ -1,6 +1,5 @@
 package com.lotto.web.model.entity.lotto;
 
-import com.lotto.web.constants.UserStatus;
 import com.lotto.web.constants.WinningStatus;
 import com.lotto.web.model.TimestampSequentialEntity;
 import lombok.Getter;
@@ -12,8 +11,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "winningStatus")
-@Entity(name = "winningStatus")
+@Table(name = "winning_status")
+@Entity(name = "winning_status")
 public class WinningStatusEntity extends TimestampSequentialEntity {
 
     @Enumerated(EnumType.STRING)

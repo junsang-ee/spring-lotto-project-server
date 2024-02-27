@@ -26,7 +26,7 @@ public interface PostRepository extends JpaRepository<PostEntity, String>,
                                     "ELSE '비공개' " +
                                 "END as disclosureType, " +
                                 "u.email, " +
-                                "TO_CHAR(p.createdAt, 'YYYY-MM-DD') as createdAt, " +
+                                "p.createdAt, " +
                                 "p.viewCount" +
                             ") " +
                      "FROM post p " +

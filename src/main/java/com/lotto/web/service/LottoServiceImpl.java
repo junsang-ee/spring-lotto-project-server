@@ -1,21 +1,27 @@
 package com.lotto.web.service;
 
-import com.lotto.web.constants.messages.ErrorMessage;
-import com.lotto.web.exception.custom.InvalidBasicFormatException;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
+import com.lotto.web.model.dto.response.ExtractionDetailResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
+import com.lotto.web.model.entity.UserEntity;
+import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
+import com.lotto.web.repository.ExtractionHistoryRepository;
 import com.lotto.web.repository.LottoHistoryRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.lotto.web.util.LottoUtil.*;
 
@@ -25,7 +31,11 @@ public class LottoServiceImpl implements LottoService {
 
     private final LottoVO lottoVO;
 
+    private final UserService userService;
+
     private final LottoHistoryRepository lottoHistoryRepository;
+
+    private final ExtractionHistoryRepository extractionHistoryRepository;
 
     @Override
     public RandomLottoListResponse getRandomList(String userId,
@@ -61,6 +71,21 @@ public class LottoServiceImpl implements LottoService {
     @Override
     public List<LottoWinningHistoryEntity> getAllWinningNumbers() {
         return lottoHistoryRepository.findAll();
+    }
+
+    @Override
+    public Page<ExtractionDetailResponse> getAllExtractions(String userId, Pageable pageable) {
+        UserEntity user = userService.getUser(userId);
+        Page<ExtractionDetailResponse> list =
+                extractionHistoryRepository.getAllExtraction(
+                        user,
+                        pageable
+                );
+
+        return new PageImpl<>(
+                list.stream().collect(Collectors.toList()),
+                list.getPageable(),
+                list.getTotalElements());
     }
 
     private void setLotto(List<Integer> exceptList, List<Integer> needsList) {

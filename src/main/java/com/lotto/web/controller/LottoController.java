@@ -1,11 +1,15 @@
 package com.lotto.web.controller;
 
+import com.lotto.web.model.dto.response.ExtractionDetailResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
+import com.lotto.web.model.dto.response.common.PageResponse;
+import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.service.LottoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,5 +47,12 @@ public class LottoController extends BaseController {
     @GetMapping("/winning/list")
     public ApiSuccessResponse<List<LottoWinningHistoryEntity>> allWinningNumbers() {
         return wrap(lottoService.getAllWinningNumbers());
+    }
+
+    /* 모든 추출 번호 가져오기 */
+    @GetMapping("/extraction/list")
+    public ApiSuccessResponse<PageResponse<ExtractionDetailResponse>> getAllExtractions(@AuthenticationPrincipal(expression = "id") String userId,
+                                                                                        Pageable pageable) {
+        return page(lottoService.getAllExtractions(userId, pageable));
     }
 }

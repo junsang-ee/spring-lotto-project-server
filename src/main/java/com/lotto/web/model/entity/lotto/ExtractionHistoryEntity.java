@@ -12,8 +12,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "ExtractionHistory")
-@Entity(name = "ExtractionHistory")
+@Table(name = "extraction_history")
+@Entity(name = "extraction_history")
 public class ExtractionHistoryEntity extends TimestampSequentialEntity {
     private int firstNumber;
     private int secondNumber;
