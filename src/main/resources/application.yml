@@ -44,7 +44,14 @@ spring:
     level:
       org.hibernate.SQL: debug
 
+integration:
+  slack:
+    enabled: true
+    web-hook-url: https://hooks.slack.com/services/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
+    channel: error-log
+  level: ERROR
+
 junsang:
   jwt:
     secret: junsang_l@tt@
-    valid-time: 1h
+    valid-time: 2h
