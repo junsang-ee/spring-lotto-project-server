@@ -1,7 +1,5 @@
 package com.lotto.web.controller.admin;
 
-
-import com.lotto.web.constants.UserStatus;
 import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
@@ -34,7 +32,7 @@ public class AdminController extends BaseController {
     @PostMapping("/board")
     public ApiSuccessResponse<BoardEntity> saveBoard(@AuthenticationPrincipal(expression = "id") String userId,
                                                      @RequestBody BoardSaveRequest request) {
-        return wrap(boardService.save(userId, request));
+        return wrap(adminService.saveBoard(request));
     }
 
     @GetMapping("/board")
@@ -49,7 +47,7 @@ public class AdminController extends BaseController {
 
     @DeleteMapping("/board/{boardId}")
     public ApiSuccessResponse<Boolean> deleteBoard(@PathVariable String boardId) {
-        return wrap(boardService.deleteBoard(boardId));
+        return wrap(adminService.deleteBoard(boardId));
     }
 
     @PutMapping("/setting/lotto-history")

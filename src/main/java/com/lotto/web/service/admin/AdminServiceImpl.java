@@ -1,14 +1,18 @@
 package com.lotto.web.service.admin;
 
+import com.lotto.web.constants.BoardActivationStatus;
 import com.lotto.web.constants.SettingToggleType;
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.UserStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
+import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
+import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
 import com.lotto.web.model.dto.response.admin.BoardDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserDetailResponse;
+import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.admin.AdminSettingEntity;
 import com.lotto.web.repository.AdminSettingRepository;
@@ -45,6 +49,28 @@ public class AdminServiceImpl implements AdminService {
 
     @Value("${junsang.admin.password}")
     private String adminPassword;
+
+    @Override
+    @Transactional
+    public BoardEntity saveBoard(BoardSaveRequest request) {
+        BoardEntity board = new BoardEntity();
+        setBoardEntity(getAdmin(), board, request);
+        return boardRepository.save(board);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteBoard(String boardId) {
+        BoardEntity board = boardRepository.findById(boardId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
+        );
+        if (board.getStatus() == BoardActivationStatus.REMOVED) {
+            throw new InvalidStateException(ErrorMessage.BOARD_REMOVED);
+        }
+        board.setStatus(BoardActivationStatus.REMOVED);
+        boardRepository.save(board);
+        return false;
+    }
 
     @Override
     @Transactional
@@ -110,5 +136,18 @@ public class AdminServiceImpl implements AdminService {
         }
         user.setStatus(status);
         userRepository.save(user);
+    }
+
+    @Override
+    public UserEntity getAdmin() {
+        return userRepository.findByEmail(adminEmail).get();
+    }
+
+    private void setBoardEntity(UserEntity user,
+                                BoardEntity entity,
+                                BoardSaveRequest request) {
+        entity.setCreatedBy(user);
+        entity.setName(request.getName());
+        entity.setAccessType(request.getAccessType());
     }
 }
