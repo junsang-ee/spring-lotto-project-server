@@ -30,7 +30,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                             "u.email, " +
                             "u.status, " +
                             "u.dailyAvailableCount, " +
-                            "count(p) as postCount" +
+                            "count(p) as postCount, " +
+                            "u.createdAt" +
                         ") " +
                      "FROM user u " +
                 "LEFT JOIN post p on p.createdBy = u.id " +

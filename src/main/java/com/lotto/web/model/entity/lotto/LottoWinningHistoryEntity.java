@@ -13,8 +13,8 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "lottoWinningHistory")
-@Entity(name = "lottoWinningHistory")
+@Table(name = "lotto_winning_history")
+@Entity(name = "lotto_winning_history")
 public class LottoWinningHistoryEntity extends TimestampSequentialEntity {
     private int firstNumber;
     private int secondNumber;

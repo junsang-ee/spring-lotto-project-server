@@ -68,5 +68,11 @@ public class AdminController extends BaseController {
         return wrap(null);
     }
 
+    @PostMapping("/update/lotto-winnings")
+    public ApiSuccessResponse<Object> updateLottoWinnings() {
+        return wrap(null);
+    }
+
+
 
 }
