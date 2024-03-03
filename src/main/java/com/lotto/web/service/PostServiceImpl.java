@@ -1,8 +1,6 @@
 package com.lotto.web.service;
 
-import com.lotto.web.constants.MethodType;
-import com.lotto.web.constants.PostActivationStatus;
-import com.lotto.web.constants.PostDisclosureType;
+import com.lotto.web.constants.*;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
@@ -44,11 +42,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public boolean save(String userId, String boardId, PostSaveRequest request) {
+    public PostEntity save(String userId, String boardId, PostSaveRequest request) {
         PostEntity entity = new PostEntity();
         setPostEntity(userId, boardId, entity, request);
-        postRepository.save(entity);
-        return true;
+        return postRepository.save(entity);
     }
 
     @Override
@@ -158,7 +155,9 @@ public class PostServiceImpl implements PostService {
                             throw new InvalidStateException(ErrorMessage.POST_INVALID_PASSWORD);
                     }
                 } else {
-                    if (userService.getUser(userId) != post.getCreatedBy()) {
+                    UserEntity user = userService.getUser(userId);
+                    if (user.getRole() == UserRole.ADMIN) break;
+                    if (user != post.getCreatedBy()) {
                         if (type == MethodType.DELETE)
                             throw new InvalidStateException(ErrorMessage.POST_ONLY_REMOVE_WRITER);
                         throw new InvalidStateException(ErrorMessage.POST_ONLY_EDIT_WRITER);

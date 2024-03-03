@@ -4,7 +4,8 @@ import com.lotto.web.model.TimestampSequentialEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -25,6 +26,6 @@ public class LottoWinningHistoryEntity extends TimestampSequentialEntity {
     private int bonusNumber;
     private int round;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     private Date drawDate;
 }

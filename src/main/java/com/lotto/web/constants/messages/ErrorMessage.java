@@ -42,6 +42,7 @@ public enum ErrorMessage {
     /* 6000 ~ BoardError (board) */
     BOARD_NOT_FOUND("6000"),
     BOARD_REMOVED("6001"),
+    BOARD_ENABLED("6002"),
 
     /* 7000 ~ PostError (post) */
     POST_NOT_FOUND("7000"),

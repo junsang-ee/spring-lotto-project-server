@@ -1,43 +1,59 @@
 package com.lotto.web.controller.admin;
 
 import com.lotto.web.controller.BaseController;
-import com.lotto.web.model.dto.request.BoardSaveRequest;
-import com.lotto.web.model.dto.request.SettingUpdateRequest;
-import com.lotto.web.model.dto.request.UserStatusRequest;
-import com.lotto.web.model.dto.response.admin.BoardDetailResponse;
-import com.lotto.web.model.dto.response.admin.UserDetailResponse;
+import com.lotto.web.model.dto.request.*;
+import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
 import com.lotto.web.model.entity.BoardEntity;
-import com.lotto.web.service.BoardService;
 import com.lotto.web.service.admin.AdminService;
 
+import com.lotto.web.service.crawler.CrawlerService;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
 @RestController
 public class AdminController extends BaseController {
 
-    private final BoardService boardService;
-
     private final AdminService adminService;
 
+    private final CrawlerService crawlerService;
+
     @PostMapping("/board")
-    public ApiSuccessResponse<BoardEntity> saveBoard(@AuthenticationPrincipal(expression = "id") String userId,
-                                                     @RequestBody BoardSaveRequest request) {
+    public ApiSuccessResponse<BoardEntity> saveBoard(@RequestBody BoardSaveRequest request) {
         return wrap(adminService.saveBoard(request));
     }
 
-    @GetMapping("/board")
-    public ApiSuccessResponse<List<BoardDetailResponse>> getBoardList() {
-        return wrap(adminService.getBoardList());
+    @GetMapping("/boards")
+    public ApiSuccessResponse<PageResponse<BoardManageDetailResponse>> getBoardList(Pageable pageable) {
+        return page(adminService.getBoardList(pageable));
+    }
+
+    @PatchMapping("/board/{boardId}/status")
+    public ApiSuccessResponse<Object> updateBoardStatus(@PathVariable String boardId,
+                                                        @RequestBody BoardStatusRequest request) {
+        adminService.updateBoardStatus(boardId, request.getStatus());
+        return wrap(null);
+    }
+
+    @PatchMapping("/post/{postId}/status")
+    public ApiSuccessResponse<Object> updatePostStatus(@PathVariable String postId,
+                                                       @RequestBody PostStatusRequest request) {
+        adminService.updatePostStatus(postId, request.getStatus());
+        return wrap(null);
+    }
+
+    @GetMapping("/board/{boardId}/posts")
+    public ApiSuccessResponse<PageResponse<PostManageDetailResponse>> getPosts(@PathVariable String boardId,
+                                                                               Pageable pageable) {
+        return page(adminService.getPostList(boardId, pageable));
     }
 
     @GetMapping("/post/{postId}")
@@ -56,8 +72,8 @@ public class AdminController extends BaseController {
         return wrap(null);
     }
 
-    @GetMapping("/user/list")
-    public ApiSuccessResponse<PageResponse<UserDetailResponse>> getUserList(Pageable pageable) {
+    @GetMapping("/users")
+    public ApiSuccessResponse<PageResponse<UserManageDetailResponse>> getUserList(Pageable pageable) {
         return page(adminService.getUserList(pageable));
     }
 
@@ -70,6 +86,7 @@ public class AdminController extends BaseController {
 
     @PostMapping("/update/lotto-winnings")
     public ApiSuccessResponse<Object> updateLottoWinnings() {
+        crawlerService.createWinningHistory();
         return wrap(null);
     }
 

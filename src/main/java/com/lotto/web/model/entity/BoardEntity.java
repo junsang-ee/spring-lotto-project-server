@@ -3,6 +3,8 @@ package com.lotto.web.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
+import com.lotto.web.model.entity.count.PostCountEntity;
+import com.lotto.web.model.entity.count.ReplyCountEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,8 +34,13 @@ public class BoardEntity extends CreationUserEntity {
     @OneToMany(mappedBy = "parentBoard", fetch = FetchType.LAZY)
     private List<PostEntity> posts;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "post_count")
+    private PostCountEntity postCount;
+
     @PrePersist
     public void onPrevisionPersist() {
+        this.postCount = new PostCountEntity();
         this.status = BoardActivationStatus.NORMAL;
     }
 }

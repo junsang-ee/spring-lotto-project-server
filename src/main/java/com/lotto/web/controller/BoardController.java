@@ -5,6 +5,7 @@ import com.lotto.web.model.dto.response.BoardListResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
+import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.service.BoardService;
 import com.lotto.web.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,16 @@ public class BoardController extends BaseController {
         return wrap(boardService.listForUser());
     }
 
-    @GetMapping("/{boardId}/post")
+    @GetMapping("/{boardId}/posts")
     public ApiSuccessResponse<PageResponse<PostListEntryResponse>> postList(@PathVariable String boardId,
                                                                             Pageable pageable) {
         return page(postService.list(boardId, pageable));
     }
 
     @PostMapping("/{boardId}/post")
-    public ApiSuccessResponse<Boolean> savePost(@AuthenticationPrincipal(expression = "id") String userId,
-                                                @PathVariable String boardId,
-                                                @RequestBody PostSaveRequest request) {
+    public ApiSuccessResponse<PostEntity> savePost(@AuthenticationPrincipal(expression = "id") String userId,
+                                                   @PathVariable String boardId,
+                                                   @RequestBody PostSaveRequest request) {
         return wrap(postService.save(userId, boardId, request));
     }
 

@@ -3,8 +3,10 @@ package com.lotto.web.repository;
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
 import com.lotto.web.model.dto.response.BoardListEntryResponse;
-import com.lotto.web.model.dto.response.admin.BoardDetailResponse;
+import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
 import com.lotto.web.model.entity.BoardEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,11 +24,18 @@ public interface BoardRepository extends JpaRepository<BoardEntity, String> {
     List<BoardListEntryResponse> getAllByStatus(@Param("status") BoardActivationStatus status);
 
     @Query(value = "SELECT " +
-                        "new com.lotto.web.model.dto.response.admin.BoardDetailResponse(" +
-                            "id, name, status, accessType" +
+                        "new com.lotto.web.model.dto.response.admin.BoardManageDetailResponse(" +
+                            "b.id, " +
+                            "b.name, " +
+                            "b.status, " +
+                            "b.accessType, " +
+                            "p.enabledCount as enabledPostCount, " +
+                            "p.disabledCount as disabledPostCount, " +
+                            "p.removedCount as removedPostCount" +
                         ") " +
-                     "FROM board")
-    List<BoardDetailResponse> getAllBoard();
+                     "FROM board b " +
+               "INNER JOIN post_count p on p.id = b.postCount")
+    Page<BoardManageDetailResponse> getAllBoard(Pageable pageable);
 
 
     @Query(value = "SELECT " +

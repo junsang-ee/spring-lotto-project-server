@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
+@Entity(name = "reply_count")
 @Table(name = "reply_count")
 public class ReplyCountEntity extends SequentialEntity {
 
@@ -21,10 +21,13 @@ public class ReplyCountEntity extends SequentialEntity {
 
     private int disabledCount;
 
+    private int removedCount;
+
 
     @PrePersist
     private void onPrevisionPersist() {
         this.enabledCount = 0;
         this.disabledCount = 0;
+        this.removedCount = 0;
     }
 }

@@ -3,7 +3,7 @@ package com.lotto.web.repository;
 
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.UserStatus;
-import com.lotto.web.model.dto.response.admin.UserDetailResponse;
+import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     List<UserEntity> findAllByStatusAndRole(UserStatus status, UserRole role);
 
     @Query(value = "SELECT " +
-                        "new com.lotto.web.model.dto.response.admin.UserDetailResponse(" +
+                        "new com.lotto.web.model.dto.response.admin.UserManageDetailResponse(" +
                             "u.id, " +
                             "u.email, " +
                             "u.status, " +
@@ -37,6 +37,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                 "LEFT JOIN post p on p.createdBy = u.id " +
                     "WHERE u.email != :adminEmail " +
                  "GROUP BY u.id")
-    Page<UserDetailResponse> getAllUser(@Param("adminEmail") String adminEmail,
-                                        Pageable pageable);
+    Page<UserManageDetailResponse> getAllUser(@Param("adminEmail") String adminEmail,
+                                              Pageable pageable);
 }

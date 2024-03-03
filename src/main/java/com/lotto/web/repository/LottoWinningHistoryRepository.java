@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LottoWinningHistoryRepository extends JpaRepository<LottoWinningHistoryEntity, Long> {
 
+    LottoWinningHistoryEntity findByRound(int round);
 }

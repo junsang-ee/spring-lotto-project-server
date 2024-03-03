@@ -1,22 +1,22 @@
 package com.lotto.web.service.admin;
 
-import com.lotto.web.constants.BoardActivationStatus;
-import com.lotto.web.constants.SettingToggleType;
-import com.lotto.web.constants.UserRole;
-import com.lotto.web.constants.UserStatus;
+import com.lotto.web.constants.*;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
-import com.lotto.web.model.dto.response.admin.BoardDetailResponse;
-import com.lotto.web.model.dto.response.admin.UserDetailResponse;
+import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.entity.BoardEntity;
+import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.admin.AdminSettingEntity;
 import com.lotto.web.repository.AdminSettingRepository;
 import com.lotto.web.repository.BoardRepository;
+import com.lotto.web.repository.PostRepository;
 import com.lotto.web.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,6 @@ import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -44,6 +43,8 @@ public class AdminServiceImpl implements AdminService {
     private final AdminSettingRepository adminSettingRepository;
 
     private final BoardRepository boardRepository;
+
+    private final PostRepository postRepository;
     @Value("${junsang.admin.email}")
     private String adminEmail;
 
@@ -102,23 +103,46 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<BoardDetailResponse> getBoardList() {
-        return boardRepository.getAllBoard();
-    }
-
-    @Override
-    public Page<UserDetailResponse> getUserList(Pageable pageable) {
-        Page<UserDetailResponse> list = userRepository.getAllUser(adminEmail, pageable);
-        return new PageImpl<>(
+    public Page<BoardManageDetailResponse> getBoardList(Pageable pageable) {
+        Page<BoardManageDetailResponse> list = boardRepository.getAllBoard(pageable);
+        return new PageImpl<> (
                 list.stream().collect(Collectors.toList()),
                 list.getPageable(),
                 list.getTotalElements());
     }
 
     @Override
+    public Page<UserManageDetailResponse> getUserList(Pageable pageable) {
+        Page<UserManageDetailResponse> list = userRepository.getAllUser(adminEmail, pageable);
+        return new PageImpl<>(
+                list.stream().collect(Collectors.toList()),
+                list.getPageable(),
+                list.getTotalElements()
+        );
+    }
+
+    @Override
+    public Page<PostManageDetailResponse> getPostList(String boardId, Pageable pageable) {
+        BoardEntity parentBoard = getBoardDetail(boardId);
+        Page<PostManageDetailResponse> list = postRepository.getAllPost(parentBoard, pageable);
+        return new PageImpl<>(
+                list.stream().collect(Collectors.toList()),
+                list.getPageable(),
+                list.getTotalElements()
+        );
+    }
+
+    @Override
     public UserEntity getUserDetail(String userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
+    }
+
+    @Override
+    public PostEntity getPostDetail(String postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
         );
     }
 
@@ -139,14 +163,45 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public UserEntity getAdmin() {
-        return userRepository.findByEmail(adminEmail).get();
+    @Transactional
+    public void updateBoardStatus(String boardId, BoardActivationStatus status) {
+        BoardEntity board = getBoardDetail(boardId);
+        if (status == board.getStatus()) {
+            if (board.getStatus() == BoardActivationStatus.REMOVED)
+                throw new InvalidStateException(ErrorMessage.BOARD_REMOVED);
+            else if (board.getStatus() == BoardActivationStatus.NORMAL)
+                throw new InvalidStateException(ErrorMessage.BOARD_ENABLED);
+        }
+        board.setStatus(status);
+        boardRepository.save(board);
     }
 
-    private void setBoardEntity(UserEntity user,
+    @Override
+    @Transactional
+    public void updatePostStatus(String postId, PostActivationStatus status) {
+        PostEntity post = getPostDetail(postId);
+        post.setStatus(status);
+        postRepository.save(post);
+    }
+
+    @Override
+    public UserEntity getAdmin() {
+        return userRepository.findByEmail(adminEmail).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
+    }
+
+    @Override
+    public BoardEntity getBoardDetail(String boardId) {
+        return boardRepository.findById(boardId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
+        );
+    }
+
+    private void setBoardEntity(UserEntity admin,
                                 BoardEntity entity,
                                 BoardSaveRequest request) {
-        entity.setCreatedBy(user);
+        entity.setCreatedBy(admin);
         entity.setName(request.getName());
         entity.setAccessType(request.getAccessType());
     }

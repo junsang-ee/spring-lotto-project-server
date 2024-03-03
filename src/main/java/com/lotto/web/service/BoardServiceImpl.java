@@ -7,6 +7,7 @@ import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.response.BoardListEntryResponse;
 import com.lotto.web.model.dto.response.BoardListResponse;
 import com.lotto.web.model.entity.BoardEntity;
+import com.lotto.web.model.entity.count.PostCountEntity;
 import com.lotto.web.repository.BoardRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,12 @@ public class BoardServiceImpl implements BoardService {
         BoardListResponse result = new BoardListResponse();
         setBoardList(boardDetails, result);
         return result;
+    }
+
+    @Override
+    public void updatePostCount(BoardEntity board, PostCountEntity postCount) {
+        board.setPostCount(postCount);
+        boardRepository.save(board);
     }
 
     private void setBoardList(List<BoardListEntryResponse> boardDetails,
