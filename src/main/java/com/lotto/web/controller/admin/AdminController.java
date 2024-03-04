@@ -2,6 +2,7 @@ package com.lotto.web.controller.admin;
 
 import com.lotto.web.constants.BoardActivationStatus;
 import com.lotto.web.constants.PostActivationStatus;
+import com.lotto.web.constants.UserStatus;
 import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.*;
 import com.lotto.web.model.dto.response.BoardDeleteResponse;
@@ -17,6 +18,7 @@ import com.lotto.web.service.admin.AdminService;
 import com.lotto.web.service.admin.crawler.CrawlerServiceImpl;
 import com.lotto.web.service.admin.management.BoardManagementService;
 import com.lotto.web.service.admin.management.PostManagementService;
+import com.lotto.web.service.admin.management.UserManagementService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,7 @@ public class AdminController extends BaseController {
     private final AdminService adminService;
     private final BoardManagementService boardManagementService;
     private final PostManagementService postManagementService;
+    private final UserManagementService userManagementService;
     private final CrawlerServiceImpl crawlerService;
 
     @PostMapping("/board")
@@ -86,14 +89,13 @@ public class AdminController extends BaseController {
 
     @GetMapping("/users")
     public ApiSuccessResponse<PageResponse<UserManageDetailResponse>> getUserList(Pageable pageable) {
-        return page(adminService.getUserList(pageable));
+        return page(userManagementService.list(pageable));
     }
 
-    @PatchMapping("/user/{userId}/status")
-    public ApiSuccessResponse<Object> updateUserStatus(@PathVariable("userId") String userId,
-                                                       @RequestBody UserStatusRequest request) {
-        adminService.updateUserStatus(userId, request.getStatus());
-        return wrap(null);
+    @PatchMapping("/user/{userId}/status/{status}")
+    public ApiSuccessResponse<Boolean> updateUserStatus(@PathVariable("userId") String userId,
+                                                       @PathVariable UserStatus status) {
+        return wrap(userManagementService.updateStatus(userId, status));
     }
 
     @PostMapping("/lotto/winning")

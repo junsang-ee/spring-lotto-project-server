@@ -18,11 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 
@@ -42,10 +39,6 @@ public class AdminServiceImpl implements AdminService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final AdminSettingRepository adminSettingRepository;
-
-    private final BoardRepository boardRepository;
-
-    private final PostRepository postRepository;
 
     private final CrawlerService crawlerService;
 
@@ -84,39 +77,6 @@ public class AdminServiceImpl implements AdminService {
         AdminSettingEntity entity = new AdminSettingEntity();
         entity.setLottoAutoUpdateToggle(toggle.getType());
         adminSettingRepository.save(entity);
-    }
-
-    @Override
-    public Page<UserManageDetailResponse> getUserList(Pageable pageable) {
-        Page<UserManageDetailResponse> list = userRepository.getAllUser(adminEmail, pageable);
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements()
-        );
-    }
-
-    @Override
-    public UserEntity getUserDetail(String userId) {
-        return userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
-        );
-    }
-
-    @Override
-    @Transactional
-    public void updateUserStatus(String userId, UserStatus status) {
-        UserEntity user = getUserDetail(userId);
-        if (status == user.getStatus()) {
-            switch (user.getStatus()) {
-                case DISABLED:
-                    throw new AuthException(ErrorMessage.AUTH_DISABLED);
-                case RETIRED:
-                    throw new AuthException(ErrorMessage.AUTH_RETIRED);
-            }
-        }
-        user.setStatus(status);
-        userRepository.save(user);
     }
 
     @Override

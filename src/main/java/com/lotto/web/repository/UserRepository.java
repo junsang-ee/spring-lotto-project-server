@@ -35,8 +35,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                         ") " +
                      "FROM user u " +
                 "LEFT JOIN post p on p.createdBy = u.id " +
-                    "WHERE u.email != :adminEmail " +
+                    "WHERE u != :admin " +
                  "GROUP BY u.id")
-    Page<UserManageDetailResponse> getAllUser(@Param("adminEmail") String adminEmail,
+    Page<UserManageDetailResponse> getAllUser(@Param("admin") UserEntity admin,
                                               Pageable pageable);
 }
