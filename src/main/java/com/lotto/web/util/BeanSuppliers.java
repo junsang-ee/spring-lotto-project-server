@@ -1,7 +1,6 @@
 package com.lotto.web.util;
 
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
 import static org.springframework.beans.factory.BeanFactoryUtils.beanOfTypeIncludingAncestors;

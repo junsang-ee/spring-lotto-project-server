@@ -29,8 +29,9 @@ public class BoardEntity extends CreationUserEntity {
     @Enumerated(EnumType.STRING)
     private BoardAccessType accessType;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "parentBoard", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentBoard",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     private List<PostEntity> posts;
 
     @OneToOne(cascade = CascadeType.ALL)

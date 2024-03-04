@@ -37,7 +37,9 @@ public class PostEntity extends AbstractPostEntity {
     @JoinColumn(name = "parentBoard", nullable = false)
     private BoardEntity parentBoard;
 
-    @OneToMany(mappedBy = "parentPost", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentPost",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     private List<ReplyEntity> replies;
 
     @OneToOne(cascade = CascadeType.ALL)

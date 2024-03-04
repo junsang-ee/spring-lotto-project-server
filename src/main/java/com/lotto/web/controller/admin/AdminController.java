@@ -1,7 +1,10 @@
 package com.lotto.web.controller.admin;
 
+import com.lotto.web.constants.BoardActivationStatus;
 import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.*;
+import com.lotto.web.model.dto.response.BoardDeleteResponse;
+import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
@@ -10,7 +13,8 @@ import com.lotto.web.model.dto.response.common.PageResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.service.admin.AdminService;
 
-import com.lotto.web.service.crawler.CrawlerService;
+import com.lotto.web.service.admin.crawler.CrawlerServiceImpl;
+import com.lotto.web.service.admin.management.BoardManagementService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +28,23 @@ public class AdminController extends BaseController {
 
     private final AdminService adminService;
 
-    private final CrawlerService crawlerService;
+    private final BoardManagementService boardManagementService;
+
+    private final CrawlerServiceImpl crawlerService;
 
     @PostMapping("/board")
-    public ApiSuccessResponse<BoardEntity> saveBoard(@RequestBody BoardSaveRequest request) {
-        return wrap(adminService.saveBoard(request));
+    public ApiSuccessResponse<BoardSaveResponse> saveBoard(@RequestBody BoardSaveRequest request) {
+        return wrap(boardManagementService.save(request));
     }
 
     @GetMapping("/boards")
-    public ApiSuccessResponse<PageResponse<BoardManageDetailResponse>> getBoardList(Pageable pageable) {
-        return page(adminService.getBoardList(pageable));
+    public ApiSuccessResponse<PageResponse<BoardManageDetailResponse>> getBoards(Pageable pageable) {
+        return page(boardManagementService.list(pageable));
+    }
+
+    @DeleteMapping("/board/{boardId}")
+    public ApiSuccessResponse<BoardDeleteResponse> deleteBoard(@PathVariable String boardId) {
+        return wrap(boardManagementService.delete(boardId));
     }
 
     @DeleteMapping("/post/{postId}")
@@ -42,11 +53,10 @@ public class AdminController extends BaseController {
         return wrap(null);
     }
 
-    @PatchMapping("/board/{boardId}/status")
+    @PatchMapping("/board/{boardId}/status/{status}")
     public ApiSuccessResponse<Object> updateBoardStatus(@PathVariable String boardId,
-                                                        @RequestBody BoardStatusRequest request) {
-        adminService.updateBoardStatus(boardId, request.getStatus());
-        return wrap(null);
+                                                        @PathVariable BoardActivationStatus status) {
+        return wrap(boardManagementService.updateStatus(boardId, status));
     }
 
     @PatchMapping("/post/{postId}/status")
@@ -67,10 +77,10 @@ public class AdminController extends BaseController {
         return null;
     }
 
-    @DeleteMapping("/board/{boardId}")
-    public ApiSuccessResponse<Boolean> deleteBoard(@PathVariable String boardId) {
-        return wrap(adminService.deleteBoard(boardId));
-    }
+//    @DeleteMapping("/board/{boardId}")
+//    public ApiSuccessResponse<Boolean> deleteBoard(@PathVariable String boardId) {
+//        return wrap(adminService.deleteBoard(boardId));
+//    }
 
     @PutMapping("/setting/lotto-history")
     public ApiSuccessResponse<Object> updateLottoAutomation(@RequestBody SettingUpdateRequest toggle) {
@@ -90,8 +100,8 @@ public class AdminController extends BaseController {
         return wrap(null);
     }
 
-    @PostMapping("/update/lotto-winnings")
-    public ApiSuccessResponse<Object> updateLottoWinnings() {
+    @PostMapping("/lotto/winning")
+    public ApiSuccessResponse<Object> saveLottoWinning() {
         crawlerService.createWinningHistory();
         return wrap(null);
     }

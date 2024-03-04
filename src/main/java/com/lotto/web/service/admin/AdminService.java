@@ -12,14 +12,11 @@ import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.model.entity.UserEntity;
 
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface AdminService {
-
-    BoardEntity saveBoard(BoardSaveRequest request);
-
-    boolean deleteBoard(String boardId);
 
     void deletePost(String postId);
 
@@ -28,7 +25,6 @@ public interface AdminService {
 
     void updateLottoAutomationSetting(SettingUpdateRequest toggle);
 
-    Page<BoardManageDetailResponse> getBoardList(Pageable pageable);
     Page<UserManageDetailResponse> getUserList(Pageable pageable);
 
     Page<PostManageDetailResponse> getPostList(String boardId, Pageable pageable);
@@ -39,11 +35,11 @@ public interface AdminService {
 
     void updateUserStatus(String userId, UserStatus status);
 
-    void updateBoardStatus(String boardId, BoardActivationStatus status);
-
     void updatePostStatus(String postId, PostActivationStatus status);
 
     UserEntity getAdmin();
 
     BoardEntity getBoardDetail(String boardId);
+
+    LottoWinningHistoryEntity saveWinningByRound(String round);
 }

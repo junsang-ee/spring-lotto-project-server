@@ -3,24 +3,23 @@ package com.lotto.web.service.admin;
 import com.lotto.web.constants.*;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
-import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
-import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
-import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.admin.AdminSettingEntity;
-import com.lotto.web.repository.AdminSettingRepository;
-import com.lotto.web.repository.BoardRepository;
-import com.lotto.web.repository.PostRepository;
-import com.lotto.web.repository.UserRepository;
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
+import com.lotto.web.repository.*;
 
+import com.lotto.web.service.admin.crawler.CrawlerService;
+import com.lotto.web.util.LottoUtil;
 import lombok.RequiredArgsConstructor;
 
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +29,11 @@ import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -45,33 +49,16 @@ public class AdminServiceImpl implements AdminService {
     private final BoardRepository boardRepository;
 
     private final PostRepository postRepository;
+
+    private final CrawlerService crawlerService;
+
+    private final LottoWinningHistoryRepository lottoWinningHistoryRepository;
+    
     @Value("${junsang.admin.email}")
     private String adminEmail;
 
     @Value("${junsang.admin.password}")
     private String adminPassword;
-
-    @Override
-    @Transactional
-    public BoardEntity saveBoard(BoardSaveRequest request) {
-        BoardEntity board = new BoardEntity();
-        setBoardEntity(getAdmin(), board, request);
-        return boardRepository.save(board);
-    }
-
-    @Override
-    @Transactional
-    public boolean deleteBoard(String boardId) {
-        BoardEntity board = boardRepository.findById(boardId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
-        );
-        if (board.getStatus() == BoardActivationStatus.REMOVED) {
-            throw new InvalidStateException(ErrorMessage.BOARD_REMOVED);
-        }
-        board.setStatus(BoardActivationStatus.REMOVED);
-        boardRepository.save(board);
-        return true;
-    }
 
     @Override
     @Transactional
@@ -107,15 +94,6 @@ public class AdminServiceImpl implements AdminService {
         AdminSettingEntity entity = new AdminSettingEntity();
         entity.setLottoAutoUpdateToggle(toggle.getType());
         adminSettingRepository.save(entity);
-    }
-
-    @Override
-    public Page<BoardManageDetailResponse> getBoardList(Pageable pageable) {
-        Page<BoardManageDetailResponse> list = boardRepository.getAllBoard(pageable);
-        return new PageImpl<> (
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements());
     }
 
     @Override
@@ -171,20 +149,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void updateBoardStatus(String boardId, BoardActivationStatus status) {
-        BoardEntity board = getBoardDetail(boardId);
-        if (status == board.getStatus()) {
-            if (board.getStatus() == BoardActivationStatus.REMOVED)
-                throw new InvalidStateException(ErrorMessage.BOARD_REMOVED);
-            else if (board.getStatus() == BoardActivationStatus.NORMAL)
-                throw new InvalidStateException(ErrorMessage.BOARD_ENABLED);
-        }
-        board.setStatus(status);
-        boardRepository.save(board);
-    }
-
-    @Override
-    @Transactional
     public void updatePostStatus(String postId, PostActivationStatus status) {
         PostEntity post = getPostDetail(postId);
         post.setStatus(status);
@@ -205,11 +169,61 @@ public class AdminServiceImpl implements AdminService {
         );
     }
 
-    private void setBoardEntity(UserEntity admin,
-                                BoardEntity entity,
-                                BoardSaveRequest request) {
-        entity.setCreatedBy(admin);
-        entity.setName(request.getName());
-        entity.setAccessType(request.getAccessType());
+    @Override
+    @Transactional
+    public LottoWinningHistoryEntity saveWinningByRound(String round) {
+        Document document = crawlerService.getLottoDocumentByRound(round);
+        Element dateElement = document.select(LottoUtil.DIV_DATE).get(0);
+        Element winningElement = document.select(LottoUtil.DIV_WINNINGS).get(0);
+        Element bonusElement = document.select(LottoUtil.DIV_BONUS).get(0);
+        List<Integer> winningList = getWinningList(winningElement);
+        Date drawDate = getLottoDrawDate(dateElement);
+        LottoWinningHistoryEntity winningEntity = new LottoWinningHistoryEntity();
+        setWinningHistory(
+                winningEntity,
+                winningList,
+                drawDate,
+                Integer.parseInt(bonusElement.text()),
+                Integer.parseInt(round)
+        );
+        return lottoWinningHistoryRepository.save(winningEntity);
     }
+
+    private void setWinningHistory(LottoWinningHistoryEntity entity,
+                                   List<Integer> winningList,
+                                   Date drawDate,
+                                   int bonus,
+                                   int round) {
+        entity.setFirstNumber(winningList.get(0));
+        entity.setSecondNumber(winningList.get(1));
+        entity.setThirdNumber(winningList.get(2));
+        entity.setFourthNumber(winningList.get(3));
+        entity.setFifthNumber(winningList.get(4));
+        entity.setSixthNumber(winningList.get(5));
+        entity.setDrawDate(drawDate);
+        entity.setBonusNumber(bonus);
+        entity.setRound(round);
+    }
+
+    private List<Integer> getWinningList(Element element) {
+        String[] winningArr = element.text().split("\\s+");
+        return Arrays.stream(winningArr).map(
+                Integer::parseInt
+        ).collect(Collectors.toList());
+    }
+
+    private Date getLottoDrawDate(Element element) {
+        String dateStr = element.text().substring(
+                element.text().indexOf("(")+1,
+                element.text().indexOf(")")-1
+        );
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
+        Date result = null;
+        try {
+            result = formatter.parse(dateStr);
+        } catch (ParseException ignored) {
+        }
+        return result;
+    }
+
 }
