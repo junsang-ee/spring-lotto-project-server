@@ -5,10 +5,7 @@ import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
-import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
-import com.lotto.web.model.entity.BoardEntity;
-import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.admin.AdminSettingEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
@@ -62,13 +59,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void deletePost(String postId) {
-        PostEntity post = getPostDetail(postId);
-        postRepository.delete(post);
-    }
-
-    @Override
-    @Transactional
     public void createAdminAccount() {
         if (userRepository.findByEmail(adminEmail).isPresent())
             return;
@@ -107,27 +97,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Page<PostManageDetailResponse> getPostList(String boardId, Pageable pageable) {
-        BoardEntity parentBoard = getBoardDetail(boardId);
-        Page<PostManageDetailResponse> list = postRepository.getAllPost(parentBoard, pageable);
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements()
-        );
-    }
-
-    @Override
     public UserEntity getUserDetail(String userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
-        );
-    }
-
-    @Override
-    public PostEntity getPostDetail(String postId) {
-        return postRepository.findById(postId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
         );
     }
 
@@ -148,24 +120,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    @Transactional
-    public void updatePostStatus(String postId, PostActivationStatus status) {
-        PostEntity post = getPostDetail(postId);
-        post.setStatus(status);
-        postRepository.save(post);
-    }
-
-    @Override
     public UserEntity getAdmin() {
         return userRepository.findByEmail(adminEmail).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
-        );
-    }
-
-    @Override
-    public BoardEntity getBoardDetail(String boardId) {
-        return boardRepository.findById(boardId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
         );
     }
 
