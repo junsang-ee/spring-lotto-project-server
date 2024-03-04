@@ -30,8 +30,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, String> {
                             "b.status, " +
                             "b.accessType, " +
                             "p.enabledCount as enabledPostCount, " +
-                            "p.disabledCount as disabledPostCount, " +
-                            "p.removedCount as removedPostCount" +
+                            "p.disabledCount as disabledPostCount" +
                         ") " +
                      "FROM board b " +
                "INNER JOIN post_count p on p.id = b.postCount")

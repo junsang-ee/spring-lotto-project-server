@@ -5,8 +5,8 @@ import com.lotto.web.model.dto.request.PostUpdateRequest;
 import com.lotto.web.model.dto.request.ReplySaveRequest;
 import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.ReplyDetailResponse;
+import com.lotto.web.model.dto.response.ReplySaveResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
-import com.lotto.web.model.entity.ReplyEntity;
 import com.lotto.web.service.PostService;
 
 import com.lotto.web.service.ReplyService;
@@ -48,9 +48,9 @@ public class PostController extends BaseController {
     }
 
     @PostMapping("/{postId}/reply")
-    public ApiSuccessResponse<ReplyEntity> saveReply(@AuthenticationPrincipal(expression = "id") String userId,
-                                                     @PathVariable String postId,
-                                                     @Valid @RequestBody ReplySaveRequest request) {
+    public ApiSuccessResponse<ReplySaveResponse> saveReply(@AuthenticationPrincipal(expression = "id") String userId,
+                                                           @PathVariable String postId,
+                                                           @Valid @RequestBody ReplySaveRequest request) {
         return wrap(replyService.save(userId, postId, request));
     }
 

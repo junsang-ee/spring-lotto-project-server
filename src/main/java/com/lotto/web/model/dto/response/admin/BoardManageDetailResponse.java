@@ -16,6 +16,4 @@ public class BoardManageDetailResponse {
     private BoardAccessType accessType;
     private int enabledPostCount;
     private int disabledPostCount;
-    private int removedPostCount;
-
 }

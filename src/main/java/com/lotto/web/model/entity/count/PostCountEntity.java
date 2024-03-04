@@ -20,12 +20,9 @@ public class PostCountEntity extends SequentialEntity {
 
     private int disabledCount;
 
-    private int removedCount;
-
     @PrePersist
     private void onPrevisionPersist() {
         this.enabledCount = 0;
         this.disabledCount = 0;
-        this.removedCount = 0;
     }
 }

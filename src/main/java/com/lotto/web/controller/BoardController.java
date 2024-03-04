@@ -3,9 +3,9 @@ package com.lotto.web.controller;
 import com.lotto.web.model.dto.request.PostSaveRequest;
 import com.lotto.web.model.dto.response.BoardListResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
+import com.lotto.web.model.dto.response.PostSaveResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
-import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.service.BoardService;
 import com.lotto.web.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +34,9 @@ public class BoardController extends BaseController {
     }
 
     @PostMapping("/{boardId}/post")
-    public ApiSuccessResponse<PostEntity> savePost(@AuthenticationPrincipal(expression = "id") String userId,
-                                                   @PathVariable String boardId,
-                                                   @RequestBody PostSaveRequest request) {
+    public ApiSuccessResponse<PostSaveResponse> savePost(@AuthenticationPrincipal(expression = "id") String userId,
+                                                         @PathVariable String boardId,
+                                                         @RequestBody PostSaveRequest request) {
         return wrap(postService.save(userId, boardId, request));
     }
 

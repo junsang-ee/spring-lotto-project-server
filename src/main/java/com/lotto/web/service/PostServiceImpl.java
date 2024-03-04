@@ -8,6 +8,7 @@ import com.lotto.web.model.dto.request.PostSaveRequest;
 import com.lotto.web.model.dto.request.PostUpdateRequest;
 import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
+import com.lotto.web.model.dto.response.PostSaveResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.model.entity.UserEntity;
@@ -42,10 +43,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostEntity save(String userId, String boardId, PostSaveRequest request) {
+    public PostSaveResponse save(String userId, String boardId, PostSaveRequest request) {
         PostEntity entity = new PostEntity();
         setPostEntity(userId, boardId, entity, request);
-        return postRepository.save(entity);
+        PostEntity savedPost = postRepository.save(entity);
+        PostSaveResponse result = new PostSaveResponse();
+        setPostSaveResponse(result, savedPost);
+        return result;
     }
 
     @Override
@@ -140,6 +144,16 @@ public class PostServiceImpl implements PostService {
         response.setMine(createdBy == userService.getUser(userId));
         response.setDisclosureType(post.getDisclosureType());
         response.setReplyCount(post.getReplyCount().getEnabledCount());
+    }
+
+    private void setPostSaveResponse(PostSaveResponse result, PostEntity post) {
+        result.setId(post.getId());
+        result.setTitle(post.getTitle());
+        result.setContent(post.getContent());
+        result.setViewCount(post.getViewCount());
+        result.setStatus(post.getStatus());
+        result.setDisclosureType(post.getDisclosureType());
+        result.setWriter(post.getCreatedBy().getEmail());
     }
 
     private void validPost(PostEntity post, String password, MethodType type, String userId) {

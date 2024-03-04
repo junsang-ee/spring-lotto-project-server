@@ -44,7 +44,6 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
                     "p.status, " +
                     "rc.enabledCount as enabledReplyCount, " +
                     "rc.disabledCount as disabledReplyCount, " +
-                    "rc.removedCount as removedReplyCount, " +
                     "p.createdAt" +
                 ") " +
              "FROM post p " +

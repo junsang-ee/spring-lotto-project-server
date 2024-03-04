@@ -36,6 +36,12 @@ public class AdminController extends BaseController {
         return page(adminService.getBoardList(pageable));
     }
 
+    @DeleteMapping("/post/{postId}")
+    public ApiSuccessResponse<Object> deletePost(@PathVariable String postId) {
+        adminService.deletePost(postId);
+        return wrap(null);
+    }
+
     @PatchMapping("/board/{boardId}/status")
     public ApiSuccessResponse<Object> updateBoardStatus(@PathVariable String boardId,
                                                         @RequestBody BoardStatusRequest request) {

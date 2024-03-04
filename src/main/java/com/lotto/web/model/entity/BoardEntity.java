@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
 import com.lotto.web.model.entity.count.PostCountEntity;
-import com.lotto.web.model.entity.count.ReplyCountEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

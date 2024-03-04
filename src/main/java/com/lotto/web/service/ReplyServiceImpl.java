@@ -8,6 +8,7 @@ import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.ReplySaveRequest;
 import com.lotto.web.model.dto.request.ReplyUpdateRequest;
 import com.lotto.web.model.dto.response.ReplyDetailResponse;
+import com.lotto.web.model.dto.response.ReplySaveResponse;
 import com.lotto.web.model.entity.ReplyEntity;
 import com.lotto.web.repository.ReplyRepository;
 
@@ -30,10 +31,13 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     @Transactional
-    public ReplyEntity save(String userId, String postId, ReplySaveRequest request) {
+    public ReplySaveResponse save(String userId, String postId, ReplySaveRequest request) {
         ReplyEntity reply = new ReplyEntity();
         setSaveReply(userId, postId, reply, request);
-        return replyRepository.save(reply);
+        ReplyEntity savedReply = replyRepository.save(reply);
+        ReplySaveResponse result = new ReplySaveResponse();
+        setReplySaveResponse(result, savedReply);
+        return result;
     }
 
     @Override
@@ -81,6 +85,14 @@ public class ReplyServiceImpl implements ReplyService {
         entity.setContent(request.getContent());
         entity.setCreatedBy(userService.getUser(userId));
         entity.setParentPost(postService.get(postId));
+    }
+
+    private void setReplySaveResponse(ReplySaveResponse response, ReplyEntity reply) {
+        response.setId(reply.getId());
+        response.setContent(reply.getContent());
+        response.setStatus(reply.getStatus());
+        response.setParentPostTitle(reply.getParentPost().getTitle());
+        response.setWriter(reply.getCreatedBy().getEmail());
     }
 
     private void valid(ReplyEntity reply, MethodType type, String userId) {

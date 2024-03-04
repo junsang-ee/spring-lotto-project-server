@@ -70,7 +70,14 @@ public class AdminServiceImpl implements AdminService {
         }
         board.setStatus(BoardActivationStatus.REMOVED);
         boardRepository.save(board);
-        return false;
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(String postId) {
+        PostEntity post = getPostDetail(postId);
+        postRepository.delete(post);
     }
 
     @Override

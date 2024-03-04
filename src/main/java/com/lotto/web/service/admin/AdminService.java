@@ -21,6 +21,8 @@ public interface AdminService {
 
     boolean deleteBoard(String boardId);
 
+    void deletePost(String postId);
+
     void createAdminSetting();
     void createAdminAccount();
 

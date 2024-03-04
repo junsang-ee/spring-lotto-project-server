@@ -28,7 +28,5 @@ public class PostManageDetailResponse {
 
     private int disabledReplyCount;
 
-    private int removedReplyCount;
-
     private Instant createdAt;
 }
