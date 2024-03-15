@@ -5,7 +5,7 @@ import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.response.PostDeleteResponse;
-import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.PostManageListResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.repository.PostRepository;
@@ -33,9 +33,9 @@ public class PostManagementServiceImpl implements PostManagementService {
     }
 
     @Override
-    public Page<PostManageDetailResponse> list(String boardId, Pageable pageable) {
+    public Page<PostManageListResponse> list(String boardId, Pageable pageable) {
         BoardEntity parentBoard = boardManagementService.get(boardId);
-        Page<PostManageDetailResponse> list = postRepository.getAllPost(parentBoard, pageable);
+        Page<PostManageListResponse> list = postRepository.getAllPost(parentBoard, pageable);
         return new PageImpl<>(
                 list.stream().collect(Collectors.toList()),
                 list.getPageable(),

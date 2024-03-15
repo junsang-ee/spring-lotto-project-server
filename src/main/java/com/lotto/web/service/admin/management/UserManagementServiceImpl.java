@@ -4,7 +4,7 @@ import com.lotto.web.constants.UserStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.NotFoundException;
-import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.UserManageListResponse;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.repository.UserRepository;
 import com.lotto.web.service.admin.AdminService;
@@ -33,8 +33,8 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public Page<UserManageDetailResponse> list(Pageable pageable) {
-        Page<UserManageDetailResponse> list = userRepository.getAllUser(
+    public Page<UserManageListResponse> list(Pageable pageable) {
+        Page<UserManageListResponse> list = userRepository.getAllUser(
                 adminService.getAdmin(),
                 pageable
         );
@@ -53,6 +53,12 @@ public class UserManagementServiceImpl implements UserManagementService {
         user.setStatus(status);
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public UserManageListResponse getDetail(String userId) {
+//        UserEntity user = get(userId);
+        return userRepository.getUserDetail(userId);
     }
 
     private void validStatus(UserEntity user, UserStatus status) {

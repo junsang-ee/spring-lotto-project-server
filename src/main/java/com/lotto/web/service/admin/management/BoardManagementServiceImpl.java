@@ -7,7 +7,7 @@ import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.dto.response.BoardDeleteResponse;
 import com.lotto.web.model.dto.response.BoardSaveResponse;
-import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.BoardManageListResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.repository.BoardRepository;
 import com.lotto.web.service.admin.AdminService;
@@ -67,8 +67,8 @@ public class BoardManagementServiceImpl implements BoardManagementService {
     }
 
     @Override
-    public Page<BoardManageDetailResponse> list(Pageable pageable) {
-        Page<BoardManageDetailResponse> list = boardRepository.getAllBoard(pageable);
+    public Page<BoardManageListResponse> list(Pageable pageable) {
+        Page<BoardManageListResponse> list = boardRepository.getAllBoard(pageable);
         return new PageImpl<>(
                 list.stream().collect(Collectors.toList()),
                 list.getPageable(),

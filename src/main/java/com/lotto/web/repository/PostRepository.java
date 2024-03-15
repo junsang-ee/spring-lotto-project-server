@@ -1,9 +1,8 @@
 package com.lotto.web.repository;
 
-import com.lotto.web.config.dsl.QueryDslPredicateExtendedExecutor;
 import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
-import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.PostManageListResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
 
@@ -36,7 +35,7 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
                                                               Pageable pageable);
 
     @Query("SELECT " +
-                "new com.lotto.web.model.dto.response.admin.PostManageDetailResponse(" +
+                "new com.lotto.web.model.dto.response.admin.PostManageListResponse(" +
                     "p.id, " +
                     "p.title, " +
                     "u.email as writer, " +
@@ -50,7 +49,7 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
        "INNER JOIN user u on u.id = p.createdBy " +
        "INNER JOIN reply_count rc on rc.id = p.replyCount " +
             "WHERE p.parentBoard = :parentBoard")
-    Page<PostManageDetailResponse> getAllPost(@Param("parentBoard") BoardEntity parentBoard,
-                                              Pageable pageable);
+    Page<PostManageListResponse> getAllPost(@Param("parentBoard") BoardEntity parentBoard,
+                                            Pageable pageable);
 
 }

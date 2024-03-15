@@ -8,9 +8,9 @@ import com.lotto.web.model.dto.request.*;
 import com.lotto.web.model.dto.response.BoardDeleteResponse;
 import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.dto.response.PostDeleteResponse;
-import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
-import com.lotto.web.model.dto.response.admin.PostManageDetailResponse;
-import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.BoardManageListResponse;
+import com.lotto.web.model.dto.response.admin.PostManageListResponse;
+import com.lotto.web.model.dto.response.admin.UserManageListResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
 import com.lotto.web.service.admin.AdminService;
@@ -42,7 +42,7 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/boards")
-    public ApiSuccessResponse<PageResponse<BoardManageDetailResponse>> getBoards(Pageable pageable) {
+    public ApiSuccessResponse<PageResponse<BoardManageListResponse>> getBoards(Pageable pageable) {
         return page(boardManagementService.list(pageable));
     }
 
@@ -69,8 +69,8 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/board/{boardId}/posts")
-    public ApiSuccessResponse<PageResponse<PostManageDetailResponse>> getPosts(@PathVariable String boardId,
-                                                                               Pageable pageable) {
+    public ApiSuccessResponse<PageResponse<PostManageListResponse>> getPosts(@PathVariable String boardId,
+                                                                             Pageable pageable) {
         return page(postManagementService.list(boardId, pageable));
     }
 
@@ -88,14 +88,19 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/users")
-    public ApiSuccessResponse<PageResponse<UserManageDetailResponse>> getUserList(Pageable pageable) {
+    public ApiSuccessResponse<PageResponse<UserManageListResponse>> getUserList(Pageable pageable) {
         return page(userManagementService.list(pageable));
     }
 
     @PatchMapping("/user/{userId}/status/{status}")
     public ApiSuccessResponse<Boolean> updateUserStatus(@PathVariable("userId") String userId,
-                                                       @PathVariable UserStatus status) {
+                                                        @PathVariable UserStatus status) {
         return wrap(userManagementService.updateStatus(userId, status));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ApiSuccessResponse<UserManageListResponse> getUser(@PathVariable("userId") String userId) {
+        return wrap(userManagementService.getDetail(userId));
     }
 
     @PostMapping("/lotto/winning")

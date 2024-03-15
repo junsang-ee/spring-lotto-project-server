@@ -3,7 +3,7 @@ package com.lotto.web.repository;
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
 import com.lotto.web.model.dto.response.BoardListEntryResponse;
-import com.lotto.web.model.dto.response.admin.BoardManageDetailResponse;
+import com.lotto.web.model.dto.response.admin.BoardManageListResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, String> {
     List<BoardListEntryResponse> getAllByStatus(@Param("status") BoardActivationStatus status);
 
     @Query(value = "SELECT " +
-                        "new com.lotto.web.model.dto.response.admin.BoardManageDetailResponse(" +
+                        "new com.lotto.web.model.dto.response.admin.BoardManageListResponse(" +
                             "b.id, " +
                             "b.name, " +
                             "b.status, " +
@@ -34,7 +34,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, String> {
                         ") " +
                      "FROM board b " +
                "INNER JOIN post_count p on p.id = b.postCount")
-    Page<BoardManageDetailResponse> getAllBoard(Pageable pageable);
+    Page<BoardManageListResponse> getAllBoard(Pageable pageable);
 
 
     @Query(value = "SELECT " +

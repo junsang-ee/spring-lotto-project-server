@@ -2,10 +2,8 @@ package com.lotto.web.service.admin;
 
 import com.lotto.web.constants.*;
 import com.lotto.web.constants.messages.ErrorMessage;
-import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
-import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.admin.AdminSettingEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
