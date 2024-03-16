@@ -1,13 +1,13 @@
 package com.lotto.web.model.dto.response.admin;
 
 import com.lotto.web.constants.UserStatus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class UserManageDetailResponse {
     private String email;
 
@@ -18,6 +18,8 @@ public class UserManageDetailResponse {
     private long postCount;
 
     private long extractionCount;
+
+    private long winningCount;
 
     private Instant createdAt;
 }

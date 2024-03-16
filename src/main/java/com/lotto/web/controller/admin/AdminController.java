@@ -10,6 +10,7 @@ import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.dto.response.PostDeleteResponse;
 import com.lotto.web.model.dto.response.admin.BoardManageListResponse;
 import com.lotto.web.model.dto.response.admin.PostManageListResponse;
+import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserManageListResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
@@ -99,7 +100,7 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/user/{userId}")
-    public ApiSuccessResponse<UserManageListResponse> getUser(@PathVariable("userId") String userId) {
+    public ApiSuccessResponse<UserManageDetailResponse> getUser(@PathVariable("userId") String userId) {
         return wrap(userManagementService.getDetail(userId));
     }
 

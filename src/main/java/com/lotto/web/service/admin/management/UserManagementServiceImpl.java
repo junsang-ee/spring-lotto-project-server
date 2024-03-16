@@ -4,6 +4,7 @@ import com.lotto.web.constants.UserStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
 import com.lotto.web.exception.custom.NotFoundException;
+import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserManageListResponse;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.repository.UserRepository;
@@ -56,8 +57,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
-    public UserManageListResponse getDetail(String userId) {
-//        UserEntity user = get(userId);
+    public UserManageDetailResponse getDetail(String userId) {
         return userRepository.getUserDetail(userId);
     }
 
