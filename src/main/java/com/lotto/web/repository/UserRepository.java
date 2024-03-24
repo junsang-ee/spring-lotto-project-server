@@ -48,14 +48,13 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                             "u.dailyAvailableCount, " +
                             "count(p) as postCount, " +
                             "count(eh) as extractionCount, " +
-                            "(" +
-                                "select " +
-                                    "count(eh) " +
-                                  "from user u " +
-                             "left join extraction_history eh on eh.createdBy = u.id " +
-                             "left join winning_status ws on eh.winningStatus = ws.id " +
-                                 "where ws.overallStatus = 'WON'" +
-                            ") as winningCount, " +
+                            "(select " +
+                                "count(eh) " +
+                               "from user u " +
+                         "inner join extraction_history eh on eh.createdBy = u.id " +
+                         "inner join winning_status ws on eh.winningStatus = ws.id " +
+                              "where ws.overallStatus = 'WON') " +
+                            "as winningCount, " +
                             "u.createdAt" +
                         ") " +
                      "FROM user u " +
@@ -64,4 +63,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                     "WHERE u.id = :userId " +
                  "GROUP BY u.id")
     UserManageDetailResponse getUserDetail(@Param("userId") String userId);
+
+
 }

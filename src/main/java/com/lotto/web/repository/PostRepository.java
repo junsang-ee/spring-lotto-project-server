@@ -3,9 +3,11 @@ package com.lotto.web.repository;
 import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.model.dto.response.PostListEntryResponse;
 import com.lotto.web.model.dto.response.admin.PostManageListResponse;
+import com.lotto.web.model.dto.response.admin.UserPostListResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
 
+import com.lotto.web.model.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -50,6 +52,23 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
        "INNER JOIN reply_count rc on rc.id = p.replyCount " +
             "WHERE p.parentBoard = :parentBoard")
     Page<PostManageListResponse> getAllPost(@Param("parentBoard") BoardEntity parentBoard,
+                                            Pageable pageable);
+
+    @Query(value = "SELECT " +
+                        "new com.lotto.web.model.dto.response.admin.UserPostListResponse(" +
+                            "b.name, " +
+                            "p.title, " +
+                            "p.status, " +
+                            "p.disclosureType, " +
+                            "count(r) as replyCount, " +
+                            "p.createdAt" +
+                        ") " +
+                     "FROM post p " +
+               "INNER JOIN board b on b.id = p.parentBoard " +
+               "INNER JOIN reply r on p.id = r.parentPost " +
+                    "WHERE p.createdBy = :user " +
+                 "GROUP BY p.id, b.id")
+    Page<UserPostListResponse> getUserPosts(@Param("user") UserEntity user,
                                             Pageable pageable);
 
 }
