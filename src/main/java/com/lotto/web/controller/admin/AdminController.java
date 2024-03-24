@@ -114,9 +114,9 @@ public class AdminController extends BaseController {
 
 
 
-    @PostMapping("/lotto/winning")
-    public ApiSuccessResponse<Object> saveLottoWinning() {
-        crawlerService.createWinningHistory();
+    @PostMapping("/lotto/winning/{round}")
+    public ApiSuccessResponse<Object> saveLottoWinning(@PathVariable String round) {
+        adminService.saveWinningByRound(round);
         return wrap(null);
     }
 
