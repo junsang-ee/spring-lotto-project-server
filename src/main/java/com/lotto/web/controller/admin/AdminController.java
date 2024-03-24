@@ -13,7 +13,7 @@ import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
 import com.lotto.web.service.admin.AdminService;
 
-import com.lotto.web.service.admin.crawler.CrawlerServiceImpl;
+import com.lotto.web.service.admin.crawler.CrawlerService;
 import com.lotto.web.service.admin.management.BoardManagementService;
 import com.lotto.web.service.admin.management.PostManagementService;
 import com.lotto.web.service.admin.management.UserManagementService;
@@ -32,7 +32,7 @@ public class AdminController extends BaseController {
     private final BoardManagementService boardManagementService;
     private final PostManagementService postManagementService;
     private final UserManagementService userManagementService;
-    private final CrawlerServiceImpl crawlerService;
+    private final CrawlerService crawlerService;
 
     @PostMapping("/board")
     public ApiSuccessResponse<BoardSaveResponse> saveBoard(@RequestBody BoardSaveRequest request) {
