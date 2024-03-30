@@ -9,7 +9,7 @@ import com.lotto.web.model.entity.UserEntity;
 
 public interface AuthService {
 
-    UserEntity signup(UserRole role, SignupRequest request);
+    UserEntity signup(SignupRequest request, UserRole role);
 
     String login(String userAgent, LoginRequest login);
 

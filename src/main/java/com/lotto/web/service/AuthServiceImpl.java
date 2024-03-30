@@ -40,8 +40,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public UserEntity signup(UserRole role, SignupRequest request) {
-        return userService.save(role, request);
+    public UserEntity signup(SignupRequest request, UserRole role) {
+        return userService.save(request, role);
     }
 
     @Override

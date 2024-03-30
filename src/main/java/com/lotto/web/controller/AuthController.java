@@ -35,7 +35,7 @@ public class AuthController extends BaseController {
     /* 일반 사용자 회원가입 */
     @PostMapping("/signup")
     public ApiSuccessResponse<UserEntity> signup(@RequestBody SignupRequest request) {
-        return wrap(authService.signup(UserRole.USER, request));
+        return wrap(authService.signup(request, UserRole.USER));
     }
 
     @PostMapping("/email/code")

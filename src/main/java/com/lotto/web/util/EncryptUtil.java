@@ -9,4 +9,8 @@ public class EncryptUtil {
         return bCryptPasswordEncoder.encode(rawPassword);
     }
 
+    public static boolean matches(String rawPassword, String encodedPassword) {
+        return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+    }
+
 }

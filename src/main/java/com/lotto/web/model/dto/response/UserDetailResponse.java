@@ -1,21 +1,30 @@
 package com.lotto.web.model.dto.response;
 
 import com.lotto.web.constants.UserRole;
+import com.lotto.web.model.entity.UserEntity;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Getter
-@Setter
-@NoArgsConstructor
+@RequiredArgsConstructor(access = PRIVATE)
 public class UserDetailResponse {
 
-    private String email;
+    private final String email;
 
-    private Instant createdAt;
+    private final Instant createdAt;
 
-    private UserRole role;
+    private final UserRole role;
+
+    public static UserDetailResponse of(final UserEntity user) {
+        return new UserDetailResponse(
+                user.getEmail(),
+                user.getCreatedAt(),
+                user.getRole()
+        );
+    }
 
 }

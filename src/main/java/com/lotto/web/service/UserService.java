@@ -26,7 +26,7 @@ public interface UserService {
 
     UserEntity getUserByEmail(String email);
 
-    UserEntity save(UserRole role, SignupRequest request);
+    UserEntity save(SignupRequest request, UserRole role);
 
     boolean getIsDuplicatedEmail(String email);
 
