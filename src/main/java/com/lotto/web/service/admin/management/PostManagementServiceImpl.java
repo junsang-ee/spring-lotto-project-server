@@ -13,7 +13,9 @@ import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.repository.BoardRepository;
 import com.lotto.web.repository.PostRepository;
 import com.lotto.web.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +45,10 @@ public class PostManagementServiceImpl implements PostManagementService {
     @Override
     public Page<PostManageListResponse> list(String boardId, Pageable pageable) {
         BoardEntity parentBoard = getBoard(boardId);
-        Page<PostManageListResponse> list = postRepository.getAllPost(parentBoard, pageable);
+        Page<PostManageListResponse> list = postRepository.getAllPost(
+                parentBoard,
+                pageable
+        );
         return new PageImpl<>(
                 list.stream().collect(Collectors.toList()),
                 list.getPageable(),
@@ -69,8 +74,7 @@ public class PostManagementServiceImpl implements PostManagementService {
     public boolean updateStatus(String postId, PostActivationStatus status) {
         PostEntity post = get(postId);
         validStatus(post, status);
-        post.setStatus(status);
-        postRepository.save(post);
+        post.updateStatus(status);
         return true;
     }
 
@@ -79,9 +83,7 @@ public class PostManagementServiceImpl implements PostManagementService {
     public PostDeleteResponse delete(String postId) {
         PostEntity post = get(postId);
         postRepository.delete(post);
-        PostDeleteResponse result = new PostDeleteResponse();
-        result.setTitle(post.getTitle());
-        return result;
+        return PostDeleteResponse.of(post.getTitle());
     }
 
     private BoardEntity getBoard(String boardId) {

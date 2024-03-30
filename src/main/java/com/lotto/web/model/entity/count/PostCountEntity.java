@@ -22,10 +22,7 @@ public class PostCountEntity extends SequentialEntity {
     private int disabledCount;
 
     public static PostCountEntity of() {
-        return new PostCountEntity(
-                0,
-                0
-        );
+        return new PostCountEntity(0, 0);
     }
 
     public void addEnabled() {

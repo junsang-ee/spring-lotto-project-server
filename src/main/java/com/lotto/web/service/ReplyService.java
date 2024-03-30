@@ -14,7 +14,7 @@ public interface ReplyService {
     ReplySaveResponse save(String userId, String postId, ReplySaveRequest request);
     ReplyEntity get(String replyId);
 
-    ReplyEntity update(String userId, String replyId, ReplyUpdateRequest request);
+    boolean update(String userId, String replyId, ReplyUpdateRequest request);
 
     boolean delete(String userId, String replyId);
 

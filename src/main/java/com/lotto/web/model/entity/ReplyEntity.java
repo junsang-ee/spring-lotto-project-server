@@ -5,13 +5,11 @@ import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.model.dto.request.ReplySaveRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 @Getter
-@Setter
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "reply")
 @Entity(name = "reply")
@@ -38,6 +36,10 @@ public class ReplyEntity extends AbstractPostEntity {
     protected ReplyEntity(UserEntity user, PostEntity post, String content) {
         super(PostActivationStatus.NORMAL, user);
         this.parentPost = post;
+        this.content = content;
+    }
+
+    public void update(String content) {
         this.content = content;
     }
 

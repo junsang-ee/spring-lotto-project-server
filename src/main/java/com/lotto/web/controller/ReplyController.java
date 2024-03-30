@@ -16,7 +16,7 @@ public class ReplyController extends BaseController {
     private final ReplyService replyService;
 
     @PatchMapping("/{replyId}")
-    public ApiSuccessResponse<ReplyEntity> update(@AuthenticationPrincipal(expression = "id") String userId,
+    public ApiSuccessResponse<Boolean> update(@AuthenticationPrincipal(expression = "id") String userId,
                                                   @PathVariable String replyId,
                                                   @RequestBody ReplyUpdateRequest request) {
         return wrap(replyService.update(userId, replyId, request));

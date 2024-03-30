@@ -3,12 +3,13 @@ package com.lotto.web.model.dto.response;
 import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.constants.PostDisclosureType;
 import com.lotto.web.model.entity.PostEntity;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = PRIVATE)
 public class PostSaveResponse {
     private final String id;
     private final String title;

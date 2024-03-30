@@ -9,9 +9,13 @@ import com.lotto.web.model.dto.request.ReplySaveRequest;
 import com.lotto.web.model.dto.request.ReplyUpdateRequest;
 import com.lotto.web.model.dto.response.ReplyDetailResponse;
 import com.lotto.web.model.dto.response.ReplySaveResponse;
+import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.model.entity.ReplyEntity;
+import com.lotto.web.model.entity.UserEntity;
+import com.lotto.web.repository.PostRepository;
 import com.lotto.web.repository.ReplyRepository;
 
+import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,19 +29,21 @@ public class ReplyServiceImpl implements ReplyService {
 
     private final ReplyRepository replyRepository;
 
-    private final UserService userService;
+    private final PostRepository postRepository;
 
-    private final PostService postService;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
     public ReplySaveResponse save(String userId, String postId, ReplySaveRequest request) {
-        ReplyEntity reply = new ReplyEntity();
-        setSaveReply(userId, postId, reply, request);
-        ReplyEntity savedReply = replyRepository.save(reply);
-        ReplySaveResponse result = new ReplySaveResponse();
-        setReplySaveResponse(result, savedReply);
-        return result;
+        PostEntity parentPost = getParentPost(postId);
+        UserEntity user = getUser(userId);
+        ReplyEntity reply = ReplyEntity.of(
+                user,
+                parentPost,
+                request
+        );
+        return ReplySaveResponse.of(replyRepository.save(reply));
     }
 
     @Override
@@ -49,11 +55,11 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     @Transactional
-    public ReplyEntity update(String userId, String replyId, ReplyUpdateRequest request) {
+    public boolean update(String userId, String replyId, ReplyUpdateRequest request) {
         ReplyEntity reply = get(replyId);
         valid(reply, MethodType.UPDATE, userId);
-        reply.setContent(request.getContent());
-        return replyRepository.save(reply);
+        reply.update(request.getContent());
+        return true;
     }
 
     @Override
@@ -61,8 +67,7 @@ public class ReplyServiceImpl implements ReplyService {
     public boolean delete(String userId, String replyId) {
         ReplyEntity reply = get(replyId);
         valid(reply, MethodType.DELETE, userId);
-        reply.setStatus(PostActivationStatus.REMOVED);
-        replyRepository.save(reply);
+        reply.updateStatus(PostActivationStatus.REMOVED);
         return true;
     }
 
@@ -71,28 +76,23 @@ public class ReplyServiceImpl implements ReplyService {
                                                  String postId,
                                                  Pageable pageable) {
         return replyRepository.findAllByParentPostAndStatus(
-                userService.getUser(userId),
+                getUser(userId),
                 PostActivationStatus.NORMAL,
-                postService.get(postId),
+                getParentPost(postId),
                 pageable
         );
     }
 
-    private void setSaveReply(String userId,
-                              String postId,
-                              ReplyEntity entity,
-                              ReplySaveRequest request) {
-        entity.setContent(request.getContent());
-        entity.setCreatedBy(userService.getUser(userId));
-        entity.setParentPost(postService.get(postId));
+    private PostEntity getParentPost(String postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
+        );
     }
 
-    private void setReplySaveResponse(ReplySaveResponse response, ReplyEntity reply) {
-        response.setId(reply.getId());
-        response.setContent(reply.getContent());
-        response.setStatus(reply.getStatus());
-        response.setParentPostTitle(reply.getParentPost().getTitle());
-        response.setWriter(reply.getCreatedBy().getEmail());
+    private UserEntity getUser(String userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
     }
 
     private void valid(ReplyEntity reply, MethodType type, String userId) {
@@ -102,7 +102,7 @@ public class ReplyServiceImpl implements ReplyService {
             case REMOVED:
                 throw new InvalidStateException(ErrorMessage.REPLY_REMOVED);
             case NORMAL:
-                if (userService.getUser(userId) != reply.getCreatedBy()) {
+                if (getUser(userId) != reply.getCreatedBy()) {
                     if (type == MethodType.DELETE)
                         throw new InvalidStateException(ErrorMessage.REPLY_ONLY_REMOVE_WRITER);
                     else if (type == MethodType.UPDATE)

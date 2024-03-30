@@ -1,12 +1,15 @@
 package com.lotto.web.model.dto.response;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@RequiredArgsConstructor(access = PRIVATE)
 public class PostDeleteResponse {
-    private String title;
+    private final String title;
+
+    public static PostDeleteResponse of(final String title) {
+        return new PostDeleteResponse(title);
+    }
 }
