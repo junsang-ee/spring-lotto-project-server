@@ -53,10 +53,11 @@ public class AdminServiceImpl implements AdminService {
     public void createAdminAccount() {
         if (userRepository.findByEmail(adminEmail).isPresent())
             return;
-        UserEntity admin = new UserEntity();
-        admin.setRole(UserRole.ADMIN);
-        admin.setEmail(adminEmail);
-        admin.setPassword(passwordEncoder.encode(adminPassword));
+        UserEntity admin = UserEntity.of(
+                adminEmail,
+                adminPassword,
+                UserRole.ADMIN
+        );
         userRepository.save(admin);
     }
 

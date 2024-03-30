@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.UserStatus;
 import com.lotto.web.model.CreationTimestampEntity;
-import com.lotto.web.model.dto.request.SignupRequest;
 import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import com.lotto.web.util.EncryptUtil;
 import lombok.Getter;
@@ -52,11 +51,12 @@ public class UserEntity extends CreationTimestampEntity {
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<ExtractionHistoryEntity> extractionLottoList;
 
-    public static UserEntity of(final SignupRequest signupRequest,
+    public static UserEntity of(final String email,
+                                final String password,
                                 final UserRole role) {
         return new UserEntity(
-                signupRequest.getEmail(),
-                signupRequest.getPassword(),
+                email,
+                password,
                 role
         );
     }
@@ -80,7 +80,7 @@ public class UserEntity extends CreationTimestampEntity {
     }
 
     public void updateAvailableCount(int count) {
-        this.dailyAvailableCount -= count;
+        this.dailyAvailableCount = count;
     }
 
 }

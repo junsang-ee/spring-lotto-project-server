@@ -94,7 +94,11 @@ public class UserServiceImpl implements UserService {
         if (getByEmail(signup.getEmail()).isPresent()) {
             throw new DuplicatedException(ErrorMessage.AUTH_DUPLICATED_EMAIL);
         }
-        UserEntity user = UserEntity.of(signup, role);
+        UserEntity user = UserEntity.of(
+                signup.getEmail(),
+                signup.getPassword(),
+                role
+        );
         return userRepository.save(user);
     }
 
@@ -128,7 +132,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateAvailableCount(String userId, int count) {
         UserEntity user = getUser(userId);
-        user.updateAvailableCount(count);
+        int updatedCount = Math.max(
+                user.getDailyAvailableCount() - count,
+                0
+        );
+        user.updateAvailableCount(updatedCount);
     }
 
     @Override

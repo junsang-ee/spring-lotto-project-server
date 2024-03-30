@@ -7,7 +7,6 @@ import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.response.admin.UserManageDetailResponse;
 import com.lotto.web.model.dto.response.admin.UserManageListResponse;
 import com.lotto.web.model.entity.UserEntity;
-import com.lotto.web.repository.PostRepository;
 import com.lotto.web.repository.UserRepository;
 import com.lotto.web.service.admin.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +25,6 @@ public class UserManagementServiceImpl implements UserManagementService {
     private final AdminService adminService;
 
     private final UserRepository userRepository;
-
-    private final PostRepository postRepository;
 
     @Override
     public UserEntity get(String userId) {
@@ -54,8 +51,7 @@ public class UserManagementServiceImpl implements UserManagementService {
     public boolean updateStatus(String userId, UserStatus status) {
         UserEntity user = get(userId);
         validStatus(user, status);
-        user.setStatus(status);
-        userRepository.save(user);
+        user.updateStatus(status);
         return true;
     }
 

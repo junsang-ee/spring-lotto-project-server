@@ -22,7 +22,7 @@ public class ScheduleService {
         log.info("=== Start Scheduler resetting the number of times users can use the service ===");
         List<UserEntity> users = userService.getAllEnabledUser();
         for (UserEntity user : users) {
-            user.setDailyAvailableCount(100);
+            user.updateAvailableCount(100);
         }
         userService.saveAll(users);
     }
