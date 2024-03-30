@@ -10,7 +10,6 @@ import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.dto.response.admin.BoardManageListResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.repository.BoardRepository;
-import com.lotto.web.service.admin.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,8 +23,6 @@ import java.util.stream.Collectors;
 @Service
 public class BoardManagementServiceImpl implements BoardManagementService {
 
-    private final AdminService adminService;
-
     private final BoardRepository boardRepository;
 
     @Override
@@ -38,12 +35,8 @@ public class BoardManagementServiceImpl implements BoardManagementService {
     @Override
     @Transactional
     public BoardSaveResponse save(BoardSaveRequest request) {
-        BoardEntity board = new BoardEntity();
-        setBoard(board, request);
-        BoardEntity savedBoard = boardRepository.save(board);
-        BoardSaveResponse result = new BoardSaveResponse();
-        setSaveResponse(result, savedBoard);
-        return result;
+        BoardEntity board = BoardEntity.of(request);
+        return BoardSaveResponse.of(boardRepository.save(board));
     }
 
     @Override
@@ -61,8 +54,7 @@ public class BoardManagementServiceImpl implements BoardManagementService {
     public boolean updateStatus(String boardId, BoardActivationStatus status) {
         BoardEntity board = get(boardId);
         validStatus(board, status);
-        board.setStatus(status);
-        boardRepository.save(board);
+        board.updateStatus(status);
         return true;
     }
 
@@ -74,19 +66,6 @@ public class BoardManagementServiceImpl implements BoardManagementService {
                 list.getPageable(),
                 list.getTotalElements()
         );
-    }
-
-    private void setBoard(BoardEntity board, BoardSaveRequest request) {
-        board.setCreatedBy(adminService.getAdmin());
-        board.setName(request.getName());
-        board.setAccessType(request.getAccessType());
-    }
-
-    private void setSaveResponse(BoardSaveResponse result, BoardEntity board) {
-        result.setName(board.getName());
-        result.setType(board.getAccessType());
-        result.setStatus(board.getStatus());
-        result.setCreatedAt(board.getCreatedAt());
     }
 
     private void validStatus(BoardEntity board, BoardActivationStatus status) {

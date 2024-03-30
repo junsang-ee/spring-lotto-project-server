@@ -12,9 +12,10 @@ import com.lotto.web.model.dto.response.PostSaveResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
 import com.lotto.web.model.entity.UserEntity;
-import com.lotto.web.model.entity.count.ReplyCountEntity;
+import com.lotto.web.repository.BoardRepository;
 import com.lotto.web.repository.PostRepository;
 
+import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,9 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
 
-    private final BoardService boardService;
+    private final BoardRepository boardRepository;
+
+    private final UserRepository userRepository;
 
     private final UserService userService;
 
@@ -44,12 +47,12 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public PostSaveResponse save(String userId, String boardId, PostSaveRequest request) {
-        PostEntity entity = new PostEntity();
-        setPostEntity(userId, boardId, entity, request);
-        PostEntity savedPost = postRepository.save(entity);
-        PostSaveResponse result = new PostSaveResponse();
-        setPostSaveResponse(result, savedPost);
-        return result;
+        PostEntity post = PostEntity.of(
+                getUser(userId),
+                getParentBoard(boardId),
+                request
+        );
+        return PostSaveResponse.of(postRepository.save(post));
     }
 
     @Override
@@ -57,8 +60,7 @@ public class PostServiceImpl implements PostService {
     public boolean delete(String userId, String postId) {
         PostEntity post = get(postId);
         validPost(post, null, MethodType.DELETE, userId);
-        post.setStatus(PostActivationStatus.REMOVED);
-        postRepository.save(post);
+        post.updateStatus(PostActivationStatus.REMOVED);
         return true;
     }
 
@@ -67,9 +69,7 @@ public class PostServiceImpl implements PostService {
     public boolean update(String userId, String postId, PostUpdateRequest request) {
         PostEntity post = get(postId);
         validPost(post, null, MethodType.UPDATE, userId);
-        post.setTitle(request.getTitle());
-        post.setContent(request.getContent());
-        postRepository.save(post);
+        post.update(request);
         return true;
     }
 
@@ -77,9 +77,7 @@ public class PostServiceImpl implements PostService {
     public PostDetailResponse detail(String userId, String postId) {
         PostEntity post = get(postId);
         validPost(post, null, MethodType.GET, null);
-        PostDetailResponse result = new PostDetailResponse();
-        setPostDetail(userId, post, result);
-        return result;
+        return PostDetailResponse.of(userId, post);
     }
 
     @Override
@@ -97,7 +95,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostListEntryResponse> list(String boardId, Pageable pageable) {
-        BoardEntity parentBoard = boardService.get(boardId);
+        BoardEntity parentBoard = getParentBoard(boardId);
         Page<PostListEntryResponse> list =
                 postRepository.findAllByParentBoardAndStatus(
                         PostActivationStatus.NORMAL,
@@ -117,43 +115,16 @@ public class PostServiceImpl implements PostService {
         return true;
     }
 
-    @Override
-    @Transactional
-    public void updateReplyCount(PostEntity post, ReplyCountEntity replyCount) {
-        post.setReplyCount(replyCount);
-        postRepository.save(post);
+    private BoardEntity getParentBoard(String boardId) {
+        return boardRepository.findById(boardId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.BOARD_NOT_FOUND)
+        );
     }
 
-    private void setPostEntity(String userId, String boardId, PostEntity entity, PostSaveRequest request) {
-        entity.setParentBoard(boardService.get(boardId));
-        entity.setCreatedBy(userService.getUser(userId));
-        entity.setTitle(request.getTitle());
-        entity.setContent(request.getContent());
-        entity.setDisclosureType(request.getDisclosureType());
-        if (request.getPassword() != null &&
-            request.getDisclosureType() == PostDisclosureType.PRIVATE) {
-            entity.setPassword(passwordEncoder.encode(request.getPassword()));
-        } else entity.setPassword(null);
-    }
-
-    private void setPostDetail(String userId, PostEntity post, PostDetailResponse response) {
-        UserEntity createdBy = post.getCreatedBy();
-        response.setWriter(createdBy.getEmail());
-        response.setTitle(post.getTitle());
-        response.setContent(post.getContent());
-        response.setMine(createdBy == userService.getUser(userId));
-        response.setDisclosureType(post.getDisclosureType());
-        response.setReplyCount(post.getReplyCount().getEnabledCount());
-    }
-
-    private void setPostSaveResponse(PostSaveResponse result, PostEntity post) {
-        result.setId(post.getId());
-        result.setTitle(post.getTitle());
-        result.setContent(post.getContent());
-        result.setViewCount(post.getViewCount());
-        result.setStatus(post.getStatus());
-        result.setDisclosureType(post.getDisclosureType());
-        result.setWriter(post.getCreatedBy().getEmail());
+    private UserEntity getUser(String userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
     }
 
     private void validPost(PostEntity post, String password, MethodType type, String userId) {

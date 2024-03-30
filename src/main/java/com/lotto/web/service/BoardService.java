@@ -10,6 +10,4 @@ public interface BoardService {
     BoardListResponse listAll();
 
     BoardListResponse listForUser();
-
-    void updatePostCount(BoardEntity board, PostCountEntity postCount);
 }

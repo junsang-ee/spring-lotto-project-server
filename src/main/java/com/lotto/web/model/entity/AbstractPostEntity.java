@@ -1,19 +1,29 @@
 package com.lotto.web.model.entity;
 
 import com.lotto.web.constants.PostActivationStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
-@Setter
+@NoArgsConstructor(access = PROTECTED)
 @MappedSuperclass
-public abstract class AbstractPostEntity extends CreationUserEntity {
+public class AbstractPostEntity extends CreationUserEntity {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PostActivationStatus status;
 
+    protected AbstractPostEntity(PostActivationStatus status, UserEntity user) {
+        super(user);
+        this.status = status;
+    }
+
+    public void updateStatus(PostActivationStatus status) {
+        this.status = status;
+    }
 }

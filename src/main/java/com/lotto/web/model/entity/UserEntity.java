@@ -44,10 +44,6 @@ public class UserEntity extends CreationTimestampEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
-    private List<BoardEntity> boards;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "createdBy", fetch = FetchType.LAZY)
     private List<ReplyEntity> replies;
 
     @JsonIgnore

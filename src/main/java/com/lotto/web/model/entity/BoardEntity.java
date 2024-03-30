@@ -1,22 +1,22 @@
 package com.lotto.web.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.BoardAccessType;
 import com.lotto.web.constants.BoardActivationStatus;
+import com.lotto.web.model.ModificationTimestampEntity;
+import com.lotto.web.model.dto.request.BoardSaveRequest;
 import com.lotto.web.model.entity.count.PostCountEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
+import static lombok.AccessLevel.PROTECTED;
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "board")
 @Entity(name = "board")
-public class BoardEntity extends CreationUserEntity {
+public class BoardEntity extends ModificationTimestampEntity {
 
     @Column(nullable = false)
     private String name;
@@ -38,9 +38,21 @@ public class BoardEntity extends CreationUserEntity {
     @JoinColumn(name = "post_count")
     private PostCountEntity postCount;
 
-    @PrePersist
-    public void onPrevisionPersist() {
-        this.postCount = new PostCountEntity();
+    public static BoardEntity of(final BoardSaveRequest saveRequest) {
+        return new BoardEntity(
+                saveRequest.getName(),
+                saveRequest.getAccessType()
+        );
+    }
+
+    protected BoardEntity(String name, BoardAccessType type) {
+        this.name = name;
+        this.accessType = type;
         this.status = BoardActivationStatus.NORMAL;
+        this.postCount = PostCountEntity.of();
+    }
+
+    public void updateStatus(BoardActivationStatus status) {
+        this.status = status;
     }
 }

@@ -29,6 +29,4 @@ public interface PostService {
     Page<PostListEntryResponse> list(String boardId, Pageable pageable);
 
     boolean verifyPassword(String postId, String password);
-
-    void updateReplyCount(PostEntity post, ReplyCountEntity replyCount);
 }

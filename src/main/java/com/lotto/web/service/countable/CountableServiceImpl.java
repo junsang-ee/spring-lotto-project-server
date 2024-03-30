@@ -30,27 +30,12 @@ public class CountableServiceImpl implements CountableService{
     public void updateReplyCount(String postId, CountableType type) {
         PostEntity post = postService.get(postId);
         ReplyCountEntity replyCount = post.getReplyCount();
-        int disabledCount = replyCount.getDisabledCount();
-        int enabledCount = replyCount.getEnabledCount();
-        switch (type) {
-            case CANCEL:
-                disabledCount--;
-                enabledCount++;
-                break;
-            case CREATE:
-                enabledCount++;
-                break;
-            case REMOVE:
-            case DISABLE:
-                if (enabledCount != 0)
-                    enabledCount--;
-                disabledCount++;
-                break;
-            default: break;
-        }
-        replyCount.setEnabledCount(enabledCount);
-        replyCount.setDisabledCount(disabledCount);
-        postService.updateReplyCount(post, replyCount);
+        if (type == CountableType.CANCEL)
+            replyCount.cancel();
+        else if (type == CountableType.CREATE)
+            replyCount.addEnabled();
+        else if(type == CountableType.DISABLE || type == CountableType.REMOVE)
+            replyCount.addDisabled();
     }
 
     @Override
@@ -58,26 +43,11 @@ public class CountableServiceImpl implements CountableService{
     public void updatePostCount(String boardId, CountableType type) {
         BoardEntity board = boardService.get(boardId);
         PostCountEntity postCount = board.getPostCount();
-        int disabledCount = postCount.getDisabledCount();
-        int enabledCount = postCount.getEnabledCount();
-        switch (type) {
-            case CANCEL:
-                disabledCount--;
-                enabledCount++;
-                break;
-            case CREATE:
-                enabledCount++;
-                break;
-            case REMOVE:
-            case DISABLE:
-                if (enabledCount != 0)
-                    enabledCount--;
-                disabledCount++;
-                break;
-            default: break;
-        }
-        postCount.setEnabledCount(enabledCount);
-        postCount.setDisabledCount(disabledCount);
-        boardService.updatePostCount(board, postCount);
+        if (type == CountableType.CANCEL)
+            postCount.cancel();
+        else if (type == CountableType.CREATE)
+            postCount.addEnabled();
+        else if(type == CountableType.DISABLE || type == CountableType.REMOVE)
+            postCount.addDisabled();
     }
 }

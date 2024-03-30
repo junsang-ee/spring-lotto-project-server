@@ -1,25 +1,32 @@
 package com.lotto.web.model.dto.response;
 
 import com.lotto.web.constants.PostDisclosureType;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.lotto.web.model.entity.PostEntity;
+import lombok.*;
 
+import java.util.Objects;
+
+import static lombok.AccessLevel.PRIVATE;
 @Getter
-@Setter
-@NoArgsConstructor
+@RequiredArgsConstructor(access = PRIVATE)
 public class PostDetailResponse {
 
-    private String writer;
+    private final String writer;
+    private final String title;
+    private final String content;
+    private final PostDisclosureType disclosureType;
+    private final int replyCount;
+    private final boolean mine;
 
-    private String title;
-
-    private String content;
-
-    private boolean mine;
-
-    private PostDisclosureType disclosureType;
-
-    private int replyCount;
+    public static PostDetailResponse of(final String requestUserId, final PostEntity post) {
+        return new PostDetailResponse(
+                post.getCreatedBy().getEmail(),
+                post.getTitle(),
+                post.getContent(),
+                post.getDisclosureType(),
+                post.getReplyCount().getEnabledCount(),
+                requestUserId.equals(post.getCreatedBy().getId())
+        );
+    }
 
 }
