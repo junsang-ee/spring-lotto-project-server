@@ -2,15 +2,17 @@ package com.lotto.web.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lotto.web.constants.PostActivationStatus;
+import com.lotto.web.model.dto.request.ReplySaveRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
+import static lombok.AccessLevel.PROTECTED;
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "reply")
 @Entity(name = "reply")
 public class ReplyEntity extends AbstractPostEntity {
@@ -23,8 +25,20 @@ public class ReplyEntity extends AbstractPostEntity {
     @JoinColumn(name = "parentPost", nullable = false)
     private PostEntity parentPost;
 
-    @PrePersist
-    public void onPrevisionPersist() {
-        super.setStatus(PostActivationStatus.NORMAL);
+    public static ReplyEntity of(final UserEntity user,
+                                 final PostEntity parentPost,
+                                 final ReplySaveRequest saveRequest) {
+        return new ReplyEntity(
+                user,
+                parentPost,
+                saveRequest.getContent()
+        );
+
     }
+    protected ReplyEntity(UserEntity user, PostEntity post, String content) {
+        super(PostActivationStatus.NORMAL, user);
+        this.parentPost = post;
+        this.content = content;
+    }
+
 }
