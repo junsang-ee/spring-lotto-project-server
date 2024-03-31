@@ -1,15 +1,17 @@
 package com.lotto.web.service;
 
+import com.lotto.web.constants.messages.ErrorMessage;
+import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.dto.response.ExtractionDetailResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.entity.UserEntity;
-import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
 import com.lotto.web.repository.ExtractionHistoryRepository;
 import com.lotto.web.repository.LottoHistoryRepository;
+import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -31,7 +33,7 @@ public class LottoServiceImpl implements LottoService {
 
     private final LottoVO lottoVO;
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     private final LottoHistoryRepository lottoHistoryRepository;
 
@@ -42,9 +44,13 @@ public class LottoServiceImpl implements LottoService {
                                                  int price,
                                                  List<Integer> exceptList,
                                                  List<Integer> needsList) {
-        RandomLottoListResponse result = new RandomLottoListResponse();
-        setLottoListResponse(price, exceptList, needsList, result);
-        return result;
+        return RandomLottoListResponse.of(
+                getLottoListResponse(
+                        price,
+                        exceptList,
+                        needsList
+                )
+        );
     }
 
     @Override
@@ -55,17 +61,13 @@ public class LottoServiceImpl implements LottoService {
     @Override
     public LottoWinningNumbersResponse getWinningNumbersByRound(int round) {
         LottoWinningHistoryEntity entity = lottoHistoryRepository.findByRound(round);
-        LottoWinningNumbersResponse response = new LottoWinningNumbersResponse();
-        setWinningNumbersResponse(entity, response);
-        return response;
+        return LottoWinningNumbersResponse.of(entity);
     }
 
     @Override
     public LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate) {
         LottoWinningHistoryEntity entity = lottoHistoryRepository.findByDrawDate(drawDate);
-        LottoWinningNumbersResponse response = new LottoWinningNumbersResponse();
-        setWinningNumbersResponse(entity, response);
-        return response;
+        return LottoWinningNumbersResponse.of(entity);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class LottoServiceImpl implements LottoService {
 
     @Override
     public Page<ExtractionDetailResponse> getAllExtractions(String userId, Pageable pageable) {
-        UserEntity user = userService.getUser(userId);
+        UserEntity user = getUser(userId);
         Page<ExtractionDetailResponse> list =
                 extractionHistoryRepository.getAllExtraction(
                         user,
@@ -124,40 +126,28 @@ public class LottoServiceImpl implements LottoService {
         lottoVO.getLottoList().sort(Comparator.naturalOrder());
     }
 
-    private void setLottoResponse(DefaultLottoResponse lottoResponse,
-                                  List<Integer> exceptList,
-                                  List<Integer> needsList) {
+    private DefaultLottoResponse getLottoResponse(List<Integer> exceptList,
+                                                  List<Integer> needsList) {
         setLotto(exceptList, needsList);
-        lottoResponse.setFirstNumber(lottoVO.getLottoList().get(0));
-        lottoResponse.setSecondNumber(lottoVO.getLottoList().get(1));
-        lottoResponse.setThirdNumber(lottoVO.getLottoList().get(2));
-        lottoResponse.setFourthNumber(lottoVO.getLottoList().get(3));
-        lottoResponse.setFifthNumber(lottoVO.getLottoList().get(4));
-        lottoResponse.setSixthNumber(lottoVO.getLottoList().get(5));
+        return DefaultLottoResponse.of(lottoVO);
     }
 
-    private void setLottoListResponse(int price,
-                                      List<Integer> exceptList,
-                                      List<Integer> needsList,
-                                      RandomLottoListResponse lottoListGetResponse) {
-        List<DefaultLottoResponse> lottoDetails = new ArrayList<>();
+    private List<DefaultLottoResponse> getLottoListResponse(int price,
+                                                            List<Integer> exceptList,
+                                                            List<Integer> needsList) {
+        List<DefaultLottoResponse> defaultLottoResponseList = new ArrayList<>();
         for (int i = 0; i < getLottoCount(price); i++) {
-            DefaultLottoResponse lotto = new DefaultLottoResponse();
-            setLottoResponse(lotto, exceptList, needsList);
-            lottoDetails.add(lotto);
+            defaultLottoResponseList.add(
+                    getLottoResponse(exceptList, needsList)
+            );
         }
-        lottoListGetResponse.setLottoList(lottoDetails);
+        return defaultLottoResponseList;
     }
 
-    private void setWinningNumbersResponse(LottoWinningHistoryEntity entity,
-                                           LottoWinningNumbersResponse response) {
-        response.setFirstNumber(entity.getFirstNumber());
-        response.setSecondNumber(entity.getSecondNumber());
-        response.setThirdNumber(entity.getThirdNumber());
-        response.setFourthNumber(entity.getFourthNumber());
-        response.setFifthNumber(entity.getFifthNumber());
-        response.setSixthNumber(entity.getSixthNumber());
-        response.setBonusNumber(entity.getBonusNumber());
+    private UserEntity getUser(String userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
+        );
     }
 
 }

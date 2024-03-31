@@ -1,19 +1,19 @@
 package com.lotto.web.model.entity.lotto;
 
 import com.lotto.web.model.TimestampSequentialEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import java.util.Date;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "lotto_winning_history")
 @Entity(name = "lotto_winning_history")
 public class LottoWinningHistoryEntity extends TimestampSequentialEntity {
@@ -28,4 +28,6 @@ public class LottoWinningHistoryEntity extends TimestampSequentialEntity {
 
     @Temporal(TemporalType.DATE)
     private Date drawDate;
+
+
 }

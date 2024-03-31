@@ -132,8 +132,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateAvailableCount(String userId, int count) {
         UserEntity user = getUser(userId);
+        int currentAvaliableCount = user.getDailyAvailableCount();
         int updatedCount = Math.max(
-                user.getDailyAvailableCount() - count,
+                currentAvaliableCount - count,
                 0
         );
         user.updateAvailableCount(updatedCount);
@@ -145,7 +146,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = getUser(userId);
         List<ExtractionHistoryEntity> entities = randomLottos.getLottoList()
                 .stream()
-                .map(it -> new ExtractionHistoryEntity(user, it))
+                .map(it -> ExtractionHistoryEntity.of(it, user))
                 .collect(Collectors.toList());
         extractionHistoryRepository.saveAll(entities);
     }

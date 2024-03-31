@@ -3,15 +3,18 @@ package com.lotto.web.model.entity.lotto;
 import com.lotto.web.model.TimestampSequentialEntity;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.entity.UserEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
+import static lombok.AccessLevel.PROTECTED;
+
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "extraction_history")
 @Entity(name = "extraction_history")
 public class ExtractionHistoryEntity extends TimestampSequentialEntity {
@@ -30,7 +33,14 @@ public class ExtractionHistoryEntity extends TimestampSequentialEntity {
     @JoinColumn(name = "created_by", nullable = false, updatable = false)
     private UserEntity createdBy;
 
-    public ExtractionHistoryEntity(UserEntity user, DefaultLottoResponse lotto) {
+    public static ExtractionHistoryEntity of(final DefaultLottoResponse lotto,
+                                             final UserEntity user) {
+        return new ExtractionHistoryEntity(
+                lotto, user
+        );
+    }
+
+    protected ExtractionHistoryEntity(DefaultLottoResponse lotto, UserEntity user) {
         this.firstNumber = lotto.getFirstNumber();
         this.secondNumber = lotto.getSecondNumber();
         this.thirdNumber = lotto.getThirdNumber();
@@ -40,5 +50,7 @@ public class ExtractionHistoryEntity extends TimestampSequentialEntity {
         this.createdBy = user;
         this.winningStatus = new WinningStatusEntity();
     }
+
+
 
 }
