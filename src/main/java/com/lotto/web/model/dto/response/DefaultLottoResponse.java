@@ -1,9 +1,7 @@
 package com.lotto.web.model.dto.response;
 
 import com.lotto.web.model.vo.LottoVO;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import static lombok.AccessLevel.PRIVATE;

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -19,5 +20,22 @@ public class LottoVO {
 
     public void setNeedsNumbers(List<Integer> needsNumbers) {
         lottoList.addAll(needsNumbers);
+    }
+
+    public void addNumber(int number) {
+        lottoList.add(number);
+    }
+
+
+    public boolean getIsDuplicated(int number) {
+        return lottoList.contains(number);
+    }
+
+    public boolean getIsEmpty() {
+        return lottoList == null || lottoList.isEmpty();
+    }
+
+    public void sort() {
+        lottoList.sort(Comparator.naturalOrder());
     }
 }
