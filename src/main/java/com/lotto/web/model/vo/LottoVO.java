@@ -32,7 +32,11 @@ public class LottoVO {
     }
 
     public boolean getIsEmpty() {
-        return lottoList == null || lottoList.isEmpty();
+        return lottoList.isEmpty();
+    }
+
+    public boolean getIsNullable() {
+        return lottoList == null;
     }
 
     public void sort() {

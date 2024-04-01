@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,8 +32,6 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
     private final UserRepository userRepository;
-
-    private final BCryptPasswordEncoder passwordEncoder;
 
     private final AdminSettingRepository adminSettingRepository;
 
@@ -94,31 +91,13 @@ public class AdminServiceImpl implements AdminService {
         Element bonusElement = document.select(LottoUtil.DIV_BONUS).get(0);
         List<Integer> winningList = getWinningList(winningElement);
         Date drawDate = getLottoDrawDate(dateElement);
-        LottoWinningHistoryEntity winningEntity = new LottoWinningHistoryEntity();
-        setWinningHistory(
-                winningEntity,
+        LottoWinningHistoryEntity winningEntity = LottoWinningHistoryEntity.of(
                 winningList,
-                drawDate,
                 Integer.parseInt(bonusElement.text()),
-                Integer.parseInt(round)
+                Integer.parseInt(round),
+                drawDate
         );
         return lottoWinningHistoryRepository.save(winningEntity);
-    }
-
-    private void setWinningHistory(LottoWinningHistoryEntity entity,
-                                   List<Integer> winningList,
-                                   Date drawDate,
-                                   int bonus,
-                                   int round) {
-        entity.setFirstNumber(winningList.get(0));
-        entity.setSecondNumber(winningList.get(1));
-        entity.setThirdNumber(winningList.get(2));
-        entity.setFourthNumber(winningList.get(3));
-        entity.setFifthNumber(winningList.get(4));
-        entity.setSixthNumber(winningList.get(5));
-        entity.setDrawDate(drawDate);
-        entity.setBonusNumber(bonus);
-        entity.setRound(round);
     }
 
     private List<Integer> getWinningList(Element element) {

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -75,12 +76,14 @@ public class ReplyServiceImpl implements ReplyService {
     public List<ReplyDetailResponse> listForUser(String userId,
                                                  String postId,
                                                  Pageable pageable) {
-        return replyRepository.findAllByParentPostAndStatus(
-                getUser(userId),
-                PostActivationStatus.NORMAL,
+        List<ReplyEntity> replies = replyRepository.findAllByParentPostAndStatus(
                 getParentPost(postId),
+                PostActivationStatus.NORMAL,
                 pageable
         );
+        return replies.stream()
+                .map(reply -> ReplyDetailResponse.of(reply, userId))
+                .collect(Collectors.toList());
     }
 
     private PostEntity getParentPost(String postId) {

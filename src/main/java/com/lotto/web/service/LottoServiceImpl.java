@@ -15,7 +15,6 @@ import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -76,20 +75,14 @@ public class LottoServiceImpl implements LottoService {
     @Override
     public Page<ExtractionDetailResponse> getAllExtractions(String userId, Pageable pageable) {
         UserEntity user = getUser(userId);
-        Page<ExtractionDetailResponse> list =
-                extractionHistoryRepository.getAllExtraction(
-                        user,
-                        pageable
-                );
-
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements());
+        return extractionHistoryRepository.findAllByCreatedBy(
+                user,
+                pageable
+        ).map(ExtractionDetailResponse::of);
     }
 
     private void setLotto(List<Integer> exceptList, List<Integer> needsList) {
-        if (!lottoVO.getIsEmpty()) {
+        if (!lottoVO.getIsEmpty() || lottoVO.getIsNullable()) {
             lottoVO.resetLottoNumbers();
         }
         if (needsList != null && !needsList.isEmpty()) {
@@ -102,9 +95,8 @@ public class LottoServiceImpl implements LottoService {
     }
 
     private void addLottoNumber(List<Integer> exceptList) {
-        if (lottoVO.getIsEmpty()) return;
         int randomNumber = getRandomNumber();
-        if (lottoVO.getIsDuplicated(randomNumber) && !getIsExcept(exceptList, randomNumber)) {
+        if (!lottoVO.getIsDuplicated(randomNumber) && !getIsExcept(exceptList, randomNumber)) {
             lottoVO.addNumber(randomNumber);
         }
     }
@@ -115,20 +107,16 @@ public class LottoServiceImpl implements LottoService {
         return exceptList.contains(randomNumber);
     }
 
-    private DefaultLottoResponse getLottoResponse(List<Integer> exceptList,
-                                                  List<Integer> needsList) {
-        setLotto(exceptList, needsList);
-        return DefaultLottoResponse.of(lottoVO);
-    }
-
     private List<DefaultLottoResponse> getLottoListResponse(int price,
                                                             List<Integer> exceptList,
                                                             List<Integer> needsList) {
-
         return IntStream.range(0, getLottoCount(price))
-                .mapToObj(e -> getLottoResponse(exceptList, needsList))
-                .collect(Collectors.toList());
+                .mapToObj(index -> {
+                    setLotto(exceptList, needsList);
+                    return DefaultLottoResponse.of(lottoVO);
+                }).collect(Collectors.toList());
     }
+
 
     private UserEntity getUser(String userId) {
         return userRepository.findById(userId).orElseThrow(

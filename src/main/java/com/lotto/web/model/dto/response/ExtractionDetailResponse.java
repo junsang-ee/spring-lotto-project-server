@@ -1,28 +1,50 @@
 package com.lotto.web.model.dto.response;
 
 import com.lotto.web.constants.WinningStatus;
-import lombok.AllArgsConstructor;
+import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Getter
-@Setter
-@AllArgsConstructor
+@RequiredArgsConstructor(access = PRIVATE)
 public class ExtractionDetailResponse {
-    private int firstNumber;
-    private int secondNumber;
-    private int thirdNumber;
-    private int fourthNumber;
-    private int fifthNumber;
-    private int sixthNumber;
-    private WinningStatus firstStatus;
-    private WinningStatus secondStatus;
-    private WinningStatus thirdStatus;
-    private WinningStatus fourthStatus;
-    private WinningStatus fifthStatus;
-    private WinningStatus sixthStatus;
-    private WinningStatus winningResult;
-    private Instant createdAt;
+    private final int firstNumber;
+    private final int secondNumber;
+    private final int thirdNumber;
+    private final int fourthNumber;
+    private final int fifthNumber;
+    private final int sixthNumber;
+    private final WinningStatus firstStatus;
+    private final WinningStatus secondStatus;
+    private final WinningStatus thirdStatus;
+    private final WinningStatus fourthStatus;
+    private final WinningStatus fifthStatus;
+    private final WinningStatus sixthStatus;
+    private final WinningStatus winningResult;
+    private final Instant createdAt;
+
+    public static ExtractionDetailResponse of(final ExtractionHistoryEntity entity) {
+        return new ExtractionDetailResponse(
+                entity.getFirstNumber(),
+                entity.getSecondNumber(),
+                entity.getThirdNumber(),
+                entity.getFourthNumber(),
+                entity.getFifthNumber(),
+                entity.getSixthNumber(),
+                entity.getWinningStatus().getFirstStatus(),
+                entity.getWinningStatus().getSecondStatus(),
+                entity.getWinningStatus().getThirdStatus(),
+                entity.getWinningStatus().getFourthStatus(),
+                entity.getWinningStatus().getFifthStatus(),
+                entity.getWinningStatus().getSixthStatus(),
+                entity.getWinningStatus().getOverallStatus(),
+                entity.getCreatedAt()
+        );
+    }
+
+
 }
