@@ -73,9 +73,9 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public List<ReplyDetailResponse> listForUser(String userId,
-                                                 String postId,
-                                                 Pageable pageable) {
+    public List<ReplyDetailResponse> list(String userId,
+                                          String postId,
+                                          Pageable pageable) {
         List<ReplyEntity> replies = replyRepository.findAllByParentPostAndStatus(
                 getParentPost(postId),
                 PostActivationStatus.NORMAL,

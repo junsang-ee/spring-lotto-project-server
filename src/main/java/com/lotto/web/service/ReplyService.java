@@ -18,5 +18,5 @@ public interface ReplyService {
 
     boolean delete(String userId, String replyId);
 
-    List<ReplyDetailResponse> listForUser(String userId, String postId, Pageable pageable);
+    List<ReplyDetailResponse> list(String userId, String postId, Pageable pageable);
 }

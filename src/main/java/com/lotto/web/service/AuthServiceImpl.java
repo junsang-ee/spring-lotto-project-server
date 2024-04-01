@@ -18,13 +18,11 @@ import com.lotto.web.service.caffeine.CaffeineService;
 import com.lotto.web.service.mail.MailService;
 import lombok.RequiredArgsConstructor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Random;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {

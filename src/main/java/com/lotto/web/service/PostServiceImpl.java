@@ -18,7 +18,6 @@ import com.lotto.web.repository.PostRepository;
 import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +28,6 @@ import javax.transaction.Transactional;
 
 import java.util.stream.Collectors;
 
-@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostServiceImpl implements PostService {

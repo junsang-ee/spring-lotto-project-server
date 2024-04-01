@@ -58,7 +58,7 @@ public class PostController extends BaseController {
     public ApiSuccessResponse<List<ReplyDetailResponse>> replies(@AuthenticationPrincipal(expression = "id") String userId,
                                                                  @PathVariable String postId,
                                                                  Pageable pageable) {
-        return wrap(replyService.listForUser(userId, postId, pageable));
+        return wrap(replyService.list(userId, postId, pageable));
     }
 
     @PostMapping("/{postId}/verify")

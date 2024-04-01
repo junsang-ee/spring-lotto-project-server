@@ -8,7 +8,6 @@ import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,7 +20,6 @@ import java.util.List;
 import static com.lotto.web.util.LottoUtil.getLottoCount;
 import static com.lotto.web.util.LottoUtil.getIsCorrectPriceUnit;
 
-@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
