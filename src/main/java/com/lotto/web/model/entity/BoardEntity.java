@@ -38,10 +38,10 @@ public class BoardEntity extends ModificationTimestampEntity {
     @JoinColumn(name = "post_count")
     private PostCountEntity postCount;
 
-    public static BoardEntity of(final BoardSaveRequest saveRequest) {
+    public static BoardEntity of(final BoardSaveRequest board) {
         return new BoardEntity(
-                saveRequest.getName(),
-                saveRequest.getAccessType()
+                board.getName(),
+                board.getAccessType()
         );
     }
 

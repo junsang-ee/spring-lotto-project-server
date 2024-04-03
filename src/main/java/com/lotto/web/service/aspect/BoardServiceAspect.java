@@ -15,6 +15,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Aspect
 @Component
@@ -36,8 +38,8 @@ public class BoardServiceAspect {
             }
         } catch (NullPointerException ignored) {
         } finally {
-            BoardListResponse boards = boardService.listForUser();
-            if (boards != null && !boards.getBoards().isEmpty()) {
+            List<BoardListResponse> boards = boardService.list();
+            if (boards != null && !boards.isEmpty()) {
                 caffeineService.put(
                         CacheType.USER_BOARDS,
                         USER_BOARD_KEY,
@@ -58,8 +60,8 @@ public class BoardServiceAspect {
             }
         } catch (NullPointerException ignored) {
         } finally {
-            BoardListResponse boards = boardService.listForUser();
-            if (boards != null && !boards.getBoards().isEmpty()) {
+            List<BoardListResponse> boards = boardService.list();
+            if (boards != null && !boards.isEmpty()) {
                 caffeineService.put(
                         CacheType.USER_BOARDS,
                         USER_BOARD_KEY,

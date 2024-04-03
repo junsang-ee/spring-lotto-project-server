@@ -7,7 +7,7 @@ import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.PostSaveRequest;
 import com.lotto.web.model.dto.request.PostUpdateRequest;
 import com.lotto.web.model.dto.response.PostDetailResponse;
-import com.lotto.web.model.dto.response.PostListEntryResponse;
+import com.lotto.web.model.dto.response.PostListResponse;
 import com.lotto.web.model.dto.response.PostSaveResponse;
 import com.lotto.web.model.entity.BoardEntity;
 import com.lotto.web.model.entity.PostEntity;
@@ -92,18 +92,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostListEntryResponse> list(String boardId, Pageable pageable) {
+    public Page<PostListResponse> list(String boardId, Pageable pageable) {
         BoardEntity parentBoard = getParentBoard(boardId);
-        Page<PostListEntryResponse> list =
-                postRepository.findAllByParentBoardAndStatus(
-                        PostActivationStatus.NORMAL,
-                        parentBoard,
-                        pageable
-                );
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements());
+        return postRepository.findAllByParentBoardAndStatus(
+                parentBoard,
+                PostActivationStatus.NORMAL,
+                pageable
+        ).map(PostListResponse::of);
     }
 
     @Override

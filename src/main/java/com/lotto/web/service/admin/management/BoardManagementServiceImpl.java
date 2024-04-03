@@ -60,12 +60,8 @@ public class BoardManagementServiceImpl implements BoardManagementService {
 
     @Override
     public Page<BoardManageListResponse> list(Pageable pageable) {
-        Page<BoardManageListResponse> list = boardRepository.getAllBoard(pageable);
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements()
-        );
+        return boardRepository.findAll(pageable)
+                .map(BoardManageListResponse::of);
     }
 
     private void validStatus(BoardEntity board, BoardActivationStatus status) {

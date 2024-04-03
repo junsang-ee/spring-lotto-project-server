@@ -1,7 +1,6 @@
 package com.lotto.web.repository;
 
 import com.lotto.web.constants.PostActivationStatus;
-import com.lotto.web.model.dto.response.PostListEntryResponse;
 import com.lotto.web.model.dto.response.admin.PostManageListResponse;
 import com.lotto.web.model.dto.response.admin.UserPostListResponse;
 import com.lotto.web.model.entity.BoardEntity;
@@ -17,24 +16,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, String> {
-//        QueryDslPredicateExtendedExecutor<PostEntity> {
 
-    @Query(value = "SELECT " +
-                      "new com.lotto.web.model.dto.response.PostListEntryResponse(" +
-                                "p.id, " +
-                                "p.title, " +
-                                "p.disclosureType, " +
-                                "u.email, " +
-                                "p.createdAt, " +
-                                "p.viewCount" +
-                            ") " +
-                     "FROM post p " +
-               "INNER JOIN user u on u.id = p.createdBy " +
-                    "WHERE p.status = :status " +
-                      "AND p.parentBoard = :parentBoard")
-    Page<PostListEntryResponse> findAllByParentBoardAndStatus(@Param("status") PostActivationStatus status,
-                                                              @Param("parentBoard") BoardEntity parentBoard,
-                                                              Pageable pageable);
+    Page<PostEntity> findAllByParentBoardAndStatus(@Param("parentBoard") BoardEntity parentBoard,
+                                                   @Param("status") PostActivationStatus status,
+                                                   Pageable pageable);
 
     @Query("SELECT " +
                 "new com.lotto.web.model.dto.response.admin.PostManageListResponse(" +

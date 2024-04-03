@@ -3,15 +3,12 @@ package com.lotto.web.service;
 import com.lotto.web.model.dto.request.PostSaveRequest;
 import com.lotto.web.model.dto.request.PostUpdateRequest;
 import com.lotto.web.model.dto.response.PostDetailResponse;
-import com.lotto.web.model.dto.response.PostListEntryResponse;
+import com.lotto.web.model.dto.response.PostListResponse;
 import com.lotto.web.model.dto.response.PostSaveResponse;
 import com.lotto.web.model.entity.PostEntity;
 
-import com.lotto.web.model.entity.count.ReplyCountEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface PostService {
     PostSaveResponse save(String userId, String boardId, PostSaveRequest request);
@@ -26,7 +23,7 @@ public interface PostService {
 
     PostDetailResponse detailForAdmin(String postId);
 
-    Page<PostListEntryResponse> list(String boardId, Pageable pageable);
+    Page<PostListResponse> list(String boardId, Pageable pageable);
 
     boolean verifyPassword(String postId, String password);
 }
