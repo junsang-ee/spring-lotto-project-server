@@ -56,8 +56,10 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserManageDetailResponse getDetail(String userId) {
-        return userRepository.getUserDetail(userId);
+        UserEntity userDetail = get(userId);
+        return UserManageDetailResponse.of(userDetail);
     }
 
 

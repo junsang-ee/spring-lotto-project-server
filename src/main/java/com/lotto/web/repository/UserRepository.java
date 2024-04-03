@@ -41,28 +41,28 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Page<UserManageListResponse> getAllUser(@Param("admin") UserEntity admin,
                                             Pageable pageable);
 
-    @Query(value = "SELECT " +
-                        "new com.lotto.web.model.dto.response.admin.UserManageDetailResponse(" +
-                            "u.email, " +
-                            "u.status, " +
-                            "u.dailyAvailableCount, " +
-                            "count(p) as postCount, " +
-                            "count(eh) as extractionCount, " +
-                            "(select " +
-                                "count(eh) " +
-                               "from user u " +
-                         "inner join extraction_history eh on eh.createdBy = u.id " +
-                         "inner join winning_status ws on eh.winningStatus = ws.id " +
-                              "where ws.overallStatus = 'WON') " +
-                            "as winningCount, " +
-                            "u.createdAt" +
-                        ") " +
-                     "FROM user u " +
-                "LEFT JOIN post p on p.createdBy = u.id " +
-                "LEFT JOIN extraction_history eh on eh.createdBy = u.id " +
-                    "WHERE u.id = :userId " +
-                 "GROUP BY u.id")
-    UserManageDetailResponse getUserDetail(@Param("userId") String userId);
+//    @Query(value = "SELECT " +
+//                        "new com.lotto.web.model.dto.response.admin.UserManageDetailResponse(" +
+//                            "u.email, " +
+//                            "u.status, " +
+//                            "u.dailyAvailableCount, " +
+//                            "count(p) as postCount, " +
+//                            "count(eh) as extractionCount, " +
+//                            "(select " +
+//                                "count(eh) " +
+//                               "from user u " +
+//                         "inner join extraction_history eh on eh.createdBy = u.id " +
+//                         "inner join winning_status ws on eh.winningStatus = ws.id " +
+//                              "where ws.overallStatus = 'WON') " +
+//                            "as winningCount, " +
+//                            "u.createdAt" +
+//                        ") " +
+//                     "FROM user u " +
+//                "LEFT JOIN post p on p.createdBy = u.id " +
+//                "LEFT JOIN extraction_history eh on eh.createdBy = u.id " +
+//                    "WHERE u.id = :userId " +
+//                 "GROUP BY u.id")
+//    UserManageDetailResponse getUserDetail(@Param("userId") String userId);
 
 
 }

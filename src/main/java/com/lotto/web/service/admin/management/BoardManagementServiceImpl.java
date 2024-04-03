@@ -42,9 +42,7 @@ public class BoardManagementServiceImpl implements BoardManagementService {
     public BoardDeleteResponse delete(String boardId) {
         BoardEntity board = get(boardId);
         boardRepository.delete(board);
-        BoardDeleteResponse result = new BoardDeleteResponse();
-        result.setName(board.getName());
-        return result;
+        return BoardDeleteResponse.of(board);
     }
 
     @Override
