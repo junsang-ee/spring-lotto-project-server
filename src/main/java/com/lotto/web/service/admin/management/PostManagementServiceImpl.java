@@ -17,12 +17,10 @@ import com.lotto.web.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -43,30 +41,19 @@ public class PostManagementServiceImpl implements PostManagementService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<PostManageListResponse> list(String boardId, Pageable pageable) {
         BoardEntity parentBoard = getBoard(boardId);
-        Page<PostManageListResponse> list = postRepository.getAllPost(
-                parentBoard,
-                pageable
-        );
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements()
-        );
+        return postRepository.findAllByParentBoard(parentBoard, pageable)
+                .map(PostManageListResponse::of);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<UserPostListResponse> listByUser(String userId, Pageable pageable) {
-        Page<UserPostListResponse> list = postRepository.getUserPosts(
-                getUser(userId),
-                pageable
-        );
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements()
-        );
+        UserEntity user = getUser(userId);
+        return postRepository.findAllByCreatedBy(user, pageable)
+                .map(UserPostListResponse::of);
     }
 
     @Override

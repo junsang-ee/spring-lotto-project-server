@@ -1,10 +1,8 @@
 package com.lotto.web.model.dto.response;
 
 import com.lotto.web.model.entity.BoardEntity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 import static lombok.AccessLevel.PRIVATE;
 

@@ -7,10 +7,11 @@ import com.lotto.web.model.entity.count.PostCountEntity;
 import com.lotto.web.model.entity.count.ReplyCountEntity;
 import com.lotto.web.service.BoardService;
 import com.lotto.web.service.PostService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
