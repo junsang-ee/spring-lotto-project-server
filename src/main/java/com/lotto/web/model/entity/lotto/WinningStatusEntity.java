@@ -3,15 +3,11 @@ package com.lotto.web.model.entity.lotto;
 import com.lotto.web.constants.WinningStatus;
 import com.lotto.web.model.TimestampSequentialEntity;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@Table(name = "winning_status")
+@Table
 @Entity(name = "winning_status")
 public class WinningStatusEntity extends TimestampSequentialEntity {
 
@@ -36,8 +32,11 @@ public class WinningStatusEntity extends TimestampSequentialEntity {
     @Enumerated(EnumType.STRING)
     private WinningStatus overallStatus;
 
-    @PrePersist
-    public void onPrevisionPersist() {
+    public static WinningStatusEntity of() {
+        return new WinningStatusEntity();
+    }
+
+    private WinningStatusEntity() {
         this.firstStatus = WinningStatus.PENDING;
         this.secondStatus = WinningStatus.PENDING;
         this.thirdStatus = WinningStatus.PENDING;

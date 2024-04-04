@@ -48,7 +48,7 @@ public class ExtractionHistoryEntity extends TimestampSequentialEntity {
         this.fifthNumber = lotto.getFifthNumber();
         this.sixthNumber = lotto.getSixthNumber();
         this.createdBy = user;
-        this.winningStatus = new WinningStatusEntity();
+        this.winningStatus = WinningStatusEntity.of();
     }
 
 
