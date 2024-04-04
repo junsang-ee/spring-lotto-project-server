@@ -57,7 +57,8 @@ public class AdminServiceImpl implements AdminService {
                                 adminPassword,
                                 UserRole.ADMIN
                         )
-                ));
+                )
+        );
     }
 
     @Override
