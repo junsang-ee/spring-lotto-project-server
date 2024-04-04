@@ -1,5 +1,6 @@
 package com.lotto.web.service.admin.management;
 
+import com.lotto.web.constants.UserRole;
 import com.lotto.web.constants.UserStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.AuthException;
@@ -23,7 +24,6 @@ import java.util.stream.Collectors;
 public class UserManagementServiceImpl implements UserManagementService {
 
     private final AdminService adminService;
-
     private final UserRepository userRepository;
 
     @Override
@@ -34,16 +34,13 @@ public class UserManagementServiceImpl implements UserManagementService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<UserManageListResponse> list(Pageable pageable) {
-        Page<UserManageListResponse> list = userRepository.getAllUser(
-                adminService.getAdmin(),
+        UserEntity admin = adminService.createAdminAccount();
+        return userRepository.findByIdNot(
+                admin.getId(),
                 pageable
-        );
-        return new PageImpl<>(
-                list.stream().collect(Collectors.toList()),
-                list.getPageable(),
-                list.getTotalElements()
-        );
+        ).map(UserManageListResponse::of);
     }
 
     @Override

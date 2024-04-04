@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -47,32 +48,30 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public void createAdminAccount() {
-        if (userRepository.findByEmail(adminEmail).isPresent())
-            return;
-        UserEntity admin = UserEntity.of(
-                adminEmail,
-                adminPassword,
-                UserRole.ADMIN
-        );
-        userRepository.save(admin);
+    public UserEntity createAdminAccount() {
+        Optional<UserEntity> admin = userRepository.findByEmail(adminEmail);
+        return admin.orElseGet(
+                () -> userRepository.save(
+                        UserEntity.of(
+                                adminEmail,
+                                adminPassword,
+                                UserRole.ADMIN
+                        )
+                ));
     }
 
     @Override
     @Transactional
     public void createAdminSetting() {
         if (adminSettingRepository.findById(1L).isPresent()) return;
-        AdminSettingEntity entity = new AdminSettingEntity();
-        entity.setLottoAutoUpdateToggle(SettingToggleType.OFF);
-        adminSettingRepository.save(entity);
+        adminSettingRepository.save(AdminSettingEntity.of(SettingToggleType.OFF));
     }
 
     @Override
     @Transactional
     public void updateLottoAutomationSetting(SettingUpdateRequest toggle) {
-        AdminSettingEntity entity = new AdminSettingEntity();
-        entity.setLottoAutoUpdateToggle(toggle.getType());
-        adminSettingRepository.save(entity);
+        AdminSettingEntity settingEntity = adminSettingRepository.findById(1L).orElseThrow();
+        settingEntity.update(toggle.getType());
     }
 
     @Override

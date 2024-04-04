@@ -3,17 +3,14 @@ package com.lotto.web.model.entity.lotto;
 import com.lotto.web.model.TimestampSequentialEntity;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.entity.UserEntity;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "extraction_history")
 @Entity(name = "extraction_history")

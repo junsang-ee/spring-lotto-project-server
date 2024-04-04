@@ -8,7 +8,7 @@ import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 public interface AdminService {
 
     void createAdminSetting();
-    void createAdminAccount();
+    UserEntity createAdminAccount();
 
     void updateLottoAutomationSetting(SettingUpdateRequest toggle);
 

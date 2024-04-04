@@ -4,12 +4,10 @@ import com.lotto.web.model.ModificationTimestampEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
 public class CreationUserEntity extends ModificationTimestampEntity {
