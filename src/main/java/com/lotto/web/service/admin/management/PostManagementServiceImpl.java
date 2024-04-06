@@ -4,7 +4,6 @@ import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
-import com.lotto.web.model.dto.response.PostDeleteResponse;
 import com.lotto.web.model.dto.response.admin.PostManageListResponse;
 import com.lotto.web.model.dto.response.admin.UserPostListResponse;
 import com.lotto.web.model.entity.BoardEntity;
@@ -67,10 +66,10 @@ public class PostManagementServiceImpl implements PostManagementService {
 
     @Override
     @Transactional
-    public PostDeleteResponse delete(String postId) {
+    public boolean delete(String postId) {
         PostEntity post = get(postId);
         postRepository.delete(post);
-        return PostDeleteResponse.of(post.getTitle());
+        return true;
     }
 
     private BoardEntity getBoard(String boardId) {

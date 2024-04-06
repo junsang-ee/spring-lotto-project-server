@@ -7,7 +7,6 @@ import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.*;
 import com.lotto.web.model.dto.response.BoardDeleteResponse;
 import com.lotto.web.model.dto.response.BoardSaveResponse;
-import com.lotto.web.model.dto.response.PostDeleteResponse;
 import com.lotto.web.model.dto.response.admin.*;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
@@ -48,7 +47,7 @@ public class AdminController extends BaseController {
     }
 
     @DeleteMapping("/post/{postId}")
-    public ApiSuccessResponse<PostDeleteResponse> deletePost(@PathVariable String postId) {
+    public ApiSuccessResponse<Boolean> deletePost(@PathVariable String postId) {
         return wrap(postManagementService.delete(postId));
     }
 

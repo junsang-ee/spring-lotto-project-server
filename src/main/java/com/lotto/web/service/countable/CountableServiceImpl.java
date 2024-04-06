@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class CountableServiceImpl implements CountableService{
+public class CountableServiceImpl implements CountableService {
     private final PostService postService;
 
     private final BoardService boardService;
@@ -31,12 +31,7 @@ public class CountableServiceImpl implements CountableService{
     public void updateReplyCount(String postId, CountableType type) {
         PostEntity post = postService.get(postId);
         ReplyCountEntity replyCount = post.getReplyCount();
-        if (type == CountableType.CANCEL)
-            replyCount.cancel();
-        else if (type == CountableType.CREATE)
-            replyCount.addEnabled();
-        else if(type == CountableType.DISABLE || type == CountableType.REMOVE)
-            replyCount.addDisabled();
+        replyCount.updateCount(type);
     }
 
     @Override
@@ -44,11 +39,6 @@ public class CountableServiceImpl implements CountableService{
     public void updatePostCount(String boardId, CountableType type) {
         BoardEntity board = boardService.get(boardId);
         PostCountEntity postCount = board.getPostCount();
-        if (type == CountableType.CANCEL)
-            postCount.cancel();
-        else if (type == CountableType.CREATE)
-            postCount.addEnabled();
-        else if(type == CountableType.DISABLE || type == CountableType.REMOVE)
-            postCount.addDisabled();
+        postCount.updateCount(type);
     }
 }
