@@ -19,6 +19,10 @@ public enum ErrorMessage {
     REQUEST_LENGTH_INVALID_AUTH_CODE("107"),
     REQUEST_LENGTH_INVALID_POST_PASSWORD("108"),
 
+    /* CommonError */
+    BAD_REQUEST("400"),
+    INTERNAL_SERVER_ERROR("500"),
+
     /* 1000 ~ LottoError */
     LOTTO_EXCEED_NEEDS("1000"),
     LOTTO_EXCEED_EXCEPTION("1001"),

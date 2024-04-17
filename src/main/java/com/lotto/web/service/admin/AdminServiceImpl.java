@@ -9,25 +9,20 @@ import com.lotto.web.model.entity.admin.AdminSettingEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.repository.*;
 
-import com.lotto.web.service.admin.crawler.CrawlerService;
-import com.lotto.web.util.LottoUtil;
+import com.lotto.web.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -36,10 +31,10 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminSettingRepository adminSettingRepository;
 
-    private final CrawlerService crawlerService;
-
     private final LottoWinningHistoryRepository lottoWinningHistoryRepository;
-    
+
+    private final WebClientUtil webClientUtil;
+
     @Value("${junsang.admin.email}")
     private String adminEmail;
 
@@ -84,41 +79,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     @Transactional
-    public LottoWinningHistoryEntity saveWinningByRound(String round) {
-        Document document = crawlerService.getLottoDocumentByRound(round);
-        Element dateElement = document.select(LottoUtil.DIV_DATE).get(0);
-        Element winningElement = document.select(LottoUtil.DIV_WINNINGS).get(0);
-        Element bonusElement = document.select(LottoUtil.DIV_BONUS).get(0);
-        List<Integer> winningList = getWinningList(winningElement);
-        Date drawDate = getLottoDrawDate(dateElement);
-        LottoWinningHistoryEntity winningEntity = LottoWinningHistoryEntity.of(
-                winningList,
-                Integer.parseInt(bonusElement.text()),
-                Integer.parseInt(round),
-                drawDate
-        );
-        return lottoWinningHistoryRepository.save(winningEntity);
-    }
-
-    private List<Integer> getWinningList(Element element) {
-        String[] winningArr = element.text().split("\\s+");
-        return Arrays.stream(winningArr).map(
-                Integer::parseInt
-        ).collect(Collectors.toList());
-    }
-
-    private Date getLottoDrawDate(Element element) {
-        String dateStr = element.text().substring(
-                element.text().indexOf("(")+1,
-                element.text().indexOf(")")-1
-        );
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
-        Date result = null;
-        try {
-            result = formatter.parse(dateStr);
-        } catch (ParseException ignored) {
-        }
-        return result;
+    public LottoWinningHistoryEntity saveWinningByRound(int round) {
+        LottoWinningHistoryEntity lottoWinningHistoryEntity = webClientUtil.get(round);
+        return lottoWinningHistoryRepository.save(lottoWinningHistoryEntity);
     }
 
 }

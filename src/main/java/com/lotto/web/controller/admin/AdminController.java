@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
 
+
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
 @RestController
@@ -112,7 +113,7 @@ public class AdminController extends BaseController {
 
 
     @PostMapping("/lotto/winning/{round}")
-    public ApiSuccessResponse<Object> saveLottoWinning(@PathVariable String round) {
+    public ApiSuccessResponse<Object> saveLottoWinning(@PathVariable int round) {
         adminService.saveWinningByRound(round);
         return wrap(null);
     }

@@ -38,6 +38,12 @@ response:
         post.password:
           code: "108"
           message: "게시글 비밀번호는 4자리 숫자여야 합니다."
+    bad.request:
+      code: "400"
+      message: "잘못된 접근입니다."
+    internal.server.error:
+      code: "500"
+      message: "서버에서 클라이언트 요청을 처리 중에 에러가 발생하였습니다."
     lotto:
       exceed:
         needs:

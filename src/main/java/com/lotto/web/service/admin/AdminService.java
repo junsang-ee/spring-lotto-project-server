@@ -14,5 +14,5 @@ public interface AdminService {
 
     UserEntity getAdmin();
 
-    LottoWinningHistoryEntity saveWinningByRound(String round);
+    LottoWinningHistoryEntity saveWinningByRound(int round);
 }
