@@ -21,7 +21,7 @@ public interface LottoService {
 
     void saveWinningNumbers();
 
-    List<LottoWinningHistoryEntity> getAllWinningNumbers();
+    Page<LottoWinningHistoryEntity> getAllWinningNumbers(Pageable pageable);
 
     Page<ExtractionDetailResponse> getAllExtractions(String userId, Pageable pageable);
 }

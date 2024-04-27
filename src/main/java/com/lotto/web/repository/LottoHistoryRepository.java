@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 
 @Repository
-public interface LottoHistoryRepository extends JpaRepository<LottoWinningHistoryEntity, String> {
+public interface LottoHistoryRepository extends JpaRepository<LottoWinningHistoryEntity, Long> {
     LottoWinningHistoryEntity findByRound(int round);
 
     LottoWinningHistoryEntity findByDrawDate(Date drawDate);

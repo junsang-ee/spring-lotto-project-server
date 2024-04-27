@@ -44,14 +44,14 @@ public class LottoController extends BaseController {
 
     /* 모든 당첨 번호 가져오기 */
     @GetMapping("/winnings")
-    public ApiSuccessResponse<List<LottoWinningHistoryEntity>> winnings() {
-        return wrap(lottoService.getAllWinningNumbers());
+    public ApiSuccessResponse<PageResponse<LottoWinningHistoryEntity>> winnings(Pageable pageable) {
+        return page(lottoService.getAllWinningNumbers(pageable));
     }
 
     /* 모든 추출 번호 가져오기 */
     @GetMapping("/extractions")
     public ApiSuccessResponse<PageResponse<ExtractionDetailResponse>> extractions(@AuthenticationPrincipal(expression = "id") String userId,
-                                                                                        Pageable pageable) {
+                                                                                  Pageable pageable) {
         return page(lottoService.getAllExtractions(userId, pageable));
     }
 }

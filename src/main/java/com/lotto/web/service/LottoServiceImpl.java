@@ -68,8 +68,8 @@ public class LottoServiceImpl implements LottoService {
     }
 
     @Override
-    public List<LottoWinningHistoryEntity> getAllWinningNumbers() {
-        return lottoHistoryRepository.findAll();
+    public Page<LottoWinningHistoryEntity> getAllWinningNumbers(Pageable pageable) {
+        return lottoHistoryRepository.findAll(pageable);
     }
 
     @Override
