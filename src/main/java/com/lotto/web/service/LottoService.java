@@ -15,6 +15,8 @@ public interface LottoService {
 
     RandomLottoListResponse getRandomList(String userId, int price, List<Integer> exceptList, List<Integer> needsList);
 
+    void saveExtractionLottos(String userId, RandomLottoListResponse randomLottos);
+
     LottoWinningNumbersResponse getWinningNumbersByRound(int round);
 
     LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate);

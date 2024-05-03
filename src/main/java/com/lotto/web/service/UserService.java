@@ -36,8 +36,6 @@ public interface UserService {
 
     void updateAvailableCount(String userId, int count);
 
-    void saveExtractionLottos(String userId, RandomLottoListResponse randomLottos);
-
     List<UserEntity> getAllEnabledUser();
 
     void saveAll(List<UserEntity> users);

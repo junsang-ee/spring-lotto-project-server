@@ -7,6 +7,7 @@ import com.lotto.web.model.dto.response.ExtractionDetailResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.entity.UserEntity;
+import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.model.vo.LottoVO;
 import com.lotto.web.repository.ExtractionHistoryRepository;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,6 +50,17 @@ public class LottoServiceImpl implements LottoService {
                         needsList
                 )
         );
+    }
+
+    @Override
+    @Transactional
+    public void saveExtractionLottos(String userId, RandomLottoListResponse randomLottos) {
+        UserEntity user = getUser(userId);
+        List<ExtractionHistoryEntity> entities = randomLottos.getLottoList()
+                .stream()
+                .map(it -> ExtractionHistoryEntity.of(it, user))
+                .collect(Collectors.toList());
+        extractionHistoryRepository.saveAll(entities);
     }
 
     @Override

@@ -45,4 +45,14 @@ public class WinningStatusEntity extends TimestampSequentialEntity {
         this.sixthStatus = WinningStatus.PENDING;
         this.overallStatus = WinningStatus.PENDING;
     }
+
+    public void updateAllAsWaiting() {
+        this.firstStatus = WinningStatus.WAITING;
+        this.secondStatus = WinningStatus.WAITING;
+        this.thirdStatus = WinningStatus.WAITING;
+        this.fourthStatus = WinningStatus.WAITING;
+        this.fifthStatus = WinningStatus.WAITING;
+        this.sixthStatus = WinningStatus.WAITING;
+        this.overallStatus = WinningStatus.WAITING;
+    }
 }

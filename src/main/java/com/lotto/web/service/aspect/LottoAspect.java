@@ -5,6 +5,7 @@ import com.lotto.web.exception.custom.InvalidBasicFormatException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.entity.UserEntity;
+import com.lotto.web.service.LottoService;
 import com.lotto.web.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,15 @@ public class LottoAspect {
 
     private final UserService userService;
 
+    private final LottoService lottoService;
+
     @Transactional
     @Around(value = "execution(* com..LottoService.getRandomList(..)) && args(userId, price, exceptList, needsList)",
             argNames = "point, userId, price, exceptList, needsList")
-    public Object getRandomLottoList(ProceedingJoinPoint point, String userId, int price, List<Integer> exceptList, List<Integer> needsList) throws Throwable {
+    public Object getRandomLottoList(ProceedingJoinPoint point,
+                                     String userId, int price,
+                                     List<Integer> exceptList,
+                                     List<Integer> needsList) throws Throwable {
         if (!getIsCorrectPriceUnit(price))
             throw new InvalidBasicFormatException(ErrorMessage.LOTTO_PRICE_UNIT);
 
@@ -42,7 +48,7 @@ public class LottoAspect {
 
         RandomLottoListResponse result = (RandomLottoListResponse) point.proceed();
         userService.updateAvailableCount(userId, count);
-        userService.saveExtractionLottos(userId, result);
+        lottoService.saveExtractionLottos(userId, result);
         return result;
     }
 }

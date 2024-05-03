@@ -9,12 +9,9 @@ import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 
 import com.lotto.web.model.dto.request.SignupRequest;
-import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.UserDetailResponse;
 import com.lotto.web.model.entity.UserEntity;
 
-import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
-import com.lotto.web.repository.ExtractionHistoryRepository;
 import com.lotto.web.repository.UserRepository;
 import com.lotto.web.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    private final ExtractionHistoryRepository extractionHistoryRepository;
 
     @Override
     public Optional<UserEntity> get(String userId) {
@@ -138,17 +132,6 @@ public class UserServiceImpl implements UserService {
                 0
         );
         user.updateAvailableCount(updatedCount);
-    }
-
-    @Override
-    @Transactional
-    public void saveExtractionLottos(String userId, RandomLottoListResponse randomLottos) {
-        UserEntity user = getUser(userId);
-        List<ExtractionHistoryEntity> entities = randomLottos.getLottoList()
-                .stream()
-                .map(it -> ExtractionHistoryEntity.of(it, user))
-                .collect(Collectors.toList());
-        extractionHistoryRepository.saveAll(entities);
     }
 
     @Override
