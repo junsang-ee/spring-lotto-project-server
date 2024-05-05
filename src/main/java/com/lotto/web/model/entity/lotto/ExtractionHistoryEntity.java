@@ -1,9 +1,9 @@
 package com.lotto.web.model.entity.lotto;
 
-import com.lotto.web.constants.WinningStatus;
 import com.lotto.web.model.TimestampSequentialEntity;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
 import com.lotto.web.model.entity.UserEntity;
+import com.lotto.web.util.LottoUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +22,7 @@ public class ExtractionHistoryEntity extends TimestampSequentialEntity {
     private int fourthNumber;
     private int fifthNumber;
     private int sixthNumber;
+    private int matchingRound;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "winning_status")
@@ -33,9 +34,7 @@ public class ExtractionHistoryEntity extends TimestampSequentialEntity {
 
     public static ExtractionHistoryEntity of(final DefaultLottoResponse lotto,
                                              final UserEntity user) {
-        return new ExtractionHistoryEntity(
-                lotto, user
-        );
+        return new ExtractionHistoryEntity(lotto, user);
     }
 
     protected ExtractionHistoryEntity(DefaultLottoResponse lotto, UserEntity user) {
@@ -47,12 +46,7 @@ public class ExtractionHistoryEntity extends TimestampSequentialEntity {
         this.sixthNumber = lotto.getSixthNumber();
         this.createdBy = user;
         this.winningStatus = WinningStatusEntity.of();
+        this.matchingRound = LottoUtil.getExtractionMatchingRound();
     }
-
-    public void updateOverallStatus(WinningStatus status) {
-        this.winningStatus.getOverallStatus();
-    }
-
-
 
 }

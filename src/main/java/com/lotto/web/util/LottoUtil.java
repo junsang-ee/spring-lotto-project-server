@@ -1,5 +1,12 @@
 package com.lotto.web.util;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
+
 public class LottoUtil {
     public static final int priceUnit = 1000;
 
@@ -15,5 +22,45 @@ public class LottoUtil {
         return (int) (Math.random() * 45 + 1);
     }
 
+    public static int getExtractionMatchingRound() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime drawDateTime = calculateDrawDateTime(now);
+        if (now.isAfter(drawDateTime))
+            return calculateDrawNumber(drawDateTime);
+        return calculateDrawNumber(drawDateTime.minusWeeks(1));
+    }
 
+    private static LocalDateTime calculateDrawDateTime(LocalDateTime dateTime) {
+        LocalDateTime saturday = dateTime.with(
+                TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY)
+        );
+        return LocalDateTime.of(
+                saturday.toLocalDate(),
+                LocalTime.of(
+                        LottoDefault.HOUR,
+                        LottoDefault.MINUTE
+                )
+        );
+    }
+
+    private static int calculateDrawNumber(LocalDateTime drawDateTime) {
+        LocalDate startDate = LocalDate.of(
+                LottoDefault.YEAR,
+                LottoDefault.MONTH,
+                LottoDefault.DAY
+        );
+        long weeks = ChronoUnit.WEEKS.between(
+                startDate,
+                drawDateTime.toLocalDate()
+        );
+        return (int) weeks + 2;
+    }
+
+    protected static class LottoDefault {
+        private static final int YEAR = 2002;
+        private static final int MONTH = 12;
+        private static final int DAY = 7;
+        private static final int HOUR = 20;
+        private static final int MINUTE = 34;
+    }
 }
