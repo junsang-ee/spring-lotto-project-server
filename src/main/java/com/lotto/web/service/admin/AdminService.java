@@ -13,6 +13,4 @@ public interface AdminService {
     void updateLottoAutomationSetting(SettingUpdateRequest toggle);
 
     UserEntity getAdmin();
-
-    LottoWinningHistoryEntity saveWinningByRound(int round);
 }

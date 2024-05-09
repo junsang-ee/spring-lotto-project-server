@@ -4,8 +4,10 @@ import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface LottoWinningHistoryRepository extends JpaRepository<LottoWinningHistoryEntity, Long> {
 
-    LottoWinningHistoryEntity findByRound(int round);
+    Optional<LottoWinningHistoryEntity> findByRound(int round);
 }

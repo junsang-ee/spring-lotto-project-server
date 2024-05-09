@@ -24,9 +24,9 @@ public class LottoController extends BaseController {
 
     @GetMapping("/randoms")
     public ApiSuccessResponse<RandomLottoListResponse> randoms(@AuthenticationPrincipal(expression = "id") String userId,
-                                                                  @RequestParam(defaultValue = "5000") int price,
-                                                                  @RequestParam(required = false) List<Integer> exceptList,
-                                                                  @RequestParam(required = false) List<Integer> needsList) {
+                                                               @RequestParam(defaultValue = "5000") int price,
+                                                               @RequestParam(required = false) List<Integer> exceptList,
+                                                               @RequestParam(required = false) List<Integer> needsList) {
         return wrap(lottoService.getRandomList(userId, price, exceptList, needsList));
     }
 

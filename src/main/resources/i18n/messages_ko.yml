@@ -58,6 +58,12 @@ response:
       price.unit:
         code: "1003"
         message: "로또 구매 가격 단위가 정확하지 않습니다. (1,000 원 단위)"
+      invalid.round:
+        code: "1010"
+        message: "로또 당첨 회차 정보가 정확하지 않습니다."
+      duplicated.round:
+        code: "1011"
+        message: "해당 회차는 이미 존재합니다."
 
     auth:
       duplicated.email:

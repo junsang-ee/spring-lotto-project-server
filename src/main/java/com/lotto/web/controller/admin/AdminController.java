@@ -10,9 +10,11 @@ import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.dto.response.admin.*;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.service.admin.AdminService;
 
 import com.lotto.web.service.admin.management.BoardManagementService;
+import com.lotto.web.service.admin.management.LottoManagementService;
 import com.lotto.web.service.admin.management.PostManagementService;
 import com.lotto.web.service.admin.management.UserManagementService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class AdminController extends BaseController {
     private final BoardManagementService boardManagementService;
     private final PostManagementService postManagementService;
     private final UserManagementService userManagementService;
+    private final LottoManagementService lottoManagementService;
 
     @PostMapping("/board")
     public ApiSuccessResponse<BoardSaveResponse> saveBoard(@RequestBody BoardSaveRequest request) {
@@ -110,12 +113,9 @@ public class AdminController extends BaseController {
         return null;
     }
 
-
-
     @PostMapping("/lotto/winning/{round}")
-    public ApiSuccessResponse<Object> saveLottoWinning(@PathVariable int round) {
-        adminService.saveWinningByRound(round);
-        return wrap(null);
+    public ApiSuccessResponse<LottoWinningHistoryEntity> saveLottoWinning(@PathVariable int round) {
+        return wrap(lottoManagementService.saveWinningByRound(round));
     }
 
 

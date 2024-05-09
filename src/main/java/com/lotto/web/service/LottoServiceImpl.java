@@ -64,7 +64,8 @@ public class LottoServiceImpl implements LottoService {
     }
 
     @Override
-    public void saveWinningNumbers() {
+    @Transactional
+    public void saveWinning() {
 
     }
 

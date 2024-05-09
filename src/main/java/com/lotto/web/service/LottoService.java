@@ -21,7 +21,7 @@ public interface LottoService {
 
     LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate);
 
-    void saveWinningNumbers();
+    void saveWinning();
 
     Page<LottoWinningHistoryEntity> getAllWinningNumbers(Pageable pageable);
 

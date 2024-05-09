@@ -1,5 +1,8 @@
 package com.lotto.web.util;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -7,7 +10,10 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 
+@Slf4j
+@RequiredArgsConstructor
 public class LottoUtil {
+    public static final String LOTTO_API_URI = "https://www.dhlottery.co.kr/";
     public static final int priceUnit = 1000;
 
     public static boolean getIsCorrectPriceUnit(int price) {
@@ -28,6 +34,11 @@ public class LottoUtil {
         if (now.isAfter(drawDateTime))
             return calculateDrawNumber(drawDateTime);
         return calculateDrawNumber(drawDateTime.minusWeeks(1));
+    }
+
+    public static String getLottoApiUri(int round) {
+        String queryParams = LOTTO_API_URI + "common.do?method=getLottoNumber&drwNo=";
+        return queryParams + round;
     }
 
     private static LocalDateTime calculateDrawDateTime(LocalDateTime dateTime) {

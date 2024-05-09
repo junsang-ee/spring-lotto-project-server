@@ -29,12 +29,9 @@ public class ExtractionDetailResponse {
 
     public static ExtractionDetailResponse of(final ExtractionHistoryEntity entity) {
         return new ExtractionDetailResponse(
-                entity.getFirstNumber(),
-                entity.getSecondNumber(),
-                entity.getThirdNumber(),
-                entity.getFourthNumber(),
-                entity.getFifthNumber(),
-                entity.getSixthNumber(),
+                entity.getFirstNumber(), entity.getSecondNumber(),
+                entity.getThirdNumber(), entity.getFourthNumber(),
+                entity.getFifthNumber(), entity.getSixthNumber(),
                 entity.getWinningStatus().getFirstStatus(),
                 entity.getWinningStatus().getSecondStatus(),
                 entity.getWinningStatus().getThirdStatus(),

@@ -1,6 +1,8 @@
 package com.lotto.web.model.entity.lotto;
 
 import com.lotto.web.model.TimestampSequentialEntity;
+import com.lotto.web.model.dto.api.LottoApiResponse;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,20 +26,19 @@ public class LottoWinningHistoryEntity extends TimestampSequentialEntity {
     private int fifthNumber;
     private int sixthNumber;
     private int bonusNumber;
+
     private int round;
 
     @Temporal(TemporalType.DATE)
     private Date drawDate;
 
-    public static LottoWinningHistoryEntity of(final int firstNumber, final int secondNumber,
-                                               final int thirdNumber, final int fourthNumber,
-                                               final int fifthNumber, final int sixthNumber,
-                                               final int bonusNumber, final int round,
-                                               final Date drawDate) {
+    public static LottoWinningHistoryEntity of(final LottoApiResponse response) {
         return new LottoWinningHistoryEntity(
-                firstNumber, secondNumber, thirdNumber,
-                fourthNumber, fifthNumber, sixthNumber,
-                bonusNumber, round, drawDate
+                response.getDrwtNo1(), response.getDrwtNo2(),
+                response.getDrwtNo3(), response.getDrwtNo4(),
+                response.getDrwtNo5(), response.getDrwtNo6(),
+                response.getBnusNo(), response.getDrwNo(),
+                response.getDrwNoDate()
         );
     }
 

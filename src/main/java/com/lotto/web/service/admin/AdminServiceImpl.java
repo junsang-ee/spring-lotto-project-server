@@ -6,7 +6,6 @@ import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.request.SettingUpdateRequest;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.admin.AdminSettingEntity;
-import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.repository.*;
 
 import com.lotto.web.util.WebClientUtil;
@@ -30,10 +29,6 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
 
     private final AdminSettingRepository adminSettingRepository;
-
-    private final LottoWinningHistoryRepository lottoWinningHistoryRepository;
-
-    private final WebClientUtil webClientUtil;
 
     @Value("${junsang.admin.email}")
     private String adminEmail;
@@ -75,13 +70,6 @@ public class AdminServiceImpl implements AdminService {
         return userRepository.findByEmail(adminEmail).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
-    }
-
-    @Override
-    @Transactional
-    public LottoWinningHistoryEntity saveWinningByRound(int round) {
-        LottoWinningHistoryEntity lottoWinningHistoryEntity = webClientUtil.get(round);
-        return lottoWinningHistoryRepository.save(lottoWinningHistoryEntity);
     }
 
 }
