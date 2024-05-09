@@ -90,6 +90,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<PostListResponse> list(String boardId, Pageable pageable) {
         BoardEntity parentBoard = getParentBoard(boardId);
         return postRepository.findAllByParentBoardAndStatus(
