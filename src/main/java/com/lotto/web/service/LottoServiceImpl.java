@@ -3,7 +3,7 @@ package com.lotto.web.service;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.response.DefaultLottoResponse;
-import com.lotto.web.model.dto.response.ExtractionDetailResponse;
+import com.lotto.web.model.dto.response.ExtractionListResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.entity.UserEntity;
@@ -87,12 +87,12 @@ public class LottoServiceImpl implements LottoService {
     }
 
     @Override
-    public Page<ExtractionDetailResponse> getAllExtractions(String userId, Pageable pageable) {
+    public Page<ExtractionListResponse> getAllExtractions(String userId, Pageable pageable) {
         UserEntity user = getUser(userId);
         return extractionHistoryRepository.findAllByCreatedBy(
                 user,
                 pageable
-        ).map(ExtractionDetailResponse::of);
+        ).map(ExtractionListResponse::of);
     }
 
     private void setLotto(List<Integer> exceptList, List<Integer> needsList) {

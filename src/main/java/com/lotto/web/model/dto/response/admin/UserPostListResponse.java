@@ -13,6 +13,8 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class UserPostListResponse {
+    private final String parentBoardId;
+    private final String postId;
     private final String parentBoardName;
     private final String title;
     private final PostActivationStatus status;
@@ -22,6 +24,8 @@ public class UserPostListResponse {
 
     public static UserPostListResponse of(final PostEntity post) {
         return new UserPostListResponse(
+                post.getParentBoard().getId(),
+                post.getId(),
                 post.getParentBoard().getName(),
                 post.getTitle(),
                 post.getStatus(),

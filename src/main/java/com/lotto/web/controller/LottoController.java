@@ -1,6 +1,6 @@
 package com.lotto.web.controller;
 
-import com.lotto.web.model.dto.response.ExtractionDetailResponse;
+import com.lotto.web.model.dto.response.ExtractionListResponse;
 import com.lotto.web.model.dto.response.RandomLottoListResponse;
 import com.lotto.web.model.dto.response.LottoWinningNumbersResponse;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
@@ -50,8 +50,8 @@ public class LottoController extends BaseController {
 
     /* 모든 추출 번호 가져오기 */
     @GetMapping("/extractions")
-    public ApiSuccessResponse<PageResponse<ExtractionDetailResponse>> extractions(@AuthenticationPrincipal(expression = "id") String userId,
-                                                                                  Pageable pageable) {
+    public ApiSuccessResponse<PageResponse<ExtractionListResponse>> extractions(@AuthenticationPrincipal(expression = "id") String userId,
+                                                                                Pageable pageable) {
         return page(lottoService.getAllExtractions(userId, pageable));
     }
 }
