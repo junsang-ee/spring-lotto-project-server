@@ -7,6 +7,7 @@ import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.*;
 import com.lotto.web.model.dto.response.BoardDeleteResponse;
 import com.lotto.web.model.dto.response.BoardSaveResponse;
+import com.lotto.web.model.dto.response.ExtractionListResponse;
 import com.lotto.web.model.dto.response.admin.*;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
@@ -79,6 +80,12 @@ public class AdminController extends BaseController {
         return page(postManagementService.listByUser(userId, pageable));
     }
 
+    @GetMapping("/user/{userId}/extractions")
+    public ApiSuccessResponse<PageResponse<ExtractionListResponse>> getExtractions(@PathVariable String userId,
+                                                                                   Pageable pageable) {
+        return page(lottoManagementService.getExtractionsByUser(userId, pageable));
+    }
+
     @GetMapping("/post/{postId}")
     public ApiSuccessResponse<Object> getPost() {
         return null;
@@ -106,11 +113,6 @@ public class AdminController extends BaseController {
     @GetMapping("/user/{userId}")
     public ApiSuccessResponse<UserManageDetailResponse> getUser(@PathVariable("userId") String userId) {
         return wrap(userManagementService.getDetail(userId));
-    }
-
-    @GetMapping("/user/{userId}/extractions")
-    public ApiSuccessResponse<PageResponse<Object>> getExtractionsByUser(@PathVariable String userId) {
-        return null;
     }
 
     @PostMapping("/lotto/winning/{round}")
