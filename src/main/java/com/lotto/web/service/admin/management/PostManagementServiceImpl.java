@@ -4,6 +4,7 @@ import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
+import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.admin.PostManageListResponse;
 import com.lotto.web.model.dto.response.admin.UserPostListResponse;
 import com.lotto.web.model.entity.BoardEntity;
@@ -33,10 +34,9 @@ public class PostManagementServiceImpl implements PostManagementService {
 
 
     @Override
-    public PostEntity get(String postId) {
-        return postRepository.findById(postId).orElseThrow(
-                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
-        );
+    public PostDetailResponse detail(String postId) {
+        PostEntity post = getPost(postId);
+        return PostDetailResponse.of(null, post, true);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class PostManagementServiceImpl implements PostManagementService {
     @Override
     @Transactional
     public boolean updateStatus(String postId, PostActivationStatus status) {
-        PostEntity post = get(postId);
+        PostEntity post = getPost(postId);
         validStatus(post, status);
         post.updateStatus(status);
         return true;
@@ -67,9 +67,15 @@ public class PostManagementServiceImpl implements PostManagementService {
     @Override
     @Transactional
     public boolean delete(String postId) {
-        PostEntity post = get(postId);
+        PostEntity post = getPost(postId);
         postRepository.delete(post);
         return true;
+    }
+
+    private PostEntity getPost(String postId) {
+        return postRepository.findById(postId).orElseThrow(
+                () -> new NotFoundException(ErrorMessage.POST_NOT_FOUND)
+        );
     }
 
     private BoardEntity getBoard(String boardId) {

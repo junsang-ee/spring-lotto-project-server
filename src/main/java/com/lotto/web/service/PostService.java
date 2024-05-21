@@ -21,8 +21,6 @@ public interface PostService {
 
     PostDetailResponse detail(String userId, String postId);
 
-    PostDetailResponse detailForAdmin(String postId);
-
     Page<PostListResponse> list(String boardId, Pageable pageable);
 
     boolean verifyPassword(String postId, String password);

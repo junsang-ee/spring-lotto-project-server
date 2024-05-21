@@ -1,10 +1,9 @@
 package com.lotto.web.model.dto.response;
 
+import com.lotto.web.constants.PostEditableType;
 import com.lotto.web.constants.PostDisclosureType;
 import com.lotto.web.model.entity.PostEntity;
 import lombok.*;
-
-import java.util.Objects;
 
 import static lombok.AccessLevel.PRIVATE;
 @Getter
@@ -16,17 +15,25 @@ public class PostDetailResponse {
     private final String content;
     private final PostDisclosureType disclosureType;
     private final int replyCount;
-    private final boolean mine;
+    private final PostEditableType postEditableType;
 
-    public static PostDetailResponse of(final String requestUserId, final PostEntity post) {
+    public static PostDetailResponse of(final String requestUserId, final PostEntity post, final boolean isAdmin) {
         return new PostDetailResponse(
                 post.getCreatedBy().getEmail(),
                 post.getTitle(),
                 post.getContent(),
                 post.getDisclosureType(),
                 post.getReplyCount().getEnabledCount(),
-                requestUserId.equals(post.getCreatedBy().getId())
+                getPostEditAuthority(requestUserId, post, isAdmin)
         );
+    }
+
+    protected static PostEditableType getPostEditAuthority(String requestUserId, PostEntity post, boolean isAdmin) {
+        if (isAdmin) return PostEditableType.EDITABLE;
+        String writerId = post.getCreatedBy().getId();
+        if (requestUserId.equals(writerId))
+            return PostEditableType.EDITABLE;
+        return PostEditableType.NOT_EDITABLE;
     }
 
 }

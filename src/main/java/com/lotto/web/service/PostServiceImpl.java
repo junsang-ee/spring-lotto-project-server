@@ -73,13 +73,7 @@ public class PostServiceImpl implements PostService {
     public PostDetailResponse detail(String userId, String postId) {
         PostEntity post = get(postId);
         validPost(post, null, MethodType.GET, null);
-        return PostDetailResponse.of(userId, post);
-    }
-
-    @Override
-    public PostDetailResponse detailForAdmin(String postId) {
-        PostEntity post = get(postId);
-        return null;
+        return PostDetailResponse.of(userId, post, false);
     }
 
     @Override

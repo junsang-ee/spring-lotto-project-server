@@ -1,6 +1,6 @@
 package com.lotto.web.repository;
 
-import com.lotto.web.constants.WinningStatus;
+import com.lotto.web.constants.WinningResultType;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import org.springframework.data.domain.Page;
@@ -17,5 +17,5 @@ public interface ExtractionHistoryRepository extends JpaRepository<ExtractionHis
     Page<ExtractionHistoryEntity> findAllByCreatedBy(@Param("user") UserEntity user,
                                                      Pageable pageable);
 
-    List<ExtractionHistoryEntity> findAllByWinningStatusOverallStatus(WinningStatus winningStatus);
+    List<ExtractionHistoryEntity> findAllByWinningStatusWinningResult(WinningResultType winningResultType);
 }

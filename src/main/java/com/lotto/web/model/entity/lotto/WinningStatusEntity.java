@@ -1,6 +1,7 @@
 package com.lotto.web.model.entity.lotto;
 
-import com.lotto.web.constants.WinningStatus;
+import com.lotto.web.constants.MatchStatus;
+import com.lotto.web.constants.WinningResultType;
 import com.lotto.web.model.TimestampSequentialEntity;
 import lombok.Getter;
 
@@ -12,47 +13,53 @@ import javax.persistence.*;
 public class WinningStatusEntity extends TimestampSequentialEntity {
 
     @Enumerated(EnumType.STRING)
-    private WinningStatus firstStatus;
+    private MatchStatus firstStatus;
 
     @Enumerated(EnumType.STRING)
-    private WinningStatus secondStatus;
+    private MatchStatus secondStatus;
 
     @Enumerated(EnumType.STRING)
-    private WinningStatus thirdStatus;
+    private MatchStatus thirdStatus;
 
     @Enumerated(EnumType.STRING)
-    private WinningStatus fourthStatus;
+    private MatchStatus fourthStatus;
 
     @Enumerated(EnumType.STRING)
-    private WinningStatus fifthStatus;
+    private MatchStatus fifthStatus;
 
     @Enumerated(EnumType.STRING)
-    private WinningStatus sixthStatus;
+    private MatchStatus sixthStatus;
 
     @Enumerated(EnumType.STRING)
-    private WinningStatus overallStatus;
+    private WinningResultType winningResult;
 
     public static WinningStatusEntity of() {
         return new WinningStatusEntity();
     }
 
     private WinningStatusEntity() {
-        this.firstStatus = WinningStatus.PENDING;
-        this.secondStatus = WinningStatus.PENDING;
-        this.thirdStatus = WinningStatus.PENDING;
-        this.fourthStatus = WinningStatus.PENDING;
-        this.fifthStatus = WinningStatus.PENDING;
-        this.sixthStatus = WinningStatus.PENDING;
-        this.overallStatus = WinningStatus.PENDING;
+        this.firstStatus = MatchStatus.PENDING;
+        this.secondStatus = MatchStatus.PENDING;
+        this.thirdStatus = MatchStatus.PENDING;
+        this.fourthStatus = MatchStatus.PENDING;
+        this.fifthStatus = MatchStatus.PENDING;
+        this.sixthStatus = MatchStatus.PENDING;
+        this.winningResult = WinningResultType.PENDING;
     }
 
-    public void updateAllAsWaiting() {
-        this.firstStatus = WinningStatus.WAITING;
-        this.secondStatus = WinningStatus.WAITING;
-        this.thirdStatus = WinningStatus.WAITING;
-        this.fourthStatus = WinningStatus.WAITING;
-        this.fifthStatus = WinningStatus.WAITING;
-        this.sixthStatus = WinningStatus.WAITING;
-        this.overallStatus = WinningStatus.WAITING;
+    public void updateToWaiting() {
+        this.firstStatus = MatchStatus.WAITING;
+        this.secondStatus = MatchStatus.WAITING;
+        this.thirdStatus = MatchStatus.WAITING;
+        this.fourthStatus = MatchStatus.WAITING;
+        this.fifthStatus = MatchStatus.WAITING;
+        this.sixthStatus = MatchStatus.WAITING;
+        this.winningResult = WinningResultType.WAITING;
+    }
+
+    public boolean getIsWinning() {
+        return this.getWinningResult() != WinningResultType.LOST &&
+                this.getWinningResult() != WinningResultType.PENDING &&
+                this.getWinningResult() != WinningResultType.WAITING;
     }
 }

@@ -8,6 +8,7 @@ import com.lotto.web.model.dto.request.*;
 import com.lotto.web.model.dto.response.BoardDeleteResponse;
 import com.lotto.web.model.dto.response.BoardSaveResponse;
 import com.lotto.web.model.dto.response.ExtractionListResponse;
+import com.lotto.web.model.dto.response.PostDetailResponse;
 import com.lotto.web.model.dto.response.admin.*;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
@@ -57,7 +58,7 @@ public class AdminController extends BaseController {
     }
 
     @PatchMapping("/board/{boardId}/status/{status}")
-    public ApiSuccessResponse<Object> updateBoardStatus(@PathVariable String boardId,
+    public ApiSuccessResponse<Boolean> updateBoardStatus(@PathVariable String boardId,
                                                         @PathVariable BoardActivationStatus status) {
         return wrap(boardManagementService.updateStatus(boardId, status));
     }
@@ -87,11 +88,9 @@ public class AdminController extends BaseController {
     }
 
     @GetMapping("/post/{postId}")
-    public ApiSuccessResponse<Object> getPost() {
-        return null;
+    public ApiSuccessResponse<PostDetailResponse> getPost(@PathVariable String postId) {
+        return wrap(postManagementService.detail(postId));
     }
-
-
 
     @PutMapping("/setting/lotto-history")
     public ApiSuccessResponse<Object> updateLottoAutomation(@RequestBody SettingUpdateRequest toggle) {
