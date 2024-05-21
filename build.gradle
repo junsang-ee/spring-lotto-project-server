@@ -25,6 +25,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
 
+    /* Batch */
+    implementation 'org.springframework.boot:spring-boot-starter-batch'
+
     /* Cache */
     implementation 'org.springframework.boot:spring-boot-starter-cache'
 
