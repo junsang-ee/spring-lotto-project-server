@@ -1,4 +1,4 @@
-package com.lotto.web.service.scheduler;
+package com.lotto.web.batch;
 
 import com.lotto.web.constants.WinningResultType;
 import com.lotto.web.model.entity.UserEntity;
@@ -13,11 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class ScheduleService {
+public class SchedulerTasks {
 
     private final UserService userService;
 
@@ -26,21 +25,23 @@ public class ScheduleService {
     @Transactional
     @Scheduled(cron = "@midnight")
     public void resetLottoAvailableCount() {
-        log.info("=== Start Scheduler resetting the number of times users can use the service ===");
+        log.info("=== Start Scheduled resetting the number of times users can use the service ===");
         List<UserEntity> users = userService.getAllEnabledUser();
         for (UserEntity user : users) {
             user.updateAvailableCount(100);
         }
+        log.info("=== End Scheduled resetting the number of times users can use the service ===");
     }
 
     @Transactional
-    @Scheduled(cron = "0 35 20 * * SAT")
     public void setExtractionsAsWaiting() {
-        log.info("=== Begin the process of changing non-drawn(WinningResultType: PENDING) random numbers to draw standby values ===");
+        log.info("=== Start Batch to change the status of extracted random lotto numbers ===");
         List<ExtractionHistoryEntity> extractions =
                 extractionHistoryRepository.findAllByWinningStatusWinningResult(WinningResultType.PENDING);
         for (ExtractionHistoryEntity extraction : extractions) {
             extraction.getWinningStatus().updateToWaiting();
         }
+        log.info("=== End Batch to change the status of extracted random lotto numbers ===");
     }
+
 }

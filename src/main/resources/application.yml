@@ -43,6 +43,9 @@ spring:
   logging:
     level:
       org.hibernate.SQL: debug
+  batch:
+    batch:
+      initialize-schema: always
 
 integration:
   slack:
