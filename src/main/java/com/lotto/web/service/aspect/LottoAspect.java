@@ -21,9 +21,9 @@ import java.util.List;
 import static com.lotto.web.util.LottoUtil.getLottoCount;
 import static com.lotto.web.util.LottoUtil.getIsCorrectPriceUnit;
 
+@RequiredArgsConstructor
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class LottoAspect {
 
     private final UserService userService;

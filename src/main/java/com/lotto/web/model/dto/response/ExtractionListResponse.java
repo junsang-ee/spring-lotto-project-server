@@ -13,6 +13,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Getter
 @RequiredArgsConstructor(access = PRIVATE)
 public class ExtractionListResponse {
+    private final Long extractionId;
     private final int firstNumber;
     private final int secondNumber;
     private final int thirdNumber;
@@ -30,6 +31,7 @@ public class ExtractionListResponse {
 
     public static ExtractionListResponse of(final ExtractionHistoryEntity entity) {
         return new ExtractionListResponse(
+                entity.getId(),
                 entity.getFirstNumber(), entity.getSecondNumber(),
                 entity.getThirdNumber(), entity.getFourthNumber(),
                 entity.getFifthNumber(), entity.getSixthNumber(),

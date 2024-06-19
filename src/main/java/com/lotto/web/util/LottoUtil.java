@@ -1,5 +1,9 @@
 package com.lotto.web.util;
 
+import com.lotto.web.constants.MatchStatus;
+import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
+import com.lotto.web.model.entity.lotto.WinningStatusEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +13,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,6 +48,59 @@ public class LottoUtil {
     public static String getLottoApiUri(int round) {
         String queryParams = LOTTO_API_URI + "common.do?method=getLottoNumber&drwNo=";
         return queryParams + round;
+    }
+
+    public static void checkMatchingExtraction(ExtractionHistoryEntity extractionHistory,
+                                               LottoWinningHistoryEntity lottoWinningHistory) {
+        List<Integer> extractionList = extractionToList(extractionHistory);
+        List<Integer> winningList = winningToList(lottoWinningHistory);
+        WinningStatusEntity winningStatus = extractionHistory.getWinningStatus();
+        AtomicInteger matchCount = new AtomicInteger();
+
+        IntStream.range(0, extractionList.size()).forEach(
+                index -> {
+                    MatchStatus matchStatus = winningList.contains(extractionList.get(index)) ?
+                            MatchStatus.MATCH : MatchStatus.NOT_MATCH;
+                    winningStatus.updateStatus(index, matchStatus);
+                    if (matchStatus == MatchStatus.MATCH) matchCount.getAndIncrement();
+                }
+        );
+
+        boolean isMatchBonus = false;
+
+        if (matchCount.get() == 5) {
+            isMatchBonus = extractionList.contains(
+                    lottoWinningHistory.getBonusNumber()
+            );
+        }
+
+        winningStatus.updateWinningResult(
+                matchCount.get(), isMatchBonus
+        );
+
+    }
+
+    private static List<Integer> extractionToList(ExtractionHistoryEntity entity) {
+        return Stream.of(
+                entity.getFirstNumber(),
+                entity.getSecondNumber(),
+                entity.getThirdNumber(),
+                entity.getFourthNumber(),
+                entity.getFifthNumber(),
+                entity.getSixthNumber()
+        ).collect(Collectors.toList());
+
+    }
+
+    private static List<Integer> winningToList(LottoWinningHistoryEntity entity) {
+        return Stream.of(
+                entity.getFirstNumber(),
+                entity.getSecondNumber(),
+                entity.getThirdNumber(),
+                entity.getFourthNumber(),
+                entity.getFifthNumber(),
+                entity.getSixthNumber()
+        ).collect(Collectors.toList());
     }
 
     private static LocalDateTime calculateDrawDateTime(LocalDateTime dateTime) {

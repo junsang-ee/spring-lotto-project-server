@@ -62,4 +62,36 @@ public class WinningStatusEntity extends TimestampSequentialEntity {
                 this.getWinningResult() != WinningResultType.PENDING &&
                 this.getWinningResult() != WinningResultType.WAITING;
     }
+
+    public void updateStatus(int numberOrder, MatchStatus matchStatus) {
+        switch (numberOrder) {
+            case 0: this.firstStatus = matchStatus; break;
+            case 1: this.secondStatus = matchStatus; break;
+            case 2: this.thirdStatus = matchStatus; break;
+            case 3: this.fourthStatus = matchStatus; break;
+            case 4: this.fifthStatus = matchStatus; break;
+            case 5: this.sixthStatus = matchStatus; break;
+        }
+    }
+
+    public void updateWinningResult(int matchCount, boolean isMatchBonus) {
+        switch (matchCount) {
+            case 0:
+            case 1:
+            case 2:
+                this.winningResult = WinningResultType.LOST; break;
+            case 3:
+                this.winningResult = WinningResultType.FIFTH_PLACE; break;
+            case 4:
+                this.winningResult = WinningResultType.FOURTH_PLACE; break;
+            case 5:
+                if (isMatchBonus) this.winningResult = WinningResultType.SECOND_PLACE;
+                else this.winningResult = WinningResultType.THIRD_PLACE;
+                break;
+            case 6: this.winningResult = WinningResultType.FIRST_PLACE;
+        }
+
+    }
+
+
 }

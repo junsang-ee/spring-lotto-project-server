@@ -1,12 +1,15 @@
 package com.lotto.web.service.admin.management;
 
+import com.lotto.web.constants.WinningResultType;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.DuplicatedException;
 import com.lotto.web.exception.custom.InvalidStateException;
 import com.lotto.web.exception.custom.NotFoundException;
 import com.lotto.web.model.dto.api.LottoApiResponse;
+import com.lotto.web.model.dto.response.ExtractionDrawResultResponse;
 import com.lotto.web.model.dto.response.ExtractionListResponse;
 import com.lotto.web.model.entity.UserEntity;
+import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
 import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.repository.ExtractionHistoryRepository;
 import com.lotto.web.repository.LottoWinningHistoryRepository;
@@ -54,6 +57,30 @@ public class LottoManagementServiceImpl implements LottoManagementService {
                 user,
                 pageable
         ).map(ExtractionListResponse::of);
+    }
+
+    @Override
+    @Transactional
+    public ExtractionDrawResultResponse updateExtractionWinningStatus(Long extractionId) {
+        ExtractionHistoryEntity extraction =
+                extractionHistoryRepository.findById(extractionId).orElseThrow(
+                        () -> new NotFoundException(ErrorMessage.EXTRACTION_NOT_FOUND)
+                );
+
+        if (extraction.getWinningStatus().getWinningResult() != WinningResultType.WAITING)
+            throw new InvalidStateException(ErrorMessage.EXTRACTION_NOT_WAITING);
+
+        int matchingRound = extraction.getMatchingRound();
+
+        LottoWinningHistoryEntity winning =
+                lottoWinningHistoryRepository.findByRound(matchingRound).orElseThrow(
+                        () -> new InvalidStateException(ErrorMessage.LOTTO_NOT_DRAW_ROUND)
+                );
+        LottoUtil.checkMatchingExtraction(extraction, winning);
+
+        return ExtractionDrawResultResponse.of(
+                extraction.getWinningStatus()
+        );
     }
 
     private UserEntity getUser(String userId) {

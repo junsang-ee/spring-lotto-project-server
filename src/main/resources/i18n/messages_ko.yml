@@ -38,12 +38,15 @@ response:
         post.password:
           code: "108"
           message: "게시글 비밀번호는 4자리 숫자여야 합니다."
+
     bad.request:
       code: "400"
       message: "잘못된 접근입니다."
+
     internal.server.error:
       code: "500"
       message: "서버에서 클라이언트 요청을 처리 중에 에러가 발생하였습니다."
+
     lotto:
       exceed:
         needs:
@@ -64,11 +67,23 @@ response:
       duplicated.round:
         code: "1011"
         message: "해당 회차는 이미 존재합니다."
+      not.draw.round:
+        code: "1012"
+        message: "해당 회차의 당첨 로또 번호는 아직 추첨 전입니다."
+
+    extraction:
+      not:
+        found:
+          code: "2000"
+          message: "해당 랜덤 추출 번호는 존재하지 않습니다."
+        waiting:
+          code: "2001"
+          message: "해당 랜덤 추출 번호는 추첨 대기 상태가 아닙니다."
 
     auth:
       duplicated.email:
         code: "4000"
-        message: "사용중인 이메일 입니다."
+        message: "사용 중인 이메일 입니다."
       disabled:
         code: "4001"
         message: "이용 제한된 계정입니다."

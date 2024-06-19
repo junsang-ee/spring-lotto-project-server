@@ -5,10 +5,7 @@ import com.lotto.web.constants.PostActivationStatus;
 import com.lotto.web.constants.UserStatus;
 import com.lotto.web.controller.BaseController;
 import com.lotto.web.model.dto.request.*;
-import com.lotto.web.model.dto.response.BoardDeleteResponse;
-import com.lotto.web.model.dto.response.BoardSaveResponse;
-import com.lotto.web.model.dto.response.ExtractionListResponse;
-import com.lotto.web.model.dto.response.PostDetailResponse;
+import com.lotto.web.model.dto.response.*;
 import com.lotto.web.model.dto.response.admin.*;
 import com.lotto.web.model.dto.response.common.ApiSuccessResponse;
 import com.lotto.web.model.dto.response.common.PageResponse;
@@ -118,6 +115,12 @@ public class AdminController extends BaseController {
     public ApiSuccessResponse<LottoWinningHistoryEntity> saveLottoWinning(@PathVariable int round) {
         return wrap(lottoManagementService.saveWinningByRound(round));
     }
+
+    @PutMapping("/lotto/extraction/winning-result/{extractionId}")
+    public ApiSuccessResponse<ExtractionDrawResultResponse> updateWinningStatus(@PathVariable Long extractionId) {
+        return wrap(lottoManagementService.updateExtractionWinningStatus(extractionId));
+    }
+
 
 
 
