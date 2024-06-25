@@ -20,8 +20,6 @@ public interface LottoService {
 
     LottoWinningNumbersResponse getWinningNumbersByDrawDate(Date drawDate);
 
-    void saveWinning();
-
     Page<LottoWinningHistoryEntity> getAllWinningNumbers(Pageable pageable);
 
     Page<ExtractionListResponse> getAllExtractions(String userId, Pageable pageable);

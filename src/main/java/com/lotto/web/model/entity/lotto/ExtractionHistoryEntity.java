@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.time.Instant;
+
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -46,7 +48,11 @@ public class ExtractionHistoryEntity extends TimestampSequentialEntity {
         this.sixthNumber = lotto.getSixthNumber();
         this.createdBy = user;
         this.winningStatus = WinningStatusEntity.of();
-        this.matchingRound = LottoUtil.getExtractionMatchingRound();
+        this.matchingRound = LottoUtil.getExtractionMatchingRound(Instant.now());
+    }
+
+    public void updateMatchingRound(int matchingRound) {
+        this.matchingRound = matchingRound;
     }
 
 }

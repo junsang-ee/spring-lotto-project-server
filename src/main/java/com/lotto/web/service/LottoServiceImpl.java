@@ -56,17 +56,11 @@ public class LottoServiceImpl implements LottoService {
     @Transactional
     public void saveExtractionLottos(String userId, RandomLottoListResponse randomLottos) {
         UserEntity user = getUser(userId);
-        List<ExtractionHistoryEntity> entities = randomLottos.getLottoList()
+        List<ExtractionHistoryEntity> extractions = randomLottos.getLottoList()
                 .stream()
                 .map(it -> ExtractionHistoryEntity.of(it, user))
                 .collect(Collectors.toList());
-        extractionHistoryRepository.saveAll(entities);
-    }
-
-    @Override
-    @Transactional
-    public void saveWinning() {
-
+        extractionHistoryRepository.saveAll(extractions);
     }
 
     @Override

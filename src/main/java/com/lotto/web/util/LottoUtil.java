@@ -7,10 +7,7 @@ import com.lotto.web.model.entity.lotto.WinningStatusEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
@@ -37,12 +34,12 @@ public class LottoUtil {
         return (int) (Math.random() * 45 + 1);
     }
 
-    public static int getExtractionMatchingRound() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime drawDateTime = calculateDrawDateTime(now);
-        if (now.isAfter(drawDateTime))
-            return calculateDrawNumber(drawDateTime);
-        return calculateDrawNumber(drawDateTime.minusWeeks(1));
+    public static int getExtractionMatchingRound(Instant createdAt) {
+        LocalDateTime extractionAt = LocalDateTime.ofInstant(createdAt, Constants.ZONE_KR);
+        LocalDateTime drawAt = calculateDrawDateTime(extractionAt);
+        if (extractionAt.isAfter(drawAt))
+            return calculateDrawNumber(drawAt);
+        return calculateDrawNumber(drawAt.minusWeeks(1));
     }
 
     public static String getLottoApiUri(int round) {

@@ -71,11 +71,16 @@ public class LottoManagementServiceImpl implements LottoManagementService {
             throw new InvalidStateException(ErrorMessage.EXTRACTION_NOT_WAITING);
 
         int matchingRound = extraction.getMatchingRound();
+        if (extraction.getMatchingRound() == 0) {
+            matchingRound = LottoUtil.getExtractionMatchingRound(extraction.getCreatedAt());
+            extraction.updateMatchingRound(matchingRound);
+        }
 
         LottoWinningHistoryEntity winning =
                 lottoWinningHistoryRepository.findByRound(matchingRound).orElseThrow(
                         () -> new InvalidStateException(ErrorMessage.LOTTO_NOT_DRAW_ROUND)
                 );
+
         LottoUtil.checkMatchingExtraction(extraction, winning);
 
         return ExtractionDrawResultResponse.of(
