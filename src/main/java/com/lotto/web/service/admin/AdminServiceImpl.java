@@ -8,7 +8,6 @@ import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.admin.AdminSettingEntity;
 import com.lotto.web.repository.*;
 
-import com.lotto.web.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;

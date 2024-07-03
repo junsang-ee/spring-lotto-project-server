@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 public class LottoUtil {
+
     public static final String LOTTO_API_URI = "https://www.dhlottery.co.kr/";
     public static final int priceUnit = 1000;
 
@@ -74,7 +75,6 @@ public class LottoUtil {
         winningStatus.updateWinningResult(
                 matchCount.get(), isMatchBonus
         );
-
     }
 
     private static List<Integer> extractionToList(ExtractionHistoryEntity entity) {

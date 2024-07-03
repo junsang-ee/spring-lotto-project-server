@@ -1,11 +1,8 @@
 package com.lotto.web.util;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotto.web.constants.messages.ErrorMessage;
 import com.lotto.web.exception.custom.InvalidStateException;
 
-import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,12 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor

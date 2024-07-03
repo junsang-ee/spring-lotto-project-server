@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -112,8 +113,13 @@ public class AdminController extends BaseController {
     }
 
     @PostMapping("/lotto/winning/{round}")
-    public ApiSuccessResponse<LottoWinningHistoryEntity> saveLottoWinning(@PathVariable int round) {
+    public ApiSuccessResponse<LottoWinningHistoryEntity> saveWinning(@PathVariable int round) {
         return wrap(lottoManagementService.saveWinningByRound(round));
+    }
+
+    @PostMapping("/lotto/winning/recent/{recentNumber}")
+    public ApiSuccessResponse<List<LottoWinningHistoryEntity>> saveRecentWinnings(@PathVariable int recentNumber) {
+        return wrap(lottoManagementService.saveRecentWinnings(recentNumber));
     }
 
     @PutMapping("/lotto/extraction/winning-result/{extractionId}")

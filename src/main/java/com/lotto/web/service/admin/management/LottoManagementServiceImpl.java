@@ -17,10 +17,16 @@ import com.lotto.web.repository.UserRepository;
 import com.lotto.web.util.LottoUtil;
 import com.lotto.web.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
@@ -38,17 +44,32 @@ public class LottoManagementServiceImpl implements LottoManagementService {
             throw new DuplicatedException(ErrorMessage.LOTTO_DUPLICATED_ROUND);
         }
 
-        LottoApiResponse winning = webClientUtil.get(
-                LottoUtil.getLottoApiUri(round),
-                LottoApiResponse.class
-        ).block();
+        LottoApiResponse apiResponse = getWinning(round);
 
-        if (winning == null) {
-            throw new InvalidStateException(ErrorMessage.LOTTO_INVALID_ROUND);
-        }
-        LottoWinningHistoryEntity winningEntity = LottoWinningHistoryEntity.of(winning);
+        LottoWinningHistoryEntity winningEntity = LottoWinningHistoryEntity.of(apiResponse);
         return lottoWinningHistoryRepository.save(winningEntity);
     }
+
+    @Override
+    @Transactional
+    public List<LottoWinningHistoryEntity> saveRecentWinnings(int recentNumber) {
+        int matchRound = LottoUtil.getExtractionMatchingRound(Instant.now());
+        if (recentNumber > matchRound) {
+            throw new InvalidStateException(ErrorMessage.LOTTO_EXCEED_NUMBER);
+        }
+        List<LottoWinningHistoryEntity> recentWinnings =
+                IntStream.range(0, recentNumber)
+                        .filter(index -> lottoWinningHistoryRepository.findByRound(matchRound-index).isEmpty())
+                        .mapToObj(
+                                index -> {
+                                    int round = matchRound - (index+1);
+                                    LottoApiResponse apiResponse = getWinning(round);
+                                    return LottoWinningHistoryEntity.of(apiResponse);
+                                }
+                        ).collect(Collectors.toList());
+        return lottoWinningHistoryRepository.saveAll(recentWinnings);
+    }
+
 
     @Override
     public Page<ExtractionListResponse> getExtractionsByUser(String userId, Pageable pageable) {
@@ -92,5 +113,15 @@ public class LottoManagementServiceImpl implements LottoManagementService {
         return userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException(ErrorMessage.USER_NOT_FOUND)
         );
+    }
+
+    private LottoApiResponse getWinning(int round) {
+        LottoApiResponse response = webClientUtil.get(
+                LottoUtil.getLottoApiUri(round),
+                LottoApiResponse.class
+            ).block();
+        if (response == null)
+            throw new InvalidStateException(ErrorMessage.LOTTO_INVALID_ROUND);
+        return response;
     }
 }

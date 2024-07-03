@@ -58,6 +58,10 @@ response:
         issue:
           code: "1002"
           message: "랜덤 로또 발급 이용 가능 횟수를 초과하였습니다."
+        number:
+          code: "1013"
+          message: "현재 추첨된 회차 수를 초과하였습니다."
+
       price.unit:
         code: "1003"
         message: "로또 구매 가격 단위가 정확하지 않습니다. (1,000 원 단위)"
@@ -70,6 +74,7 @@ response:
       not.draw.round:
         code: "1012"
         message: "해당 회차의 당첨 로또 번호는 아직 추첨 전입니다."
+
 
     extraction:
       not:

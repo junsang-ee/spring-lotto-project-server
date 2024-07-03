@@ -56,7 +56,7 @@ public class UserEntity extends CreationTimestampEntity {
                                 final UserRole role) {
         return new UserEntity(
                 email,
-                password,
+                EncryptUtil.encode(password),
                 role
         );
     }
