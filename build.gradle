@@ -25,6 +25,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
 
+    /* Junit Test */
+    implementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
     /* Batch */
     implementation 'org.springframework.boot:spring-boot-starter-batch'
 

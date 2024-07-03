@@ -44,7 +44,7 @@ spring:
     level:
       org.hibernate.SQL: debug
   batch:
-    batch:
+    jdbc:
       initialize-schema: always
 
 integration:
