@@ -82,7 +82,7 @@ public class LottoManagementServiceImpl implements LottoManagementService {
 
     @Override
     @Transactional
-    public ExtractionDrawResultResponse updateExtractionWinningStatus(Long extractionId) {
+    public ExtractionDrawResultResponse matchExtraction(Long extractionId) {
         ExtractionHistoryEntity extraction =
                 extractionHistoryRepository.findById(extractionId).orElseThrow(
                         () -> new NotFoundException(ErrorMessage.EXTRACTION_NOT_FOUND)

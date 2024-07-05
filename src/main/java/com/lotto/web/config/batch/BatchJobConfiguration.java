@@ -24,6 +24,11 @@ public class BatchJobConfiguration {
     private final SchedulerTasks schedulerTasks;
 
 
+    /**
+     * Tasklet
+     * updateExtractionsStatusTasklet - schedulerTask:setExtractionsAsWaiting
+     * matchExtractionsTasklet -
+     */
     @Bean
     public Tasklet updateExtractionsStatusTasklet() {
         return (contribution, chunkContext) -> {
@@ -33,11 +38,38 @@ public class BatchJobConfiguration {
     }
 
     @Bean
+    public Tasklet matchExtractionsTasklet() {
+        return (contribution, chunkContext) -> {
+            schedulerTasks.setExtractionsAsWaiting();
+            return RepeatStatus.FINISHED;
+        };
+    }
+
+
+    /**
+     * Step
+     * updateExtractionsStatusStep - updateExtractionsStatusTasklet
+     * matchExtractionsStep - updateExtractionsStatusTasklet
+     */
+    @Bean
     public Step updateExtractionsStatusStep() {
         return stepBuilderFactory.get("updateExtractionsStatusStep")
                 .tasklet(updateExtractionsStatusTasklet())
                 .build();
     }
+
+    @Bean
+    public Step matchExtractionsStep() {
+        return stepBuilderFactory.get("matchExtractionsStep")
+                .tasklet(matchExtractionsTasklet())
+                .build();
+    }
+
+    /**
+     * Job
+     * updateExtractionsStatusJob - updateExtractionsStatusStep
+     * matchExtractionsJob - matchExtractionsStep
+     */
     @Bean
     public Job updateExtractionsStatusJob() {
         return jobBuilderFactory.get("updateExtractionsStatusJob")
@@ -45,9 +77,28 @@ public class BatchJobConfiguration {
                 .build();
     }
 
+    @Bean
+    public Job matchExtractionsJob() {
+        return jobBuilderFactory.get("matchExtractionsJob")
+                .start(matchExtractionsStep())
+                .build();
+    }
+
+    /**
+     * Launcher
+     * updateExtractionsStatusLauncher - updateExtractionsStatusJob
+     * matchExtractionsLauncher - matchExtractionsJob
+     */
     @Scheduled(cron = "0 35 20 * * SAT")
-    public void updateExtractionsLauncher() throws Exception {
+    public void updateExtractionsStatusLauncher() throws Exception {
         jobLauncher.run(updateExtractionsStatusJob(), new JobParametersBuilder()
+                .addLong("time", System.currentTimeMillis())
+                .toJobParameters());
+    }
+
+    @Scheduled(cron = "0 0 21 * * SAT")
+    public void matchExtractionsLauncher() throws Exception {
+        jobLauncher.run(matchExtractionsJob(), new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
                 .toJobParameters());
     }

@@ -124,10 +124,8 @@ public class AdminController extends BaseController {
 
     @PutMapping("/lotto/extraction/winning-result/{extractionId}")
     public ApiSuccessResponse<ExtractionDrawResultResponse> updateWinningStatus(@PathVariable Long extractionId) {
-        return wrap(lottoManagementService.updateExtractionWinningStatus(extractionId));
+        return wrap(lottoManagementService.matchExtraction(extractionId));
     }
-
-
 
 
 }

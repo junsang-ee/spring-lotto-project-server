@@ -37,11 +37,30 @@ public class SchedulerTasks {
     public void setExtractionsAsWaiting() {
         log.info("=== Start Batch to change the status of extracted random lotto numbers ===");
         List<ExtractionHistoryEntity> extractions =
-                extractionHistoryRepository.findAllByWinningStatusWinningResult(WinningResultType.PENDING);
+                extractionHistoryRepository.findAllByWinningStatusWinningResult(
+                        WinningResultType.PENDING
+                );
+        extractions.forEach(
+                extraction -> extraction.getWinningStatus().updateToWaiting()
+        );
+        log.info("=== End Batch to change the status of extracted random lotto numbers ===");
+    }
+
+    @Transactional
+    public void matchExtractions() {
+        log.info("=== Start Batch to checking matching of drawn numbers ===");
+        List<ExtractionHistoryEntity> extractions =
+                extractionHistoryRepository.findAllByWinningStatusWinningResult(WinningResultType.WAITING);
+        extractions.forEach(
+                extraction -> {
+                    int matchRound = extraction.getMatchingRound();
+                }
+        );
+
         for (ExtractionHistoryEntity extraction : extractions) {
             extraction.getWinningStatus().updateToWaiting();
         }
-        log.info("=== End Batch to change the status of extracted random lotto numbers ===");
+        log.info("=== End Batch to checking matching of drawn numbers ===");
     }
 
 }

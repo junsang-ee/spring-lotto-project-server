@@ -15,7 +15,7 @@ public interface LottoManagementService {
     List<LottoWinningHistoryEntity> saveRecentWinnings(int recentNumber);
     Page<ExtractionListResponse> getExtractionsByUser(String userId, Pageable pageable);
 
-    ExtractionDrawResultResponse updateExtractionWinningStatus(Long extractionId);
+    ExtractionDrawResultResponse matchExtraction(Long extractionId);
 
 
 }

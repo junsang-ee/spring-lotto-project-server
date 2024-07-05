@@ -13,7 +13,6 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -50,24 +49,25 @@ public class LottoUtil {
 
     public static void checkMatchingExtraction(ExtractionHistoryEntity extractionHistory,
                                                LottoWinningHistoryEntity lottoWinningHistory) {
-        List<Integer> extractionList = extractionToList(extractionHistory);
-        List<Integer> winningList = winningToList(lottoWinningHistory);
+        List<Integer> extractions = extractionToList(extractionHistory);
+        List<Integer> winnings = winningToList(lottoWinningHistory);
         WinningStatusEntity winningStatus = extractionHistory.getWinningStatus();
         AtomicInteger matchCount = new AtomicInteger();
 
-        IntStream.range(0, extractionList.size()).forEach(
-                index -> {
-                    MatchStatus matchStatus = winningList.contains(extractionList.get(index)) ?
+        extractions.forEach(
+                extraction -> {
+                    MatchStatus matchStatus = winnings.contains(extraction) ?
                             MatchStatus.MATCH : MatchStatus.NOT_MATCH;
-                    winningStatus.updateStatus(index, matchStatus);
-                    if (matchStatus == MatchStatus.MATCH) matchCount.getAndIncrement();
+                    winningStatus.updateStatus(extraction, matchStatus);
+                    if (matchStatus == MatchStatus.MATCH)
+                        matchCount.getAndIncrement();
                 }
         );
 
         boolean isMatchBonus = false;
 
         if (matchCount.get() == 5) {
-            isMatchBonus = extractionList.contains(
+            isMatchBonus = extractions.contains(
                     lottoWinningHistory.getBonusNumber()
             );
         }

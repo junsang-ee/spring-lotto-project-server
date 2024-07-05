@@ -33,6 +33,8 @@ public class WinningStatusEntity extends TimestampSequentialEntity {
     @Enumerated(EnumType.STRING)
     private WinningResultType winningResult;
 
+    @OneToOne(mappedBy = "winningStatus")
+    private ExtractionHistoryEntity extraction;
     public static WinningStatusEntity of() {
         return new WinningStatusEntity();
     }
@@ -63,15 +65,19 @@ public class WinningStatusEntity extends TimestampSequentialEntity {
                 this.getWinningResult() != WinningResultType.WAITING;
     }
 
-    public void updateStatus(int numberOrder, MatchStatus matchStatus) {
-        switch (numberOrder) {
-            case 0: this.firstStatus = matchStatus; break;
-            case 1: this.secondStatus = matchStatus; break;
-            case 2: this.thirdStatus = matchStatus; break;
-            case 3: this.fourthStatus = matchStatus; break;
-            case 4: this.fifthStatus = matchStatus; break;
-            case 5: this.sixthStatus = matchStatus; break;
-        }
+    public void updateStatus(int element, MatchStatus matchStatus) {
+        if (element == this.extraction.getFirstNumber())
+            this.firstStatus = matchStatus;
+        else if (element == this.extraction.getSecondNumber())
+            this.secondStatus = matchStatus;
+        else if (element == this.extraction.getThirdNumber())
+            this.thirdStatus = matchStatus;
+        else if (element == this.extraction.getFourthNumber())
+            this.fourthStatus = matchStatus;
+        else if (element == this.extraction.getFifthNumber())
+            this.fifthStatus = matchStatus;
+        else if (element == this.extraction.getSixthNumber())
+            this.sixthStatus = matchStatus;
     }
 
     public void updateWinningResult(int matchCount, boolean isMatchBonus) {
