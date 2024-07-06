@@ -27,6 +27,7 @@ public class ExtractionListResponse {
     private final MatchStatus fifthStatus;
     private final MatchStatus sixthStatus;
     private final WinningResultType winningResult;
+    private final int matchRound;
     private final Instant createdAt;
 
     public static ExtractionListResponse of(final ExtractionHistoryEntity entity) {
@@ -42,7 +43,7 @@ public class ExtractionListResponse {
                 entity.getWinningStatus().getFifthStatus(),
                 entity.getWinningStatus().getSixthStatus(),
                 entity.getWinningStatus().getWinningResult(),
-                entity.getCreatedAt()
+                entity.getMatchingRound(), entity.getCreatedAt()
         );
     }
 
