@@ -1,17 +1,24 @@
 package com.lotto.web.batch;
 
 import com.lotto.web.constants.WinningResultType;
+import com.lotto.web.model.dto.api.LottoApiResponse;
 import com.lotto.web.model.entity.UserEntity;
 import com.lotto.web.model.entity.lotto.ExtractionHistoryEntity;
+import com.lotto.web.model.entity.lotto.LottoWinningHistoryEntity;
 import com.lotto.web.repository.ExtractionHistoryRepository;
+import com.lotto.web.repository.LottoWinningHistoryRepository;
 import com.lotto.web.service.UserService;
+import com.lotto.web.util.LottoUtil;
+import com.lotto.web.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,7 +27,11 @@ public class SchedulerTasks {
 
     private final UserService userService;
 
+    private final WebClientUtil webClientUtil;
+
     private final ExtractionHistoryRepository extractionHistoryRepository;
+
+    private final LottoWinningHistoryRepository lottoWinningHistoryRepository;
 
     @Transactional
     @Scheduled(cron = "@midnight")
@@ -50,16 +61,62 @@ public class SchedulerTasks {
     public void matchExtractions() {
         log.info("=== Start Batch to checking matching of drawn numbers ===");
         List<ExtractionHistoryEntity> extractions =
-                extractionHistoryRepository.findAllByWinningStatusWinningResult(WinningResultType.WAITING);
-        extractions.forEach(
-                extraction -> {
-                    int matchRound = extraction.getMatchingRound();
-                }
+                extractionHistoryRepository.findAllByWinningStatusWinningResult(
+                        WinningResultType.WAITING
+                );
+        int currentMatchingRound = LottoUtil.getExtractionMatchingRound(Instant.now()) - 1;
+
+        LottoApiResponse currentWinningResponse = webClientUtil.get(
+                LottoUtil.getLottoApiUri(currentMatchingRound),
+                LottoApiResponse.class
+        ).block();
+        assert currentWinningResponse != null;
+
+        LottoWinningHistoryEntity currentWinning = LottoWinningHistoryEntity.of(
+                currentWinningResponse
         );
 
-        for (ExtractionHistoryEntity extraction : extractions) {
-            extraction.getWinningStatus().updateToWaiting();
-        }
+        extractions.forEach(
+                extraction -> {
+                    int matchingRound = extraction.getMatchingRound();
+                    if (matchingRound == 0) {
+                        matchingRound = LottoUtil.getExtractionMatchingRound(
+                                extraction.getCreatedAt()
+                        );
+                        extraction.updateMatchingRound(matchingRound);
+                    }
+                    if (currentMatchingRound != matchingRound) {
+
+                        Optional<LottoWinningHistoryEntity> winning = lottoWinningHistoryRepository.findByRound(
+                                matchingRound
+                        );
+
+                        if(winning.isEmpty()) {
+                            LottoApiResponse lottoApiResponse = webClientUtil.get(
+                                    LottoUtil.getLottoApiUri(matchingRound),
+                                    LottoApiResponse.class
+                            ).block();
+                            assert lottoApiResponse != null;
+                            lottoWinningHistoryRepository.save(
+                                    LottoWinningHistoryEntity.of(lottoApiResponse)
+                            );
+                            winning = Optional.of(
+                                    LottoWinningHistoryEntity.of(lottoApiResponse)
+                            );
+                        }
+                        LottoUtil.checkMatchingExtraction(
+                                extraction,
+                                winning.get()
+                        );
+                    } else {
+                        LottoUtil.checkMatchingExtraction(
+                                extraction,
+                                currentWinning
+                        );
+                    }
+                }
+        );
+        lottoWinningHistoryRepository.save(currentWinning);
         log.info("=== End Batch to checking matching of drawn numbers ===");
     }
 

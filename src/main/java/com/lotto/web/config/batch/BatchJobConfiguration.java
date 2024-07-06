@@ -40,7 +40,7 @@ public class BatchJobConfiguration {
     @Bean
     public Tasklet matchExtractionsTasklet() {
         return (contribution, chunkContext) -> {
-            schedulerTasks.setExtractionsAsWaiting();
+            schedulerTasks.matchExtractions();
             return RepeatStatus.FINISHED;
         };
     }
