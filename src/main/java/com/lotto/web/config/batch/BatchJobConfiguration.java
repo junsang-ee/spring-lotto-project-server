@@ -96,7 +96,7 @@ public class BatchJobConfiguration {
                 .toJobParameters());
     }
 
-    @Scheduled(cron = "0 0 21 * * SAT")
+    @Scheduled(cron = "0 30 21 * * SAT")
     public void matchExtractionsLauncher() throws Exception {
         jobLauncher.run(matchExtractionsJob(), new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
